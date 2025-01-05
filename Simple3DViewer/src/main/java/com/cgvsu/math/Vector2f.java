@@ -1,4 +1,4 @@
-package com.cgvsu.math.vector;
+package com.cgvsu.math;
 
 public class Vector2f implements Vector<Vector2f> {
     private float x;
@@ -8,6 +8,7 @@ public class Vector2f implements Vector<Vector2f> {
         this.x = x;
         this.y = y;
     }
+
     public float getX() {
         return x;
     }
@@ -64,25 +65,30 @@ public class Vector2f implements Vector<Vector2f> {
     }
 
     @Override
-    public void print(){
+    public void print() {
         System.out.print(x + " " + y);
     }
 
-    public Vector3f toVector3f(float z){
+    public Vector3f toVector3f(float z) {
         return new Vector3f(x, y, z);
     }
-    public Vector3f toVector3f(){
+
+    public Vector3f toVector3f() {
         return toVector3f(0);
     }
-    public static float dot(final Vector2f v1, final Vector2f v2){
-        return v1.getX()* v2.getX() + v1.getY()* v2.getY();
+
+    public static float dot(final Vector2f v1, final Vector2f v2) {
+        return v1.getX() * v2.getX() + v1.getY() * v2.getY();
     }
+
     public static Vector2f add(final Vector2f v1, final Vector2f v2) {
         return new Vector2f(v1.getX() + v2.getX(), v1.getY() + v2.getY());
     }
+
     public static Vector2f subtract(final Vector2f v1, final Vector2f v2) {
         return new Vector2f(v1.getX() - v2.getX(), v1.getY() - v2.getY());
     }
+
     public static Vector2f multiply(final Vector2f v, final float a) {
         return new Vector2f(v.getX() * a, v.getY() * a);
     }

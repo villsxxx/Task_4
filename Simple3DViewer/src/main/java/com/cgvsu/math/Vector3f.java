@@ -1,4 +1,4 @@
-package com.cgvsu.math.vector;
+package com.cgvsu.math;
 
 
 public class Vector3f implements Vector<Vector3f> {
@@ -82,8 +82,9 @@ public class Vector3f implements Vector<Vector3f> {
     public boolean isZero() {
         return Math.abs(x - 0.0f) < eps && Math.abs(y - 0.0f) < eps && Math.abs(z - 0.0f) < eps;
     }
+
     @Override
-    public void print(){
+    public void print() {
         System.out.print(x + " " + y + " " + z);
     }
 
@@ -104,9 +105,9 @@ public class Vector3f implements Vector<Vector3f> {
 
     public static Vector3f multiply(Vector3f v, Matrix3f m) {
         return new Vector3f(
-                v.getX() * m.getAt(0,0) + v.getY() *m.getAt(0,1) + v.getZ() * m.getAt(0,2),
-                v.getX() * m.getAt(1,0) + v.getY() * m.getAt(1,1) + v.getZ() * m.getAt(1,2),
-                v.getX() * m.getAt(2,0) + v.getY() * m.getAt(2,1) + v.getZ() * m.getAt(2,2));
+                v.getX() * m.getAt(0, 0) + v.getY() * m.getAt(0, 1) + v.getZ() * m.getAt(0, 2),
+                v.getX() * m.getAt(1, 0) + v.getY() * m.getAt(1, 1) + v.getZ() * m.getAt(1, 2),
+                v.getX() * m.getAt(2, 0) + v.getY() * m.getAt(2, 1) + v.getZ() * m.getAt(2, 2));
     }
 
     public static float dot(final Vector3f v1, final Vector3f v2) {

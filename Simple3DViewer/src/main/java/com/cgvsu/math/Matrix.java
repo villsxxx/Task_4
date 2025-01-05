@@ -1,4 +1,4 @@
-package ru.vsu.cs.CG2024.RAA.task3.matrix;
+package com.cgvsu.math;
 
 import java.util.Arrays;
 
@@ -19,6 +19,7 @@ public abstract class Matrix {
 
     Matrix() {
     }
+
     public float[][] getMatrix() {
         return cloneFloatMatrix(matrix);
     }
@@ -155,15 +156,3 @@ public abstract class Matrix {
         return true;
     }
 }
-
-
-   /* protected static float[][] getZeroMatrix(int raw, int column) {
-        float[][] m = new float[column][raw];
-        for (int i = 0; i < m.length; i++)
-            for (int j = 0; j < m[0].length; j++)
-                m[j][i] = 0.0f;
-        return m;
-    }*/
- /*public void setZeroMatrix() {
-        this.matrix = Matrix.getZeroMatrix(matrix.length, matrix[0].length);
-    }*/

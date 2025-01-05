@@ -1,6 +1,4 @@
-package com.cgvsu.math.vector;
-
-import ru.vsu.cs.CG2024.RAA.task3.matrix.Matrix4f;
+package com.cgvsu.math;
 
 public class Vector4f implements Vector<Vector4f> {
     private float x;
@@ -116,9 +114,9 @@ public class Vector4f implements Vector<Vector4f> {
                         v.getZ() * m.getAt(0, 2) + v.getW() * m.getAt(0, 3),
                 v.getX() * m.getAt(1, 0) + v.getY() * m.getAt(1, 1) +
                         v.getZ() * m.getAt(1, 2) + v.getW() * m.getAt(1, 3),
-                v.getX() * m.getAt(2, 0) + v.getY() *  m.getAt(2, 1) +
-                        v.getZ() * m.getAt(2, 2) + v.getW() *  m.getAt(2, 3),
-                v.getX() *  m.getAt(3, 0) + v.getY() * m.getAt(3, 1) +
+                v.getX() * m.getAt(2, 0) + v.getY() * m.getAt(2, 1) +
+                        v.getZ() * m.getAt(2, 2) + v.getW() * m.getAt(2, 3),
+                v.getX() * m.getAt(3, 0) + v.getY() * m.getAt(3, 1) +
                         v.getZ() * m.getAt(3, 2) + v.getW() * m.getAt(3, 3));
     }
 

@@ -1,4 +1,4 @@
-package com.cgvsu.math.vector;
+package com.cgvsu.math;
 
 public interface Vector<T> {
     float eps = 1e-7f;

@@ -1,4 +1,4 @@
-package ru.vsu.cs.CG2024.RAA.task3.matrix;
+package com.cgvsu.math;
 
 public class Matrix4f extends Matrix {
     public Matrix4f(float[][] matrix) {
