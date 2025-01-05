@@ -1,5 +1,7 @@
 package com.cgvsu.model;
 
+import com.cgvsu.objreader.exceptions.FaceWordException;
+
 import java.util.ArrayList;
 
 public class Polygon {
@@ -40,5 +42,34 @@ public class Polygon {
 
     public ArrayList<Integer> getNormalIndices() {
         return normalIndices;
+    }
+    public boolean hasTexture() {
+        return !textureVertexIndices.isEmpty();
+    }
+    public void setLineIndex(int lineIndex) {
+        this.lineIndex = lineIndex;
+    }
+    private int lineIndex;
+    public void checkIndices(int verticesSize, int textureVerticesSize, int normalsSize) {
+        for (int i = 0; i < vertexIndices.size(); i++) {
+            int vertexIndex = vertexIndices.get(i);
+            if (vertexIndex >= verticesSize || vertexIndex < 0) {
+                throw new FaceWordException("vertex", lineIndex, i + 1);
+            }
+        }
+
+        for (int i = 0; i < textureVertexIndices.size(); i++) {
+            int textureVertexIndex = textureVertexIndices.get(i);
+            if (textureVertexIndex >= textureVerticesSize || textureVertexIndex < 0) {
+                throw new FaceWordException("texture vertex", lineIndex, i + 1);
+            }
+        }
+
+        for (int i = 0; i < normalIndices.size(); i++) {
+            int normalIndex = normalIndices.get(i);
+            if (normalIndex >= normalsSize || normalIndex < 0) {
+                throw new FaceWordException("normal", lineIndex, i + 1);
+            }
+        }
     }
 }
