@@ -97,10 +97,18 @@ public class Vector3f implements Vector<Vector3f> {
     }
 
     public void multiply(Matrix3f m) {
-        Vector3f v = multiply(this, m);
-        setX(v.getX());
-        setY(v.getY());
-        setZ(v.getZ());
+        x = x * m.getAt(0, 0) + y * m.getAt(0, 1) + z * m.getAt(0, 2);
+        y = x * m.getAt(1, 0) + y * m.getAt(1, 1) + z * m.getAt(1, 2);
+        z = x * m.getAt(2, 0) + y * m.getAt(2, 1) + z * m.getAt(2, 2);
+    }
+    public void multiply(Matrix4f m) {
+        x = x * m.getAt(0, 0) + y * m.getAt(0, 1) + z * m.getAt(0, 2)  + m.getAt(0, 3);
+        y = x * m.getAt(1, 0) + y * m.getAt(1, 1) + z * m.getAt(1, 2)  + m.getAt(1, 3);
+        z = x * m.getAt(2, 0) + y * m.getAt(2, 1) +z * m.getAt(2, 2) + m.getAt(2, 3);
+        float w = x * m.getAt(3, 0) + y * m.getAt(3, 1) + z * m.getAt(3, 2) + m.getAt(3, 3);
+        x = x/w;
+        y = y/w;
+        z = z/w;
     }
 
     public static Vector3f multiply(Vector3f v, Matrix3f m) {
@@ -130,6 +138,19 @@ public class Vector3f implements Vector<Vector3f> {
 
     public static Vector3f multiply(final Vector3f v, final float a) {
         return new Vector3f(v.getX() * a, v.getY() * a, v.getZ() * a);
+    }
+    public static Vector3f multiply(Vector3f v, Matrix4f m) {
+        Vector4f v1 =  new Vector4f(
+                v.getX() * m.getAt(0, 0) + v.getY() * m.getAt(0, 1) + v.getZ() * m.getAt(0, 2)
+                        + m.getAt(0, 3),
+                v.getX() * m.getAt(1, 0) + v.getY() * m.getAt(1, 1) + v.getZ() * m.getAt(1, 2)
+                        + m.getAt(1, 3),
+                v.getX() * m.getAt(2, 0) + v.getY() * m.getAt(2, 1) + v.getZ() * m.getAt(2, 2)
+                        + m.getAt(2, 3),
+                v.getX() * m.getAt(3, 0) + v.getY() * m.getAt(3, 1) + v.getZ() * m.getAt(3, 2)
+                        + m.getAt(3, 3)
+        );
+        return v1.getHomogeneous3f();
     }
 
 }
