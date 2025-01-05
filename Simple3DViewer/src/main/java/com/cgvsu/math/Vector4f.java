@@ -106,6 +106,25 @@ public class Vector4f implements Vector<Vector4f> {
         setZ(v.getZ());
         setW(v.getW());
     }
+    public void scale(float sx, float sy, float sz) {
+        AffineTransforms.scale(this, sx, sy, sz);
+    }
+
+    public void rotateX(float cos, float sin) {
+        AffineTransforms.rotateX(this, cos, sin);
+    }
+
+    public void rotateY(float cos, float sin) {
+        AffineTransforms.rotateX(this, cos, sin);
+    }
+
+    public void rotateZ(float cos, float sin) {
+        AffineTransforms.rotateX(this, cos, sin);
+    }
+
+    public void translate(float tx, float ty, float tz) {
+        AffineTransforms.translate(this, tx, ty, tz);
+    }
 
     public static Vector4f multiply(Vector4f v, Matrix4f m) {
         float[][] matrix = m.getMatrix();
