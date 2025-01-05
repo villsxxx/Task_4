@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -85,6 +86,29 @@ public class GuiController {
 
         }
     }
+    @FXML
+    private void onSaveModelClick() {
+        if (mesh == null) {
+            System.out.println("No model to save.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Model");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
+
+        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+        if (file != null) {
+            try {
+                ObjWriter writer = new ObjWriter();
+                writer.write(mesh, file.getAbsolutePath());
+                System.out.println("Model saved successfully!");
+            } catch (Exception e) {
+                System.err.println("Failed to save model: " + e.getMessage());
+            }
+        }
+    }
+
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
