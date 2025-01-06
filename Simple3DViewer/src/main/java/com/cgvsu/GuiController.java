@@ -41,10 +41,49 @@ public class GuiController {
 
     private Timeline timeline;
 
+
+    private double lastMouseX; // Последняя X-координата мыши
+    private double lastMouseY; // Последняя Y-координата мыши
+    private static final float MOUSE_SENSITIVITY = 0.1f;
+
+
     @FXML
     private void initialize() {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+
+        // Обработка нажатия мыши
+        canvas.setOnMousePressed(event -> {
+            lastMouseX = event.getSceneX();
+            lastMouseY = event.getSceneY();
+        });
+
+        // Обработка перемещения мыши
+        canvas.setOnMouseDragged(event -> {
+            double currentMouseX = event.getSceneX();
+            double currentMouseY = event.getSceneY();
+
+            // Вычисляем разницу
+            double deltaX = currentMouseX - lastMouseX;
+            double deltaY = currentMouseY - lastMouseY;
+
+            // Двигаем камеру в зависимости от направления
+            camera.movePosition(new Vector3f(
+                    (float) -deltaX * MOUSE_SENSITIVITY,
+                    (float) deltaY * MOUSE_SENSITIVITY,
+                    0
+            ));
+
+            // Запоминаем текущие координаты мыши
+            lastMouseX = currentMouseX;
+            lastMouseY = currentMouseY;
+        });
+        canvas.setOnScroll(event -> {
+            double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)
+
+            // Двигаем камеру вперед или назад в зависимости от направления
+            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
+        });
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -75,17 +114,15 @@ public class GuiController {
         if (file == null) {
             return;
         }
-
         Path fileName = Path.of(file.getAbsolutePath());
-
         try {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
             // todo: обработка ошибок
         } catch (IOException exception) {
-
         }
     }
+
     @FXML
     private void onSaveModelClick() {
         if (mesh == null) {
