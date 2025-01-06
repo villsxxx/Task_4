@@ -5,12 +5,10 @@ import com.cgvsu.math.*;
 public class GraphicConveyor {
 
     public static Matrix4f rotateScaleTranslate() {
-        float[][] matrix = new float[][]{
-                {10, 0, 0, 0},
-                {0, 10, 0, 0},
-                {0, 0, 10, 0},
-                {0, 0, 0, 1}};
-        return new Matrix4f(matrix);
+        Matrix4f matrix = AffineTransforms.scale(10, 10, 10);
+        matrix.multiply(AffineTransforms.rotateX(0, 0));
+        matrix.multiply(AffineTransforms.translate(0, 0, 0));
+        return  matrix;
     }
 
     public static Matrix4f lookAt(Vector3f eye, Vector3f target) {

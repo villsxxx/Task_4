@@ -42,4 +42,5 @@ public class Matrix4f extends Matrix {
     public static Matrix4f transpose(Matrix4f m) {
         return new Matrix4f(Matrix.transpose(m.getMatrix()));
     }
+
 }
