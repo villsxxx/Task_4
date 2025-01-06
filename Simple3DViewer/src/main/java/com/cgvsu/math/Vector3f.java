@@ -121,19 +121,23 @@ public class Vector3f implements Vector<Vector3f> {
     public static float dot(final Vector3f v1, final Vector3f v2) {
         return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
     }
+    public float dot(final Vector3f v2) {
+        return x * v2.getX() + y * v2.getY() + z * v2.getZ();
+    }
+
 
     public static Vector3f cross(final Vector3f v1, final Vector3f v2) {
         return new Vector3f(v1.getY() * v2.getZ() - v1.getZ() * v2.getY(),
-                v1.getX() * v2.getZ() - v1.getZ() * v2.getX(),
+                v2.getX() * v1.getZ() - v2.getZ() * v1.getX(),
                 v1.getX() * v2.getY() - v1.getY() * v2.getX());
     }
 
     public static Vector3f add(final Vector3f v1, final Vector3f v2) {
-        return new Vector3f(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getY());
+        return new Vector3f(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
     }
 
     public static Vector3f subtract(final Vector3f v1, final Vector3f v2) {
-        return new Vector3f(v1.getX() - v2.getX(), v1.getY() - v2.getY(), v1.getZ() - v2.getY());
+        return new Vector3f(v1.getX() - v2.getX(), v1.getY() - v2.getY(), v1.getZ() - v2.getZ());
     }
 
     public static Vector3f multiply(final Vector3f v, final float a) {

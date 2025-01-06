@@ -107,9 +107,9 @@ public class Vector4f implements Vector<Vector4f> {
         setW(v.getW());
     }
     public Vector3f getHomogeneous3f(){
-        if (w == 0){
-            throw new RuntimeException("can not create homogeneous vector - coordinates are infinity");
-        }
+//        if (w == 0){
+//            throw new RuntimeException("can not create homogeneous vector - coordinates are infinity");
+//        }
         return new Vector3f(x/w, y/w, z/w);
     }
     public void scale(float sx, float sy, float sz) {
