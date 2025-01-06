@@ -26,7 +26,9 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
 
     @FXML
-    AnchorPane anchorPane;
+    AnchorPane mainPane;
+    @FXML
+    AnchorPane centerPane;
 
     @FXML
     private Canvas canvas;
@@ -40,10 +42,51 @@ public class GuiController {
 
     private Timeline timeline;
 
+
+    private double lastMouseX; // Последняя X-координата мыши
+    private double lastMouseY; // Последняя Y-координата мыши
+    private static final float MOUSE_SENSITIVITY = 0.1f;
+
+
     @FXML
     private void initialize() {
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+        //centerPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        canvas.widthProperty().bind(centerPane.widthProperty()); // Вычитаем ширину боковой панели
+        canvas.heightProperty().bind(centerPane.heightProperty());
+
+        // Обработка нажатия мыши
+        canvas.setOnMousePressed(event -> {
+            lastMouseX = event.getSceneX();
+            lastMouseY = event.getSceneY();
+        });
+
+        // Обработка перемещения мыши
+        canvas.setOnMouseDragged(event -> {
+            double currentMouseX = event.getSceneX();
+            double currentMouseY = event.getSceneY();
+
+            // Вычисляем разницу
+            double deltaX = currentMouseX - lastMouseX;
+            double deltaY = currentMouseY - lastMouseY;
+
+            // Двигаем камеру в зависимости от направления
+            camera.movePosition(new Vector3f(
+                    (float) -deltaX * MOUSE_SENSITIVITY,
+                    (float) deltaY * MOUSE_SENSITIVITY,
+                    0
+            ));
+
+            // Запоминаем текущие координаты мыши
+            lastMouseX = currentMouseX;
+            lastMouseY = currentMouseY;
+        });
+        canvas.setOnScroll(event -> {
+            double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)
+
+            // Двигаем камеру вперед или назад в зависимости от направления
+            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
+        });
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -74,17 +117,41 @@ public class GuiController {
         if (file == null) {
             return;
         }
-
         Path fileName = Path.of(file.getAbsolutePath());
-
         try {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
             // todo: обработка ошибок
         } catch (IOException exception) {
-
         }
     }
+<<<<<<< HEAD
+
+    @FXML
+    private void onSaveModelClick() {
+        if (mesh == null) {
+            System.out.println("No model to save.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Model");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
+
+        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+        if (file != null) {
+            try {
+                ObjWriter writer = new ObjWriter();
+                writer.write(mesh, file.getAbsolutePath());
+                System.out.println("Model saved successfully!");
+            } catch (Exception e) {
+                System.err.println("Failed to save model: " + e.getMessage());
+            }
+        }
+    }
+
+=======
+>>>>>>> 519ca71706cf24b765a064dbdebaedaf63659657
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
