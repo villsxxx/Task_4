@@ -17,10 +17,11 @@ public interface Vector<T> {
 
     boolean isZero();
     void print();
-
     default void normalize() {
         if (!isZero()) {
             multiply(1 / getLength());
         }
     }
+
+
 }
