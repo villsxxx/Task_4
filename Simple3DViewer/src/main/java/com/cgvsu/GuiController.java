@@ -27,7 +27,9 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
 
     @FXML
-    AnchorPane anchorPane;
+    AnchorPane mainPane;
+    @FXML
+    AnchorPane centerPane;
 
     @FXML
     private Canvas canvas;
@@ -49,8 +51,10 @@ public class GuiController {
 
     @FXML
     private void initialize() {
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+        //centerPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        canvas.widthProperty().bind(centerPane.widthProperty()); // Вычитаем ширину боковой панели
+        canvas.heightProperty().bind(centerPane.heightProperty());
 
         // Обработка нажатия мыши
         canvas.setOnMousePressed(event -> {

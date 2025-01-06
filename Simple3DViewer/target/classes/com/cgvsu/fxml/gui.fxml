@@ -5,8 +5,8 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="998.0" prefWidth="1566.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
-   <BorderPane layoutX="-1.0" prefHeight="1027.0" prefWidth="1188.0">
+<AnchorPane fx:id="mainPane" prefHeight="998.0" prefWidth="1566.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
+   <BorderPane focusTraversable="true" layoutX="-1.0" prefHeight="1027.0" prefWidth="1566.0">
       <top>
           <MenuBar prefHeight="21.0" prefWidth="1181.0" BorderPane.alignment="CENTER">
               <Menu mnemonicParsing="false" text="File">
@@ -55,8 +55,41 @@
               </Menu>
           </MenuBar>
       </top>
+      <right>
+         <TabPane prefHeight="1002.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+           <tabs>
+             <Tab text="Модель">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                           <ListView prefHeight="200.0" prefWidth="400.0" />
+                           <CheckBox layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Показать сетку" />
+                           <CheckBox layoutX="14.0" layoutY="247.0" mnemonicParsing="false" text="Подгрузить текстуру" />
+                           <TextField layoutX="14.0" layoutY="311.0" prefHeight="25.0" prefWidth="232.0" />
+                           <Button layoutX="256.0" layoutY="311.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Удалить" />
+                           <Label layoutX="14.0" layoutY="278.0" prefHeight="25.0" prefWidth="231.0" text="Введите индексы вершин для удаления" />
+                        </children></AnchorPane>
+               </content>
+             </Tab>
+             <Tab text="Камера">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+             </Tab>
+             <Tab text="Свет">
+               <content>
+                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+           </tabs>
+         </TabPane>
+      </right>
       <center>
-          <Canvas fx:id="canvas" height="764.0" width="942.0" BorderPane.alignment="CENTER_LEFT" />
+         <AnchorPane fx:id="centerPane" BorderPane.alignment="CENTER">
+            <children>
+                <Canvas fx:id="canvas" height="600.0" width="600.0" />
+            </children>
+         </AnchorPane>
       </center>
    </BorderPane>
 </AnchorPane>
