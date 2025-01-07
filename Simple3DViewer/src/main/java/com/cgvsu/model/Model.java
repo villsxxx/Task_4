@@ -1,15 +1,42 @@
 package com.cgvsu.model;
+import com.cgvsu.math.AffineTransforms;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.math.Vector2f;
+import com.cgvsu.math.Matrix4f;
+import com.cgvsu.render_engine.Transformation;
 import java.util.*;
 
-public class Model {
+import static com.cgvsu.render_engine.GraphicConveyor.vertexToPoint;
 
+public class Model {
     public ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
     public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
     private ArrayList<Group> groups = new ArrayList<>();
+    private Transformation transformation = new Transformation(
+            AffineTransforms.scale(1, 1, 1),
+            AffineTransforms.rotateY(0, 0),
+            AffineTransforms.translate(0, 0, 0)
+    );
+    public Model(){
+
+    }
+
+    public Model(ArrayList<Vector3f> vertices, ArrayList<Vector2f> textureVertices, ArrayList<Vector3f> normals,
+                 ArrayList<Polygon> polygons, ArrayList<Group> groups, Transformation transformation) {
+        this.vertices = vertices;
+        this.textureVertices = textureVertices;
+        this.normals = normals;
+        this.polygons = polygons;
+        this.groups = groups;
+        this.transformation = transformation;
+    }
+
+    public Model(ArrayList<Vector3f> vertices, ArrayList<Vector2f> textureVertices, ArrayList<Vector3f> normals,
+                 ArrayList<Polygon> polygons, ArrayList<Group> groups ){
+    }
+
 
     public void addVertex(Vector3f vertex) {
         vertices.add(vertex);
@@ -70,4 +97,26 @@ public class Model {
     public ArrayList<Group> getGroups() {
         return groups;
     }
+
+    public Transformation getTransformation() {
+        return transformation;
+    }
+
+    public Model getModelWithTransformations(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getTransformation());
+            transformVertices.add(vertex);
+        }
+        ArrayList<Vector3f> transformNormals = new ArrayList<>();
+        for (int i = 0; i < normals.size(); i++) {
+            Vector3f vertex = normals.get(i);
+            vertex.multiply(transformation.getTransformation());
+            transformNormals.add(vertex);
+        }
+        return new Model(transformVertices,textureVertices,transformNormals,
+                 polygons, groups, transformation);
+    }
+
 }

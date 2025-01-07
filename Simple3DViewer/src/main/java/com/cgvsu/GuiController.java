@@ -2,12 +2,16 @@ package com.cgvsu;
 
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.render_engine.Transformation;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -16,11 +20,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
+
 import com.cgvsu.math.*;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
+
+import static com.cgvsu.render_engine.GraphicConveyor.vertexToPoint;
 
 public class GuiController {
 
@@ -37,16 +45,26 @@ public class GuiController {
     private Model mesh = null;
 
     private Camera camera = new Camera(
-            new Vector3f(0, 00, 100),
+            new Vector3f(0, 0, 100),
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100);
+    private Transformation transformation = new Transformation(
+            AffineTransforms.scale(1, 1, 1),
+            AffineTransforms.rotateY(0, 0),
+            AffineTransforms.translate(0, 0, 0)
+    );
 
     private Timeline timeline;
-
-
     private double lastMouseX; // Последняя X-координата мыши
     private double lastMouseY; // Последняя Y-координата мыши
     private static final float MOUSE_SENSITIVITY = 0.1f;
+    @FXML
+    private TextField textScale;
+    @FXML
+    private TextField textRotate;
+    @FXML
+    private CheckBox boxSave;
+
 
 
     @FXML
@@ -100,12 +118,15 @@ public class GuiController {
             camera.setAspectRatio((float) (width / height));
 
             if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, transformation, (int) width, (int) height);
             }
         });
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        textScale.setText("1, 1, 1");
+        textRotate.setText("0x, 0y, 0z");
     }
 
     @FXML
@@ -180,4 +201,22 @@ public class GuiController {
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {camera.movePosition(new Vector3f(0, -TRANSLATION, 0));}
+
+    @FXML
+    private void scale(ActionEvent event) {
+        String s = textScale.getText();
+        String[] koef =  s.split("[,\\s]+");
+        mesh.getTransformation().setScale(AffineTransforms.scale( Float.parseFloat(koef[0]), Float.parseFloat(koef[1]), Float.parseFloat(koef[2])));
+        if(boxSave.isSelected()){
+            mesh = mesh.getModelWithTransformations();
+        }
+    }
+
+    @FXML
+    private void rotate(ActionEvent event) {
+        String s = textScale.getText();
+        String[] koef =  s.split("[,\\s]+");
+        //mesh.getTransformation().setScale(AffineTransforms.scale( Float.parseFloat(koef[0]), Float.parseFloat(koef[1]), Float.parseFloat(koef[2])));
+
+    }
 }

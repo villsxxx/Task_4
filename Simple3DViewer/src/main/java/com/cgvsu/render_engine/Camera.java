@@ -1,7 +1,12 @@
 package com.cgvsu.render_engine;
 import com.cgvsu.math.*;
 public class Camera {
-
+    private Vector3f position;
+    private Vector3f target;
+    private float fov;
+    private float aspectRatio;
+    private float nearPlane;
+    private float farPlane;
     public Camera(
             final Vector3f position,
             final Vector3f target,
@@ -53,10 +58,4 @@ public class Camera {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
 
-    private Vector3f position;
-    private Vector3f target;
-    private float fov;
-    private float aspectRatio;
-    private float nearPlane;
-    private float farPlane;
 }
