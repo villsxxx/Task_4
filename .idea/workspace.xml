@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a82a1b07-a9f9-4755-915e-836e050d7292" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/c/dc803e70535b375dab52c5a8cd08c09c7fc029bf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/c/dc803e70535b375dab52c5a8cd08c09c7fc029bf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/cgvsu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/cgvsu.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Matrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Matrix.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/WordType.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/WordType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/FaceWordException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/FaceWordException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ObjReaderException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ObjReaderException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ParsingException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ParsingException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/module-info.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="interface" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2rJgjCGZi1Lz6upNTMlaYbGI1bs" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/IdeaProjects/task4"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a82a1b07-a9f9-4755-915e-836e050d7292" name="Changes" comment="" />
+      <created>1736282725367</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1736282725367</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

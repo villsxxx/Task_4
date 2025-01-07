@@ -202,7 +202,7 @@ public class ObjReader {
 
 		polygon.setVertexIndices(vertexIndices);
 		polygon.setTextureVertexIndices(textureVertexIndices);
-		polygon.setNormalIndices(normalIndices);
+		//polygon.setNormalIndices(normalIndices);
 		polygon.setLineIndex(lineInd);
 
 		return polygon;

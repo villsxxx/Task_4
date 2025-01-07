@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
 import javafx.scene.control.ListView;
-import javax.vecmath.Vector3f;
+import com.cgvsu.math.*;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;

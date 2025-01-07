@@ -30,14 +30,14 @@ public class Polygon {
         }
         this.textureVertexIndices = textureVertexIndices;
     }
-
+/*
     public void setNormalIndices(ArrayList<Integer> normalIndices) {
         if (normalIndices.size() < 3) {
             throw new IllegalArgumentException("Полигон должен иметь хотя бы 3 нормали.");
         }
         this.normalIndices = normalIndices;
     }
-
+*/
     public ArrayList<Integer> getVertexIndices() {
         return vertexIndices;
     }
