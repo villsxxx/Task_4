@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.TL.Texture;
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -30,6 +32,11 @@ public class GuiController {
     AnchorPane mainPane;
     @FXML
     AnchorPane centerPane;
+
+    @FXML
+    private CheckBox textyre;
+
+    private Texture texture; // Добавляем поле для хранения текстуры.
 
     @FXML
     private Canvas canvas;
@@ -148,6 +155,40 @@ public class GuiController {
             } catch (Exception e) {
                 System.err.println("Failed to save model: " + e.getMessage());
             }
+        }
+    }
+
+    @FXML
+    private void handleTextureCheckbox() {
+        if (textyre.isSelected()) {
+            onLoadTextureMenuItemClick(); // Вызовите метод загрузки текстуры
+        } else {
+            // Если чекбокс снят, очищаем текстуру у вашего объекта
+            if (mesh != null) {
+                mesh.getTexture(); // Предполагается, что у класса Model есть метод clearTexture
+                System.out.println("Texture cleared.");
+            }
+        }
+    }
+
+    private void onLoadTextureMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files (*.png, *.jpg)", "*.png", "*.jpg"));
+        fileChooser.setTitle("Load Texture");
+
+        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        try {
+            Texture texture = new Texture(file.getAbsolutePath()); // Загрузка текстуры из файла
+            if (mesh != null) {
+                mesh.setTexture(texture); // Применение текстуры к модели
+                System.out.println("Texture loaded successfully!");
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading texture: " + e.getMessage());
         }
     }
 

@@ -65,5 +65,9 @@ public class PolygonRasterizerTest {
         float[][] zBuffer = rasterizer.zBuffer;
         assertTrue(zBuffer[3][3] > Float.NEGATIVE_INFINITY); // Z значение для точки внутри треугольника
         assertTrue(zBuffer[3][2] > Float.NEGATIVE_INFINITY); // Z значение для крайнего нижнего пикселя
+
+        // Проверка Z-значений вне треугольника
+        assertEquals(Float.NEGATIVE_INFINITY, zBuffer[0][0]); // Пиксель вне треугольника
+        assertEquals(Float.NEGATIVE_INFINITY, zBuffer[8][8]); // Пиксель вне треугольника
     }
 }

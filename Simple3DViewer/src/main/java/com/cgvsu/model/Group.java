@@ -14,6 +14,10 @@ public class Group {
         polygons.add(polygon);
     }
 
+    public boolean removePolygon(Polygon polygon) {
+        return polygons.remove(polygon);
+    }
+
     public String getName() {
         return name;
     }
@@ -24,5 +28,21 @@ public class Group {
 
     public int getPolygonsSize() {
         return polygons.size();
+    }
+
+    public int getTotalVertexCount() {
+        int count = 0;
+        for (Polygon polygon : polygons) {
+            count += polygon.getVertexIndices().size();
+        }
+        return count;
+    }
+
+    public int getTotalNormalsCount() {
+        int count = 0;
+        for (Polygon polygon : polygons) {
+            count += polygon.getNormalIndices().size();
+        }
+        return count;
     }
 }
