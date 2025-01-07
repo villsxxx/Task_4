@@ -1,0 +1,19 @@
+
+r	java:S116"VRename this field "TRANSLATION" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Öãõ€8Œú¹€Ä2
+>
+java:S1170"!Make this final field static too.(Öãõ€8ú¹€Ä2
+t
+java:S1450,"WRemove the "timeline" field and declare it as a local variable in the relevant methods.(›ŸòÃ8ú¹€Ä2
+b
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(Öãõ€8ú¹€Ä2
+]	java:S1256"<This block of commented-out lines of code should be removed.(–À§÷øÿÿÿÿ8‘ú¹€Ä2
+E
+java:S1905u"(Remove this unnecessary cast to "Stage".(Ü’î¨8—ú¹€Ä2
+O
+java:S1135}"2Complete the task associated to this TODO comment.(¸Ôƒ×8˜ú¹€Ä2
+E	java:S108~")Either remove or fill this block of code.(×¬œÓ8˜ú¹€Ä2
+H	java:S106…"+Replace this use of System.out by a logger.(Œ¤Á´8™ú¹€Ä2
+F
+java:S1905"(Remove this unnecessary cast to "Stage".(Òßï8šú¹€Ä2
+G	java:S106’"+Replace this use of System.out by a logger.(Ğ¥ =8›ú¹€Ä2
+M	java:S106”"+Replace this use of System.err by a logger.(–Óıúÿÿÿÿ8œú¹€Ä2
