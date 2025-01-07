@@ -9,3 +9,11 @@ y
 ISimple3DViewer/src/main/java/com/cgvsu/render_engine/GraphicConveyor.java,2\9\29862f1f5d3778c764b417b9fa9164befb2ad639
 i
 9Simple3DViewer/src/main/java/com/cgvsu/GuiController.java,c\f\cf16f36b74465d43497f298466361790e883f096
+i
+9Simple3DViewer/src/main/java/com/cgvsu/math/Vector3f.java,6\8\686288d5aa485e6340385142a3505e62c3b0af18
+g
+7Simple3DViewer/src/main/java/com/cgvsu/math/Matrix.java,6\2\62c8521f2e33d8a123a7f9dc2c1b3115de6f8c6f
+p
+@Simple3DViewer/src/main/java/com/cgvsu/render_engine/Camera.java,5\2\526cf698d3a6c182749624cd9ce1250b66b7937c
+[
++src/main/java/com/cgvsu/Simple3DViewer.java,d\c\dc803e70535b375dab52c5a8cd08c09c7fc029bf
