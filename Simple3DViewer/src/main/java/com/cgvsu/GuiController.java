@@ -3,6 +3,7 @@ package com.cgvsu;
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
 import com.cgvsu.render_engine.Transformation;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -12,15 +13,21 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.cgvsu.math.*;
 
@@ -64,8 +71,6 @@ public class GuiController {
     private TextField textRotate;
     @FXML
     private CheckBox boxSave;
-
-
 
     @FXML
     private void initialize() {
@@ -127,8 +132,8 @@ public class GuiController {
 
         textScale.setText("1, 1, 1");
         textRotate.setText("0x, 0y, 0z");
-    }
 
+    }
     @FXML
     private void onOpenModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
@@ -173,7 +178,6 @@ public class GuiController {
     }
 
 
-
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
@@ -200,14 +204,17 @@ public class GuiController {
     }
 
     @FXML
-    public void handleCameraDown(ActionEvent actionEvent) {camera.movePosition(new Vector3f(0, -TRANSLATION, 0));}
+    public void handleCameraDown(ActionEvent actionEvent) {
+        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
+    }
 
     @FXML
     private void scale(ActionEvent event) {
         String s = textScale.getText();
-        String[] koef =  s.split("[,\\s]+");
-        mesh.getTransformation().setScale(AffineTransforms.scale( Float.parseFloat(koef[0]), Float.parseFloat(koef[1]), Float.parseFloat(koef[2])));
-        if(boxSave.isSelected()){
+        String[] coefficient = readCoefficients(s, "1", 3);
+        mesh.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),
+                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
+        if (boxSave.isSelected()) {
             mesh = mesh.getModelWithTransformations();
         }
     }
@@ -215,8 +222,29 @@ public class GuiController {
     @FXML
     private void rotate(ActionEvent event) {
         String s = textScale.getText();
-        String[] koef =  s.split("[,\\s]+");
+        String[] coefficient = s.split("[,\\s]+");
         //mesh.getTransformation().setScale(AffineTransforms.scale( Float.parseFloat(koef[0]), Float.parseFloat(koef[1]), Float.parseFloat(koef[2])));
 
+    }
+
+    private String[] readCoefficients(String coefficients, String defaultString, int n) {
+        String[] arr = coefficients.split("[,\\s]+");
+        String[] coefficient = new String[n];
+        if (arr.length == n) {
+            return arr;
+        }
+        if (arr.length < n){
+            for (int i = 0; i < arr.length; i++) {
+                coefficient[i] = arr[i];
+            }
+            for (int i = arr.length; i < n; i++) {
+                coefficient[i] = defaultString;
+            }
+        } else {
+            for (int i = 0; i < n; i++) {
+                coefficient[i] = arr[i];
+            }
+        }
+        return coefficient;
     }
 }

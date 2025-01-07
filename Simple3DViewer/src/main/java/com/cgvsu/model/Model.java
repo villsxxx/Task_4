@@ -109,13 +109,13 @@ public class Model {
             vertex.multiply(transformation.getTransformation());
             transformVertices.add(vertex);
         }
-        ArrayList<Vector3f> transformNormals = new ArrayList<>();
-        for (int i = 0; i < normals.size(); i++) {
-            Vector3f vertex = normals.get(i);
-            vertex.multiply(transformation.getTransformation());
-            transformNormals.add(vertex);
-        }
-        return new Model(transformVertices,textureVertices,transformNormals,
+//        ArrayList<Vector3f> transformNormals = new ArrayList<>();
+//        for (int i = 0; i < normals.size(); i++) {
+//            Vector3f vertex = normals.get(i);
+//            vertex.multiply(transformation.getTransformation());
+//            transformNormals.add(vertex);
+//        }
+        return new Model(transformVertices,textureVertices, normals,
                  polygons, groups, transformation);
     }
 
