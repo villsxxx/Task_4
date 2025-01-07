@@ -151,6 +151,27 @@ public class GuiController {
         }
     }
 
+    // Новый метод для загрузки текстуры
+    @FXML
+    private void onLoadTextureMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        fileChooser.setTitle("Load Texture");
+
+        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        if (file != null && mesh != null) {
+            try {
+                String texturePath = file.getAbsolutePath();
+                mesh.setTexture(texturePath); // Предполагается, что у класса Model есть метод setTexture
+                System.out.println("Texture loaded successfully!");
+            } catch (Exception e) {
+                System.err.println("Failed to load texture: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No model loaded or texture file not selected.");
+        }
+    }
+
 
 
     @FXML
