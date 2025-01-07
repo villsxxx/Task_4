@@ -8,7 +8,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -16,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import javafx.scene.control.ListView;
 import javax.vecmath.Vector3f;
 
 import com.cgvsu.model.Model;
@@ -33,6 +37,12 @@ public class GuiController {
 
     @FXML
     private Canvas canvas;
+
+    @FXML
+    private CheckBox grid;
+
+    @FXML
+    private ListView<String> modelList;
 
     private Model mesh = null;
 
@@ -96,7 +106,14 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
-            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.clearRect(0,0,width,height);
+            if(grid.isSelected()){
+
+                drawGrid(gc,width,height);
+            }
+            gc.setStroke(Color.BLACK);
+            //canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
             if (mesh != null) {
@@ -114,6 +131,8 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
+
+
         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
         if (file == null) {
             return;
@@ -122,6 +141,10 @@ public class GuiController {
         try {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
+            if (mesh !=null){
+                modelList.getItems().add(file.getName());
+            }
+
             // todo: обработка ошибок
         } catch (IOException exception) {
         }
@@ -149,6 +172,20 @@ public class GuiController {
             }
         }
     }
+
+     //простая сетка нужна другая
+    private void drawGrid(GraphicsContext gc, double w,double h){
+        gc.setStroke(Color.GREEN);
+        gc.setLineWidth(0.5);
+        double cellSize =50.0;
+        for(double x=0;x<w;x+=cellSize){
+            gc.strokeLine(x,0,x,h);
+        }
+        for(double y=0;y<w;y+=cellSize){
+            gc.strokeLine(0,y,w,y);
+        }
+    }
+
 
 
     @FXML
@@ -179,5 +216,8 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
+    }
+    @FXML
+    public void toggleGrid(ActionEvent actionEvent) {
     }
 }

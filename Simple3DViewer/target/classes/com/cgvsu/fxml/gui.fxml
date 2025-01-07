@@ -62,8 +62,8 @@
                <content>
                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
-                           <ListView prefHeight="200.0" prefWidth="400.0" />
-                           <CheckBox layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Показать сетку" />
+                           <ListView fx:id="modelList" prefHeight="200.0" prefWidth="400.0" />
+                           <CheckBox fx:id="grid" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Показать сетку" onAction="#toggleGrid" />
                            <CheckBox layoutX="14.0" layoutY="247.0" mnemonicParsing="false" text="Подгрузить текстуру" />
                            <TextField layoutX="14.0" layoutY="311.0" prefHeight="25.0" prefWidth="232.0" />
                            <Button layoutX="256.0" layoutY="311.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Удалить" />
@@ -87,7 +87,7 @@
       <center>
          <AnchorPane fx:id="centerPane" BorderPane.alignment="CENTER">
             <children>
-                <Canvas fx:id="canvas" height="600.0" width="600.0" />
+                <Canvas fx:id="canvas" height="1000.0" width="1200.0" />
             </children>
          </AnchorPane>
       </center>
