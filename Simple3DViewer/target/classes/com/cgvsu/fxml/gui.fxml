@@ -5,7 +5,7 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
-<<<<<<< HEAD
+
 <AnchorPane fx:id="mainPane" prefHeight="998.0" prefWidth="1566.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
    <BorderPane focusTraversable="true" layoutX="-1.0" prefHeight="1027.0" prefWidth="1566.0">
       <top>
@@ -94,7 +94,7 @@
       </center>
    </BorderPane>
 </AnchorPane>
-=======
+
 <AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
@@ -140,4 +140,4 @@
 
     <Canvas fx:id="canvas" width="1600" height="870" AnchorPane.topAnchor="30.0"/>
 </AnchorPane>
->>>>>>> 519ca71706cf24b765a064dbdebaedaf63659657
+

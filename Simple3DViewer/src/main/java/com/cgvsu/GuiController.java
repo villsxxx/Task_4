@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -125,7 +126,7 @@ public class GuiController {
         } catch (IOException exception) {
         }
     }
-<<<<<<< HEAD
+
 
     @FXML
     private void onSaveModelClick() {
@@ -150,8 +151,7 @@ public class GuiController {
         }
     }
 
-=======
->>>>>>> 519ca71706cf24b765a064dbdebaedaf63659657
+
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
