@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.Scene.SceneManager;
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
@@ -9,7 +10,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -19,12 +20,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
-import javafx.scene.control.ListView;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cgvsu.math.*;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
+
+import static com.cgvsu.ExceptionDialog.throwExceptionWindow;
 
 public class GuiController {
 
@@ -44,7 +49,13 @@ public class GuiController {
     @FXML
     private ListView<String> modelList;
 
-    private Model mesh = null;
+    //private SceneManager sceneManager = new SceneManager();
+    private Model selectedModel;
+    private List<Float> modelCenters = new ArrayList<>();
+    private float x = 0;
+    private float spacing = 5.0f;
+
+    private List<Model> models = new ArrayList<>();
 
     private Camera camera = new Camera(
             new Vector3f(0, 00, 100),
@@ -63,7 +74,7 @@ public class GuiController {
     private void initialize() {
         //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         //centerPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
-        canvas.widthProperty().bind(centerPane.widthProperty()); // Вычитаем ширину боковой панели
+        canvas.widthProperty().bind(centerPane.widthProperty());
         canvas.heightProperty().bind(centerPane.heightProperty());
 
         // Обработка нажатия мыши
@@ -116,8 +127,10 @@ public class GuiController {
             //canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+            if (models != null) {
+                for (Model mesh: models) {
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, models, (int) width, (int) height);
+                }
             }
         });
 
@@ -131,8 +144,6 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
-
-
         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
         if (file == null) {
             return;
@@ -140,36 +151,41 @@ public class GuiController {
         Path fileName = Path.of(file.getAbsolutePath());
         try {
             String fileContent = Files.readString(fileName);
-            mesh = ObjReader.read(fileContent);
-            if (mesh !=null){
-                modelList.getItems().add(file.getName());
+            addToModelsList(fileName);
+            Model newModel = ObjReader.read(fileContent);
+            if (newModel == null) {
+                throwExceptionWindow(ExceptionDialog.Operation.READING);
             }
+            selectedModel = newModel;
+            models.add(selectedModel);
+//!!!!! что то сделать
+            translateModel(newModel, x, 0, 0);
 
+            if (models.isEmpty()) {
+                newModel.selected = true;
+                selectedModel = newModel;
+            }
+            models.add(newModel);
+            modelCenters.add(x);
+            x += newModel.xSize + spacing;
+            modelList.getItems().add(file.getName());
             // todo: обработка ошибок
         } catch (IOException exception) {
+
         }
     }
 
     @FXML
     private void onSaveModelClick() {
-        if (mesh == null) {
-            System.out.println("No model to save.");
-            return;
-        }
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Model");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
 
         File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
         if (file != null) {
-            try {
-                ObjWriter writer = new ObjWriter();
-                writer.write(mesh, file.getAbsolutePath());
-                System.out.println("Model saved successfully!");
-            } catch (Exception e) {
-                System.err.println("Failed to save model: " + e.getMessage());
-            }
+            ObjWriter writer = new ObjWriter();
+            writer.write(selectedModel, file.getAbsolutePath());
+            //ObjWriter.write(selectedModel, file.getAbsolutePath());
         }
     }
 
@@ -185,7 +201,77 @@ public class GuiController {
             gc.strokeLine(0,y,w,y);
         }
     }
+/*
+    @FXML
+    private void updateModelList() {
+        List<String> modelNames = new ArrayList<>();
+        for (int i = 0; i < sceneManager.getModels().size(); i++) {
 
+            modelNames.add("Model " + (i + 1)); // Названия моделей (можно заменить на более осмысленные)
+        }
+        modelList.getItems().setAll(modelNames); // Обновляем ListView
+    }
+    @FXML
+    private void onModelSelected(){
+        int selectedIndex = modelList.getSelectionModel().getSelectedIndex();
+        if (selectedIndex >=0){
+            sceneManager.setActiveModel(selectedIndex);
+        }
+    }
+    @FXML
+    private void onRender() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Очищаем область рисования
+
+        sceneManager.renderAllModels(gc, camera, (int) canvas.getWidth(), (int) canvas.getHeight());
+    }*/
+
+
+    /*
+    !!!!!!!!!!!!!!!!!!!!!!!
+    */
+    private void translateModel(Model model, float tx, float ty, float tz) {
+        for (com.cgvsu.math.Vector3f vertex : model.getVertices()) {
+            // Преобразуем Vector3f в Vector4f, добавив однородную координату
+            Vector4f vertex4f = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1);
+
+            // Применяем трансляцию через AffineTransforms
+            AffineTransforms.translate(vertex4f, tx, ty, tz);
+
+            // Обновляем координаты в вершине модели
+            //vertex.setX(vertex4f.getX());
+            //vertex.setY(vertex4f.getY());
+            //vertex.setZ(vertex4f.getZ());
+        }
+    }
+
+    @FXML
+    private void addToModelsList(Path fileName) {
+        String name = fileName.toString();
+        MenuButton modelButton = new MenuButton(name.split("\\\\")[name.split("\\\\").length - 1]);
+        modelButton.setMinWidth(240);
+        modelButton.setMaxWidth(240);
+        CheckMenuItem polygonMeshShow = new CheckMenuItem("Полигональная сетка");
+        polygonMeshShow.setSelected(true);
+        CheckMenuItem textureShow = new CheckMenuItem("Текстура");
+        textureShow.setSelected(false);
+        CheckMenuItem lightingShow = new CheckMenuItem("Освещение");
+        lightingShow.setSelected(false);
+        RadioMenuItem pinCamera = new RadioMenuItem("Центрировать камеру");
+        pinCamera.setSelected(models.isEmpty());
+        int modelIndex = models.size();
+
+        //pinCamera.setOnAction(actionEvent -> setCameraTarget(modelIndex));
+
+        //camerasPinGroup.getToggles().add(camerasPinGroup.getToggles().size(), pinCamera);
+        modelButton.getItems().add(pinCamera);
+
+        modelButton.getItems().add(polygonMeshShow);
+        modelButton.getItems().add(textureShow);
+        modelButton.getItems().add(lightingShow);
+
+        //modelsMenuBox.getChildren().add(modelButton);
+    }
 
 
     @FXML

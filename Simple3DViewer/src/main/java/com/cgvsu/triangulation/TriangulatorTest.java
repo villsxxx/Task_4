@@ -1,9 +1,8 @@
-package com.cgvsu.triangulator;
+package com.cgvsu.triangulation;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.math.Vector3f;
-import com.cgvsu.triangulation.Triangulator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

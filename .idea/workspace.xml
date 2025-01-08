@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a82a1b07-a9f9-4755-915e-836e050d7292" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Task_4.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Task_4.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/c/dc803e70535b375dab52c5a8cd08c09c7fc029bf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/c/dc803e70535b375dab52c5a8cd08c09c7fc029bf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/cgvsu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/cgvsu.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Matrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Matrix.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderException.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/WordType.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/WordType.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" afterDir="false" />
@@ -41,24 +47,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Stacia/CG1project/new_main/Task_4/Simple3DViewer",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "last_opened_file_path": "D:/IdeaProjects/task4"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Stacia\CG1project\new_main\Task_4\Simple3DViewer" />
-    </key>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
