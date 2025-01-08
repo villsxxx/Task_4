@@ -1,7 +1,7 @@
 package com.cgvsu;
 
-import com.cgvsu.Scene.SceneManager;
 import com.cgvsu.obj_writer.ObjWriter;
+import com.cgvsu.reader.Reader;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -68,6 +68,15 @@ public class GuiController {
     private double lastMouseX; // Последняя X-координата мыши
     private double lastMouseY; // Последняя Y-координата мыши
     private static final float MOUSE_SENSITIVITY = 0.1f;
+
+    @FXML
+    private TextField textScale;
+    @FXML
+    private TextField textRotate;
+    @FXML
+    private TextField textTranslate;
+    @FXML
+    private CheckBox boxSave;
 
 
     @FXML
@@ -136,6 +145,10 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        textScale.setText("1, 1, 1");
+        textRotate.setText("0x, 0y, 0z");
+        textTranslate.setText("0 0 0");
     }
 
     @FXML
@@ -288,4 +301,42 @@ public class GuiController {
     @FXML
     public void toggleGrid(ActionEvent actionEvent) {
     }
+    @FXML
+    private void scale(ActionEvent event) {
+        String s = textScale.getText();
+        String[] coefficient = Reader.readNumbersInLine(s, "1", 3);
+        selectedModel.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),
+                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
+        if (boxSave.isSelected()) {
+            selectedModel = selectedModel.getModelWithTransformations();
+        }
+    }
+    @FXML
+    private void translate(ActionEvent event) {
+        String s = textTranslate.getText();
+        String[] coefficient = Reader.readNumbersInLine(s, "0", 3);
+        selectedModel.getTransformation().setTranslation(AffineTransforms.translate(Float.parseFloat(coefficient[0]),
+                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
+        if (boxSave.isSelected()) {
+            selectedModel = selectedModel.getModelWithTransformations();
+        }
+    }
+    @FXML
+    private void rotate(ActionEvent event) {
+        String s = textRotate.getText();
+        String[] coefficient = Reader.readNumbersInLineWithXYZ(s, "0");
+        double rotX = Float.parseFloat(coefficient[0]);
+        double rotY = Float.parseFloat(coefficient[1]);
+        double rotZ = Float.parseFloat(coefficient[2]);
+        selectedModel.getTransformation().setRotation(
+                AffineTransforms.rotateX(Math.cos(rotX), Math.sin(rotX)).getMultiplicationWith(
+                        AffineTransforms.rotateY(Math.cos(rotY), Math.sin(rotY)).getMultiplicationWith(
+                                AffineTransforms.rotateZ(Math.cos(rotZ), Math.sin(rotZ))
+                        )));
+        if (boxSave.isSelected()) {
+            selectedModel = selectedModel.getModelWithTransformations();
+        }
+    }
+
 }
+

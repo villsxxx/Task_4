@@ -18,7 +18,7 @@ public class Model {
     public float xSize = 0;
     private Transformation transformation = new Transformation(
             AffineTransforms.scale(1, 1, 1),
-            AffineTransforms.rotateY(0, 0),
+            AffineTransforms.rotateY(1, 0),
             AffineTransforms.translate(0, 0, 0)
     );
     public Model(){

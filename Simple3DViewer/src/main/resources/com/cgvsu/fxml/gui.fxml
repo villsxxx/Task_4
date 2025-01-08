@@ -68,6 +68,9 @@
                            <TextField layoutX="14.0" layoutY="311.0" prefHeight="25.0" prefWidth="232.0" />
                            <Button layoutX="256.0" layoutY="311.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Удалить" />
                            <Label layoutX="14.0" layoutY="278.0" prefHeight="25.0" prefWidth="231.0" text="Введите индексы вершин для удаления" />
+
+
+
                         </children></AnchorPane>
                </content>
              </Tab>

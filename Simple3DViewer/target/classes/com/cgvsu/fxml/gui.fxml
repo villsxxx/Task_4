@@ -68,6 +68,21 @@
                            <TextField layoutX="14.0" layoutY="311.0" prefHeight="25.0" prefWidth="232.0" />
                            <Button layoutX="256.0" layoutY="311.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Удалить" />
                            <Label layoutX="14.0" layoutY="278.0" prefHeight="25.0" prefWidth="231.0" text="Введите индексы вершин для удаления" />
+
+                            <Label layoutX="14.0" layoutY="350.0" prefHeight="25.0" prefWidth="300.0" text="Введите коэффициенты масштабирования:" />
+                            <TextField fx:id="textScale"  layoutX="14.0" layoutY="385.0" prefHeight="25.0" prefWidth="100.0" />
+                            <Button  fx:id="buttonScale" onAction="#scale" layoutX="114.0" layoutY="385.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Масштабировать" />
+                            <CheckBox  fx:id="boxSave" onAction="#rotate" layoutX="250.0" layoutY="385.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Сохранить" />
+
+
+                            <Label layoutX="14.0" layoutY="405.0" prefHeight="25.0" prefWidth="310.0" text="Введите углы поворота с указанием координатной оси:" />
+                            <TextField fx:id="textRotate"  layoutX="14.0" layoutY="435.0" prefHeight="25.0" prefWidth="232.0" />
+                            <Button  fx:id="buttonRotate" onAction="#rotate" layoutX="256.0" layoutY="435.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Повернуть" />
+
+                            <Label layoutX="14.0" layoutY="465.0" prefHeight="25.0" prefWidth="310.0" text="Введите перемещение:" />
+                            <TextField fx:id="textTranslate"  layoutX="14.0" layoutY="495.0" prefHeight="25.0" prefWidth="232.0" />
+                            <Button  fx:id="buttonTranslate" onAction="#translate" layoutX="256.0" layoutY="495.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Переместить" />
+
                         </children></AnchorPane>
                </content>
              </Tab>

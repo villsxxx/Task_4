@@ -5,7 +5,6 @@ import com.cgvsu.math.Matrix4f;
 public class Transformation {
     private Matrix4f scale;
     private Matrix4f rotation;
-
     private Matrix4f translation;
 
     public Transformation(
