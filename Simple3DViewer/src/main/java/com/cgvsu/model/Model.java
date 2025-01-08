@@ -111,4 +111,35 @@ public class Model {
                 polygons, groups, transformation);
     }
 
+    public Model getModelWithScale(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getScale());
+            transformVertices.add(vertex);
+        }
+        return new Model(transformVertices,textureVertices, normals,
+                polygons, groups, transformation);
+    }
+    public Model getModelWithTranslation(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getTranslation());
+            transformVertices.add(vertex);
+        }
+        return new Model(transformVertices,textureVertices, normals,
+                polygons, groups, transformation);
+    }
+    public Model getModelWithRotation(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getRotation());
+            transformVertices.add(vertex);
+        }
+        return new Model(transformVertices,textureVertices, normals,
+                polygons, groups, transformation);
+    }
+
 }

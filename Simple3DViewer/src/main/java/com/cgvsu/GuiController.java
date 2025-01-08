@@ -3,6 +3,8 @@ package com.cgvsu;
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.reader.Reader;
 import com.cgvsu.render_engine.RenderEngine;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -51,6 +53,7 @@ public class GuiController {
 
     //private SceneManager sceneManager = new SceneManager();
     private Model selectedModel;
+    private int index = 0;
     private List<Float> modelCenters = new ArrayList<>();
     private float x = 0;
     private float spacing = 5.0f;
@@ -76,7 +79,11 @@ public class GuiController {
     @FXML
     private TextField textTranslate;
     @FXML
-    private CheckBox boxSave;
+    private CheckBox boxSaveScale;
+    @FXML
+    private CheckBox boxSaveRotate;
+    @FXML
+    private CheckBox boxSaveTranslate;
 
 
     @FXML
@@ -149,6 +156,15 @@ public class GuiController {
         textScale.setText("1, 1, 1");
         textRotate.setText("0x, 0y, 0z");
         textTranslate.setText("0 0 0");
+
+        MultipleSelectionModel<String> modelsSelectionModel = modelList.getSelectionModel();
+        // устанавливаем слушатель для отслеживания изменений
+        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){
+            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
+                String item = modelsSelectionModel.getSelectedItem();
+                selectedModel = models.get(Character.getNumericValue(item.charAt(item.length() - 1)));
+            }
+        });
     }
 
     @FXML
@@ -178,7 +194,7 @@ public class GuiController {
             models.add(newModel);
             modelCenters.add(x);
             x += newModel.xSize + spacing;
-            modelList.getItems().add(file.getName());
+            modelList.getItems().add(file.getName() + " - " + (index++ + 1));
             // todo: обработка ошибок
         } catch (IOException exception) {
 
@@ -307,8 +323,8 @@ public class GuiController {
         String[] coefficient = Reader.readNumbersInLine(s, "1", 3);
         selectedModel.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),
                 Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
-        if (boxSave.isSelected()) {
-            selectedModel = selectedModel.getModelWithTransformations();
+        if (boxSaveScale.isSelected()) {
+            selectedModel = selectedModel.getModelWithScale();
         }
     }
     @FXML
@@ -317,8 +333,8 @@ public class GuiController {
         String[] coefficient = Reader.readNumbersInLine(s, "0", 3);
         selectedModel.getTransformation().setTranslation(AffineTransforms.translate(Float.parseFloat(coefficient[0]),
                 Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
-        if (boxSave.isSelected()) {
-            selectedModel = selectedModel.getModelWithTransformations();
+        if (boxSaveTranslate.isSelected()) {
+            selectedModel = selectedModel.getModelWithTranslation();
         }
     }
     @FXML
@@ -333,8 +349,8 @@ public class GuiController {
                         AffineTransforms.rotateY(Math.cos(rotY), Math.sin(rotY)).getMultiplicationWith(
                                 AffineTransforms.rotateZ(Math.cos(rotZ), Math.sin(rotZ))
                         )));
-        if (boxSave.isSelected()) {
-            selectedModel = selectedModel.getModelWithTransformations();
+        if (boxSaveRotate.isSelected()) {
+            selectedModel = selectedModel.getModelWithRotation();
         }
     }
 
