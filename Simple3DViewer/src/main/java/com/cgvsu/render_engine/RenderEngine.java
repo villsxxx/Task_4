@@ -71,14 +71,14 @@ public class RenderEngine {
             final int width,
             final int height) {
 
-        Matrix4f modelMatrix = rotateScaleTranslate(); // Индивидуальная матрица модели
+        Matrix4f modelMatrix =  model.getModelMatrix();
         Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
         Matrix4f modelViewProjectionMatrix = Matrix4f.createIdentityMatrix();
         modelViewProjectionMatrix.multiply(projectionMatrix);
         modelViewProjectionMatrix.multiply(viewMatrix);
-        //modelViewProjectionMatrix.multiply(modelMatrix);
+        modelViewProjectionMatrix.multiply(modelMatrix);
 
         final int nPolygons = model.polygons.size();
 

@@ -35,7 +35,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "last_opened_file_path": "C:/Users/Stacia/CG1project/new_main/Task_4/Simple3DViewer",
-    "project.structure.last.edited": "SDKs",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.45632184"
   }
@@ -49,6 +49,9 @@
       <recent name="com.cgvsu.objreader" />
       <recent name="com.cgvsu" />
       <recent name="com.cgvsu.triangulation" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.cgvsu.model" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">

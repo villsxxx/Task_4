@@ -1,4 +1,5 @@
 package com.cgvsu.model;
+import com.cgvsu.math.AffineTransforms;
 import com.cgvsu.math.Matrix4f;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.math.Vector2f;
@@ -11,10 +12,28 @@ public class Model {
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
     private ArrayList<Group> groups = new ArrayList<>();
+
     public boolean viewMesh = true;
     public boolean selected = false;
     public float xSize = 0;
+    private Transformation transformation = new Transformation(
+            AffineTransforms.scale(1, 1, 1),
+            AffineTransforms.rotateY(0, 0),
+            AffineTransforms.translate(0, 0, 0)
+    );
+    public Model(){
 
+    }
+
+    public Model(ArrayList<Vector3f> vertices, ArrayList<Vector2f> textureVertices, ArrayList<Vector3f> normals,
+                 ArrayList<Polygon> polygons, ArrayList<Group> groups, Transformation transformation) {
+        this.vertices = vertices;
+        this.textureVertices = textureVertices;
+        this.normals = normals;
+        this.polygons = polygons;
+        this.groups = groups;
+        this.transformation = transformation;
+    }
     public void addVertex(Vector3f vertex) {
         vertices.add(vertex);
     }
@@ -74,18 +93,22 @@ public class Model {
     public ArrayList<Group> getGroups() {
         return groups;
     }
-
-    private Matrix4f modelMatrix = Matrix4f.createIdentityMatrix(); // Матрица модели
-
+    public Transformation getTransformation() {
+        return transformation;
+    }
     public Matrix4f getModelMatrix() {
-        return modelMatrix;
+        return transformation.getTransformation();
     }
 
-    public void setModelMatrix(Matrix4f modelMatrix) {
-        this.modelMatrix = modelMatrix;
+    public Model getModelWithTransformations(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getTransformation());
+            transformVertices.add(vertex);
+        }
+        return new Model(transformVertices,textureVertices, normals,
+                polygons, groups, transformation);
     }
 
-    public void applyTransformation(Matrix4f transformation) {
-        this.modelMatrix = this.modelMatrix.getMultiplicationWith(transformation);
-    }
 }

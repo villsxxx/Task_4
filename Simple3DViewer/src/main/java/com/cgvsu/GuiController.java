@@ -158,9 +158,6 @@ public class GuiController {
             }
             selectedModel = newModel;
             models.add(selectedModel);
-//!!!!! что то сделать
-            translateModel(newModel, x, 0, 0);
-
             if (models.isEmpty()) {
                 newModel.selected = true;
                 selectedModel = newModel;
@@ -230,21 +227,6 @@ public class GuiController {
     /*
     !!!!!!!!!!!!!!!!!!!!!!!
     */
-    private void translateModel(Model model, float tx, float ty, float tz) {
-        for (com.cgvsu.math.Vector3f vertex : model.getVertices()) {
-            // Преобразуем Vector3f в Vector4f, добавив однородную координату
-            Vector4f vertex4f = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1);
-
-            // Применяем трансляцию через AffineTransforms
-            AffineTransforms.translate(vertex4f, tx, ty, tz);
-
-            // Обновляем координаты в вершине модели
-            //vertex.setX(vertex4f.getX());
-            //vertex.setY(vertex4f.getY());
-            //vertex.setZ(vertex4f.getZ());
-        }
-    }
-
     @FXML
     private void addToModelsList(Path fileName) {
         String name = fileName.toString();
