@@ -1,4 +1,5 @@
 package com.cgvsu.model;
+import com.cgvsu.math.Matrix4f;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.math.Vector2f;
 import java.util.*;
@@ -10,6 +11,9 @@ public class Model {
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
     private ArrayList<Group> groups = new ArrayList<>();
+    public boolean viewMesh = true;
+    public boolean selected = false;
+    public float xSize = 0;
 
     public void addVertex(Vector3f vertex) {
         vertices.add(vertex);
@@ -69,5 +73,19 @@ public class Model {
     }
     public ArrayList<Group> getGroups() {
         return groups;
+    }
+
+    private Matrix4f modelMatrix = Matrix4f.createIdentityMatrix(); // Матрица модели
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public void setModelMatrix(Matrix4f modelMatrix) {
+        this.modelMatrix = modelMatrix;
+    }
+
+    public void applyTransformation(Matrix4f transformation) {
+        this.modelMatrix = this.modelMatrix.getMultiplicationWith(transformation);
     }
 }

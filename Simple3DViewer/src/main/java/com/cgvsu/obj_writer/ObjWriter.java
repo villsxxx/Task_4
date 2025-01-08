@@ -2,16 +2,18 @@ package com.cgvsu.obj_writer;
 
 
 
+import com.cgvsu.ExceptionDialog;
 import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 public class ObjWriter {
     private static final String OBJ_VERTEX_TOKEN = "v";
@@ -99,4 +101,5 @@ public class ObjWriter {
     private int getFormattedIndex(List<Integer> indices, int index) {
         return indices.get(index) + 1;
     }
+
 }
