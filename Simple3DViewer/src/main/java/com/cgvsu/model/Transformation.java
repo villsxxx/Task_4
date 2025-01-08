@@ -1,8 +1,12 @@
 package com.cgvsu.model;
 
+import com.cgvsu.math.AffineTransforms;
 import com.cgvsu.math.Matrix4f;
 
 public class Transformation {
+    private static final Matrix4f DEFAULT_SCALE = AffineTransforms.scale(1, 1, 1);
+    private static final Matrix4f DEFAULT_ROTATION = AffineTransforms.rotateY(1, 0);
+    private static final Matrix4f DEFAULT_TRANSLATION = AffineTransforms.translate(0, 0, 0);
     private Matrix4f scale;
     private Matrix4f rotation;
     private Matrix4f translation;
@@ -36,7 +40,20 @@ public class Transformation {
     public Matrix4f getTransformation(){
         return translation.getMultiplicationWith(rotation).getMultiplicationWith(scale);
     }
-
-
-
-}
+    public static Transformation getDefaultTransformation() {
+        return new Transformation(
+                DEFAULT_SCALE,
+                DEFAULT_ROTATION,
+                DEFAULT_TRANSLATION
+        );
+    }
+    public Transformation getWithDefaultScale() {
+        return new Transformation(DEFAULT_SCALE, this.rotation, this.translation);
+    }
+    public Transformation getWithDefaultRotation() {
+        return new Transformation(this.scale, DEFAULT_ROTATION, this.translation);
+    }
+    public Transformation getWithDefaultTranslation() {
+        return new Transformation(this.scale, this.rotation, DEFAULT_TRANSLATION);
+    }
+    }

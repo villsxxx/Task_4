@@ -16,11 +16,7 @@ public class Model {
     public boolean viewMesh = true;
     public boolean selected = false;
     public float xSize = 0;
-    private Transformation transformation = new Transformation(
-            AffineTransforms.scale(1, 1, 1),
-            AffineTransforms.rotateY(1, 0),
-            AffineTransforms.translate(0, 0, 0)
-    );
+    private Transformation transformation = Transformation.getDefaultTransformation();
     public Model(){
 
     }
@@ -108,18 +104,38 @@ public class Model {
             transformVertices.add(vertex);
         }
         return new Model(transformVertices,textureVertices, normals,
-                polygons, groups, transformation);
+                polygons, groups, Transformation.getDefaultTransformation());
     }
-
-    public Model getModelWithScale(){
+    public void saveScale(){
         ArrayList<Vector3f> transformVertices = new ArrayList<>();
         for (int i = 0; i < vertices.size(); i++) {
             Vector3f vertex = vertices.get(i);
             vertex.multiply(transformation.getScale());
             transformVertices.add(vertex);
         }
-        return new Model(transformVertices,textureVertices, normals,
-                polygons, groups, transformation);
+        vertices = transformVertices;
+        transformation = transformation.getWithDefaultScale();
+    }
+    public void saveTranslation(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getTranslation());
+            transformVertices.add(vertex);
+        }
+        vertices = transformVertices;
+        transformation = transformation.getWithDefaultTranslation();
+    }
+    public void saveRotation(){
+        Transformation oldTransformation = transformation;
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getRotation());
+            transformVertices.add(vertex);
+        }
+        vertices = transformVertices;
+        transformation = transformation.getWithDefaultRotation();
     }
     public Model getModelWithTranslation(){
         ArrayList<Vector3f> transformVertices = new ArrayList<>();
@@ -129,9 +145,10 @@ public class Model {
             transformVertices.add(vertex);
         }
         return new Model(transformVertices,textureVertices, normals,
-                polygons, groups, transformation);
+                polygons, groups, transformation.getWithDefaultTranslation());
     }
     public Model getModelWithRotation(){
+        Transformation oldTransformation = transformation;
         ArrayList<Vector3f> transformVertices = new ArrayList<>();
         for (int i = 0; i < vertices.size(); i++) {
             Vector3f vertex = vertices.get(i);
@@ -139,7 +156,19 @@ public class Model {
             transformVertices.add(vertex);
         }
         return new Model(transformVertices,textureVertices, normals,
-                polygons, groups, transformation);
+                polygons, groups, transformation.getWithDefaultRotation());
     }
-
+    public Model getModelWithScale(){
+        ArrayList<Vector3f> transformVertices = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            Vector3f vertex = vertices.get(i);
+            vertex.multiply(transformation.getScale());
+            transformVertices.add(vertex);
+        }
+        return new Model(transformVertices,textureVertices, normals,
+                polygons, groups, transformation.getWithDefaultScale());
+    }
+    public void setDefaultTransformation(){
+        transformation = Transformation.getDefaultTransformation();
+    }
 }

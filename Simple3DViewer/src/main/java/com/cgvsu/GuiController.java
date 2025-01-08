@@ -53,7 +53,7 @@ public class GuiController {
 
     //private SceneManager sceneManager = new SceneManager();
     private Model selectedModel;
-    private int index = 0;
+    private int selectedModelIndex = 0;
     private List<Float> modelCenters = new ArrayList<>();
     private float x = 0;
     private float spacing = 5.0f;
@@ -162,7 +162,7 @@ public class GuiController {
         modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){
             public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
                 String item = modelsSelectionModel.getSelectedItem();
-                selectedModel = models.get(Character.getNumericValue(item.charAt(item.length() - 1)));
+                selectedModel = models.get(Character.getNumericValue(item.charAt(item.length() - 1)) - 1);
             }
         });
     }
@@ -185,16 +185,11 @@ public class GuiController {
             if (newModel == null) {
                 throwExceptionWindow(ExceptionDialog.Operation.READING);
             }
-            selectedModel = newModel;
-            models.add(selectedModel);
-            if (models.isEmpty()) {
-                newModel.selected = true;
-                selectedModel = newModel;
-            }
             models.add(newModel);
+            selectedModel = newModel;
             modelCenters.add(x);
             x += newModel.xSize + spacing;
-            modelList.getItems().add(file.getName() + " - " + (index++ + 1));
+            modelList.getItems().add(file.getName() + " - " + (selectedModelIndex++ + 1));
             // todo: обработка ошибок
         } catch (IOException exception) {
 
@@ -324,8 +319,9 @@ public class GuiController {
         selectedModel.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),
                 Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
         if (boxSaveScale.isSelected()) {
-            selectedModel = selectedModel.getModelWithScale();
+            selectedModel.saveScale();
         }
+
     }
     @FXML
     private void translate(ActionEvent event) {
@@ -334,7 +330,7 @@ public class GuiController {
         selectedModel.getTransformation().setTranslation(AffineTransforms.translate(Float.parseFloat(coefficient[0]),
                 Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));
         if (boxSaveTranslate.isSelected()) {
-            selectedModel = selectedModel.getModelWithTranslation();
+            selectedModel.saveTranslation();
         }
     }
     @FXML
@@ -350,7 +346,7 @@ public class GuiController {
                                 AffineTransforms.rotateZ(Math.cos(rotZ), Math.sin(rotZ))
                         )));
         if (boxSaveRotate.isSelected()) {
-            selectedModel = selectedModel.getModelWithRotation();
+            selectedModel.saveRotation();
         }
     }
 
