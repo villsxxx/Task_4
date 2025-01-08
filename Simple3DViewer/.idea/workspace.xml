@@ -34,19 +34,24 @@
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/Stacia/CG1project/new_main/Task_4/Simple3DViewer",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.45632184"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Stacia\CG1project\new_main\Task_4\Simple3DViewer" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.cgvsu.render_engine" />
+      <recent name="com.cgvsu.objreader" />
+      <recent name="com.cgvsu" />
+      <recent name="com.cgvsu.triangulation" />
+    </key>
   </component>
-  <component name="RunManager" selected="JUnit.AffineTransformsTest.rotateXTest2">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.cgvsu.Main" />
       <module name="cgvsu" />
@@ -126,11 +131,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.AffineTransformsTest.rotateXTest2" />
         <item itemvalue="JUnit.AffineTransformsTest.rotateXTest1" />
         <item itemvalue="JUnit.AffineTransformsTest.rotateZTest2" />
         <item itemvalue="JUnit.AffineTransformsTest.rotateYTest2" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -148,15 +153,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/test/com/cgvsu/math/AffineTransformsTest.java</url>
-          <line>36</line>
-          <properties class="com.cgvsu.math.AffineTransformsTest" method="rotateXTest2">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
           <line>11</line>
