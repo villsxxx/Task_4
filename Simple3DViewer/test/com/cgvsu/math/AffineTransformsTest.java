@@ -25,7 +25,7 @@ public class AffineTransformsTest {
         Assertions.assertTrue(result.epsEquals(expectedResult));
     }
     @Test
-    public void rotateTest1() {
+    public void rotateXTest1() {
         Vector4f result = new Vector4f(5, 0, 0, 1);
         float cos = 0.1f;
         float sin = 0.99f;
@@ -33,7 +33,33 @@ public class AffineTransformsTest {
         result.rotateX(cos, sin);
         Assertions.assertTrue(result.epsEquals(expectedResult));
     }
-    //в метод поданы не косинус и синус одного угла - проверка должна быть не здесь
+    @Test
+    public void rotateXTest2() {
+        Vector4f result = new Vector4f(7, 5, 0, 1);
+        float cos = 0.766f;
+        float sin = 0.6428f;
+        Vector4f expectedResult = new Vector4f(7, 3.83f, -3.2139997f, 1);
+        result.rotateX(cos, sin);
+        Assertions.assertTrue(result.epsEquals(expectedResult));
+    }
+    @Test
+    public void rotateYTest1() {
+        Vector4f result = new Vector4f(0, 5, 0, 1);
+        float cos = 0.2f;
+        float sin = 0.96f;
+        Vector4f expectedResult = new Vector4f(0, 5, 0, 1);
+        result.rotateY(cos, sin);
+        Assertions.assertTrue(result.epsEquals(expectedResult));
+    }
+    @Test
+    public void rotateZTest1() {
+        Vector4f result = new Vector4f(0, 0, 5, 1);
+        float cos = 0.2f;
+        float sin = 0.96f;
+        Vector4f expectedResult = new Vector4f(0, 0, 5, 1);
+        result.rotateZ(cos, sin);
+        Assertions.assertTrue(result.epsEquals(expectedResult));
+    }
     @Test
     public void TranslateTest1() {
         Vector4f result = new Vector4f(5, 1, 3, 1);
@@ -54,4 +80,5 @@ public class AffineTransformsTest {
         result.translate(tx, ty, tz);
         Assertions.assertTrue(result.epsEquals(expectedResult));
     }
+
 }

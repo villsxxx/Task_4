@@ -10,7 +10,7 @@ public class AffineTransforms {
         });
     }
     public static Matrix4f rotateX(float cos, float sin) {
-        if(!isCosAndSin(cos, sin)){
+        if(!isCosAndSin(cos, sin,0.1f)){
             return Matrix4f.createIdentityMatrix();
         }
         return new Matrix4f(new float[][]{
@@ -21,7 +21,7 @@ public class AffineTransforms {
         });
     }
     public static Matrix4f rotateY(float cos, float sin) {
-        if(!isCosAndSin(cos, sin)){
+        if(!isCosAndSin(cos, sin, 0.1f)){
             return Matrix4f.createIdentityMatrix();
         }
         return new Matrix4f(new float[][]{
@@ -32,7 +32,7 @@ public class AffineTransforms {
         });
     }
     public static Matrix4f rotateZ(float cos, float sin) {
-        if(!isCosAndSin(cos, sin)){
+        if(!isCosAndSin(cos, sin, 0.1f)){
             return Matrix4f.createIdentityMatrix();
         }
         return new Matrix4f(new float[][]{
@@ -71,8 +71,8 @@ public class AffineTransforms {
     public static void translate(Vector4f v, float tx, float ty, float tz) {
         v.multiply(AffineTransforms.translate(tx, ty, tz));
     }
-    private static boolean isCosAndSin(float a, float b){
-        if(Float.compare(a*a + b*b, 1)!=0){
+    private static boolean isCosAndSin(float a, float b, float eps){
+        if(Math.abs(a*a + b*b - 1) > eps){
             return false;
         }
         if(Float.compare(a, 1)>0 || Float.compare(a, -1)<0){
