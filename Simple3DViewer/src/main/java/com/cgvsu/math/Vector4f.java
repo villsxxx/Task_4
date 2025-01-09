@@ -116,16 +116,16 @@ public class Vector4f implements Vector<Vector4f> {
         AffineTransforms.scale(this, sx, sy, sz);
     }
 
-    public void rotateX(float cos, float sin) {
+    public void rotateX(double cos, double sin) {
         AffineTransforms.rotateX(this, cos, sin);
     }
 
-    public void rotateY(float cos, float sin) {
-        AffineTransforms.rotateX(this, cos, sin);
+    public void rotateY(double cos, double sin) {
+        AffineTransforms.rotateY(this, cos, sin);
     }
 
-    public void rotateZ(float cos, float sin) {
-        AffineTransforms.rotateX(this, cos, sin);
+    public void rotateZ(double cos, double sin) {
+        AffineTransforms.rotateZ(this, cos, sin);
     }
 
     public void translate(float tx, float ty, float tz) {

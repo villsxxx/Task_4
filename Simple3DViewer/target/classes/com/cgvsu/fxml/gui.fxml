@@ -5,7 +5,6 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
-<<<<<<< HEAD
 <AnchorPane fx:id="mainPane" prefHeight="998.0" prefWidth="1566.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
    <BorderPane focusTraversable="true" layoutX="-1.0" prefHeight="1027.0" prefWidth="1566.0">
       <top>
@@ -57,18 +56,40 @@
           </MenuBar>
       </top>
       <right>
-         <TabPane focusTraversable="false" prefHeight="1002.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+         <TabPane prefHeight="1002.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
            <tabs>
              <Tab text="Модель">
                <content>
                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
-                           <ListView prefHeight="200.0" prefWidth="400.0" />
-                           <CheckBox layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Показать сетку" />
+
+                            <ListView fx:id="modelList" layoutX="11.0" layoutY="9.0" prefHeight="184.0" prefWidth="380.0" />
+                           <CheckBox fx:id="grid" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" onAction="#toggleGrid" text="Показать сетку" />
                            <CheckBox layoutX="14.0" layoutY="247.0" mnemonicParsing="false" text="Подгрузить текстуру" />
                            <TextField layoutX="14.0" layoutY="311.0" prefHeight="25.0" prefWidth="232.0" />
                            <Button layoutX="256.0" layoutY="311.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="136.0" text="Удалить" />
                            <Label layoutX="14.0" layoutY="278.0" prefHeight="25.0" prefWidth="231.0" text="Введите индексы вершин для удаления" />
+
+                            <Label layoutX="14.0" layoutY="345.0" prefHeight="24.0" prefWidth="300.0" text="Введите коэффициенты масштабирования:" />
+                            <TextField fx:id="textScale" layoutX="14.0" layoutY="379.0" prefHeight="22.0" prefWidth="100.0" />
+                            <Button fx:id="buttonScale" layoutX="124.0" layoutY="379.0" mnemonicParsing="false" onAction="#scale" prefHeight="25.0" prefWidth="120.0" text="Масштабировать" />
+                            <CheckBox fx:id="boxSaveScale" layoutX="256.0" layoutY="379.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="138.0" text="Сохранить" />
+
+
+                            <Label layoutX="14.0" layoutY="414.0" prefHeight="23.0" prefWidth="310.0" text="Введите углы поворота с указанием координатной оси:" />
+                            <TextField fx:id="textRotate" layoutX="14.0" layoutY="441.0" prefHeight="24.0" prefWidth="100.0" />
+                            <Button fx:id="buttonRotate" layoutX="125.0" layoutY="442.0" mnemonicParsing="false" onAction="#rotate" prefHeight="24.0" prefWidth="121.0" text="Повернуть" />
+                            <CheckBox fx:id="boxSaveRotate" layoutX="258.0" layoutY="441.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="135.0" text="Сохранить" />
+
+
+                            <Label layoutX="14.0" layoutY="465.0" prefHeight="25.0" prefWidth="310.0" text="Введите перемещение:" />
+                            <TextField fx:id="textTranslate" layoutX="14.0" layoutY="495.0" prefHeight="25.0" prefWidth="100.0" />
+                            <Button fx:id="buttonTranslate" layoutX="125.0" layoutY="495.0" mnemonicParsing="false" onAction="#translate" prefHeight="25.0" prefWidth="122.0" text="Переместить" />
+                            <CheckBox fx:id="boxSaveTranslate" layoutX="259.0" layoutY="495.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Сохранить" />
+                            <Button fx:id="buttonDeleteModel" layoutX="259.0" layoutY="200.0" mnemonicParsing="false" onAction="#deleteModel" prefHeight="25.0" prefWidth="133.0" text="Удалить модель" />
+
+
+
                         </children></AnchorPane>
                </content>
              </Tab>
@@ -88,56 +109,10 @@
       <center>
          <AnchorPane fx:id="centerPane" BorderPane.alignment="CENTER">
             <children>
-                <Canvas fx:id="canvas" height="600.0" width="600.0" />
+                <Canvas fx:id="canvas" height="1000.0" width="1200.0" />
+               <ChoiceBox prefWidth="150.0" />
             </children>
          </AnchorPane>
       </center>
    </BorderPane>
 </AnchorPane>
-=======
-<AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController">
-    <MenuBar>
-        <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Load Model">
-            <accelerator>
-                <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="F"/>
-            </accelerator>
-            </MenuItem>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Camera Options">
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Backward">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="DOWN"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="LEFT"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="RIGHT"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraUp" text="Up">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="W"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraDown" text="Down">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="UP" shift="UP" shortcut="UP" code="S"/>
-                </accelerator>
-            </MenuItem>
-        </Menu>
-    </MenuBar>
-
-    <Canvas fx:id="canvas" width="1600" height="870" AnchorPane.topAnchor="30.0"/>
-</AnchorPane>
->>>>>>> 519ca71706cf24b765a064dbdebaedaf63659657

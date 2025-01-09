@@ -9,29 +9,35 @@ public class Polygon {
     private ArrayList<Integer> vertexIndices;
     private ArrayList<Integer> textureVertexIndices;
     private ArrayList<Integer> normalIndices;
-
+    private int lineIndex;
 
     public Polygon() {
-        vertexIndices = new ArrayList<Integer>();
-        textureVertexIndices = new ArrayList<Integer>();
-        normalIndices = new ArrayList<Integer>();
+        vertexIndices = new ArrayList<>();
+        textureVertexIndices = new ArrayList<>();
+        normalIndices = new ArrayList<>();
     }
 
     public void setVertexIndices(ArrayList<Integer> vertexIndices) {
-        assert vertexIndices.size() >= 3;
+        if (vertexIndices.size() < 3) {
+            throw new IllegalArgumentException("Полигон должен иметь хотя бы 3 вершины.");
+        }
         this.vertexIndices = vertexIndices;
     }
 
     public void setTextureVertexIndices(ArrayList<Integer> textureVertexIndices) {
-        assert textureVertexIndices.size() >= 3;
+        if (textureVertexIndices.size() < 3) {
+            throw new IllegalArgumentException("Полигоны с текстурами должны иметь хотя бы 3 текстурные вершины.");
+        }
         this.textureVertexIndices = textureVertexIndices;
     }
-
+/*
     public void setNormalIndices(ArrayList<Integer> normalIndices) {
-        assert normalIndices.size() >= 3;
+        if (normalIndices.size() < 3) {
+            throw new IllegalArgumentException("Полигон должен иметь хотя бы 3 нормали.");
+        }
         this.normalIndices = normalIndices;
     }
-
+*/
     public ArrayList<Integer> getVertexIndices() {
         return vertexIndices;
     }
@@ -43,13 +49,15 @@ public class Polygon {
     public ArrayList<Integer> getNormalIndices() {
         return normalIndices;
     }
+
     public boolean hasTexture() {
         return !textureVertexIndices.isEmpty();
     }
+
     public void setLineIndex(int lineIndex) {
         this.lineIndex = lineIndex;
     }
-    private int lineIndex;
+
     public void checkIndices(int verticesSize, int textureVerticesSize, int normalsSize) {
         for (int i = 0; i < vertexIndices.size(); i++) {
             int vertexIndex = vertexIndices.get(i);
@@ -73,3 +81,6 @@ public class Polygon {
         }
     }
 }
+
+//Заменены assert на выброс IllegalArgumentException.
+//Добавлены сообщения, которые помогут понять, почему было выброшено исключение.

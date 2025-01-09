@@ -3,14 +3,6 @@ package com.cgvsu.render_engine;
 import com.cgvsu.math.*;
 
 public class GraphicConveyor {
-
-    public static Matrix4f rotateScaleTranslate() {
-        Matrix4f matrix = AffineTransforms.scale(10, 10, 10);
-        matrix.multiply(AffineTransforms.rotateX(0, 0));
-        matrix.multiply(AffineTransforms.translate(0, 0, 0));
-        return  matrix;
-    }
-
     public static Matrix4f lookAt(Vector3f eye, Vector3f target) {
         return lookAt(eye, target, new Vector3f(0F, 1.0F, 0F));
     }

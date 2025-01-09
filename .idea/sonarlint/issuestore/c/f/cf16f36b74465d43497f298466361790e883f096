@@ -1,0 +1,22 @@
+
+r	java:S116"VRename this field "TRANSLATION" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Öãõ€8†í‚Ä2
+>
+java:S1170"!Make this final field static too.(Öãõ€8†í‚Ä2
+¤
+java:S1186İ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(°Àğˆùÿÿÿÿ8†í‚Ä2
+t
+java:S14506"WRemove the "timeline" field and declare it as a local variable in the relevant methods.(›ŸòÃ8‚†í‚Ä2
+b
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(Öãõ€8ƒ†í‚Ä2
+]	java:S125@"<This block of commented-out lines of code should be removed.(–À§÷øÿÿÿÿ8„†í‚Ä2
+]	java:S125t"<This block of commented-out lines of code should be removed.(ˆş”ûÿÿÿÿ8††í‚Ä2
+F
+java:S1905ˆ"(Remove this unnecessary cast to "Stage".(Ü’î¨8ˆ†í‚Ä2
+P
+java:S1135”"2Complete the task associated to this TODO comment.(¸Ôƒ×8ˆ†í‚Ä2
+F	java:S108•")Either remove or fill this block of code.(×¬œÓ8ˆ†í‚Ä2
+H	java:S106œ"+Replace this use of System.out by a logger.(Œ¤Á´8‰†í‚Ä2
+F
+java:S1905¤"(Remove this unnecessary cast to "Stage".(Òßï8‰†í‚Ä2
+G	java:S106©"+Replace this use of System.out by a logger.(Ğ¥ =8Š†í‚Ä2
+M	java:S106«"+Replace this use of System.err by a logger.(–Óıúÿÿÿÿ8Š†í‚Ä2

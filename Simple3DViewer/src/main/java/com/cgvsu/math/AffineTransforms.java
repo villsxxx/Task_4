@@ -9,40 +9,47 @@ public class AffineTransforms {
                 {0, 0, 0, 1}
         });
     }
-    public static Matrix4f rotateX(float cos, float sin) {
-        if(!isCosAndSin(cos, sin)){
+    public static Matrix4f rotateX(double cos, double sin) {
+        if(!isCosAndSin(cos, sin,0.1f)){
             return Matrix4f.createIdentityMatrix();
         }
+        float c = (float) cos;
+        float s = (float) sin;
         return new Matrix4f(new float[][]{
                 {1, 0, 0, 0},
-                {0, cos, sin, 0},
-                {0, -sin, cos, 0},
+                {0, c, s, 0},
+                {0, -s, c, 0},
                 {0, 0, 0, 1}
         });
     }
-    public static Matrix4f rotateY(float cos, float sin) {
-        if(!isCosAndSin(cos, sin)){
+    public static Matrix4f rotateY(double cos, double sin) {
+        if(!isCosAndSin(cos, sin, 0.1)){
             return Matrix4f.createIdentityMatrix();
         }
+        float c = (float) cos;
+
+        float s = (float) sin;
         return new Matrix4f(new float[][]{
-                {cos, 0, sin, 0},
+                {c, 0, s, 0},
                 {0, 1, 0, 0},
-                {-sin, 0, cos, 0},
+                {-s, 0, c, 0},
                 {0, 0, 0, 1}
         });
     }
-    public static Matrix4f rotateZ(float cos, float sin) {
-        if(!isCosAndSin(cos, sin)){
+    public static Matrix4f rotateZ(double cos, double sin) {
+        if(!isCosAndSin(cos, sin, 0.1f)){
             return Matrix4f.createIdentityMatrix();
         }
+        float c = (float) cos;
+        float s = (float) sin;
         return new Matrix4f(new float[][]{
-                {cos, sin, 0, 0},
-                {-sin, cos, 0, 0},
+                {c, s, 0, 0},
+                {-s, c, 0, 0},
                 {0, 0, 1, 0},
                 {0, 0, 0, 1}
         });
     }
-    public static Matrix4f translate( float tx, float ty, float tz) {
+    public static Matrix4f translate(float tx, float ty, float tz) {
         return new Matrix4f(new float[][]{
                 {1, 0, 0, tx},
                 {0, 1, 0, ty},
@@ -56,29 +63,29 @@ public class AffineTransforms {
     }
 
     //против часовой
-    public static void rotateX(Vector4f v, float cos, float sin) {
+    public static void rotateX(Vector4f v, double cos, double sin) {
         v.multiply(AffineTransforms.rotateX(cos, sin));
     }
 
-    public static void rotateY(Vector4f v, float cos, float sin) {
+    public static void rotateY(Vector4f v, double cos, double sin) {
         v.multiply(AffineTransforms.rotateY(cos, sin));
     }
 
-    public static void rotateZ(Vector4f v, float cos, float sin) {
+    public static void rotateZ(Vector4f v, double cos, double sin) {
         v.multiply(AffineTransforms.rotateZ(cos, sin));
     }
 
     public static void translate(Vector4f v, float tx, float ty, float tz) {
         v.multiply(AffineTransforms.translate(tx, ty, tz));
     }
-    private static boolean isCosAndSin(float a, float b){
-        if(Float.compare(a*a + b*b, 1)!=0){
+    private static boolean isCosAndSin(double a, double b, double eps){
+        if(Math.abs(a*a + b*b - 1) > eps){
             return false;
         }
-        if(Float.compare(a, 1)>0 || Float.compare(a, -1)<0){
+        if(Double.compare(a, 1)>0 || Double.compare(a, -1)<0){
             return false;
         }
-        if(Float.compare(b, 1)>0 || Float.compare(b, -1)<0){
+        if(Double.compare(b, 1)>0 || Double.compare(b, -1)<0){
             return false;
         }
         return true;
