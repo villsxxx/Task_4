@@ -5,25 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a82a1b07-a9f9-4755-915e-836e050d7292" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/.idea/libraries/openjfx_javafx_graphics.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/.idea/libraries/openjfx_javafx_graphics.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple3DViewer/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Simple3DViewer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/cgvsu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/cgvsu.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/ExceptionDialog$Operation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector4f.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/math/Vector4f.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/obj_writer/ObjWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/obj_writer/ObjWriter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/render_engine/PolygonRasterizerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/triangulation/Triangulator$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/triangulation/Triangulator$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/classes/com/cgvsu/triangulation/TriangulatorTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple3DViewer/target/test-classes/com/cgvsu/math/AffineTransformsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Simple3DViewer/target/test-classes/com/cgvsu/math/AffineTransformsTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,18 +32,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/IdeaProjects/task4",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/task4&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="Task_4" />

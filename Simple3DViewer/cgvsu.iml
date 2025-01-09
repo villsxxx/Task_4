@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="$MODULE_DIR$/pom.xml" external.system.module.type="SINGLE_MODULE" external.system.module.version="223-2" org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
-    <output url="file://$MODULE_DIR$/target/classes" />
-    <output-test url="file://$MODULE_DIR$/target/test-classes" />
-    <content url="file://$MODULE_DIR$">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
@@ -11,21 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="20" jdkType="JavaSDK" />
-    <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="junit.jupiter.api" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:20.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apiguardian:apiguardian-api:1.1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:17.0.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:win:17.0.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:20.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:17.0.0.1" level="project" />
-    <orderEntry type="library" name="Maven: java3d:vecmath:1.3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:20.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:20.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:17.0.0.1" level="project" />
-    <orderEntry type="library" name="openjfx.javafx.graphics" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="b8aa8b80-5978-4604-bc89-614486117e45" />
