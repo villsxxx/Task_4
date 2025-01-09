@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/test/com/cgvsu/triangulation/TriangulatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/cgvsu/triangulation/TriangulatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="vertexDel" />
+        <entry key="$PROJECT_DIR$/.." value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -43,7 +57,6 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2rM825wAyoIzaHBQDPbWg9kSMv7" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -59,7 +72,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;vertexDel&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
@@ -164,9 +177,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.ReaderTest.testLineWithXYZ1" />
         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ4" />
         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ3" />
-        <item itemvalue="JUnit.ReaderTest.testLineWithXYZ1" />
         <item itemvalue="JUnit.AffineTransformsTest" />
       </list>
     </recent_temporary>

@@ -35,8 +35,6 @@ import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
-import static com.cgvsu.ExceptionDialog.throwExceptionWindow;
-import static com.cgvsu.render_engine.RenderEngine.renderModel;
 
 public class GuiController {
 
@@ -66,7 +64,7 @@ public class GuiController {
     private List<Model> models = new ArrayList<>();
 
     private Camera camera = new Camera(
-            new Vector3f(0, 0, 100),
+            new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100);
 
@@ -186,6 +184,7 @@ public class GuiController {
 
         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
         if (file == null) {
+
             return;
         }
         Path fileName = Path.of(file.getAbsolutePath());
@@ -193,14 +192,16 @@ public class GuiController {
             String fileContent = Files.readString(fileName);
             Model newModel = ObjReader.read(fileContent);
             if (newModel == null) {
-                throwExceptionWindow(ExceptionDialog.Operation.READING);
+                ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка чтения модели");
             }
             models.add(newModel);
             selectedModel = newModel;
             modelList.getItems().add(file.getName());
             // todo: обработка ошибок
         } catch (IOException exception) {
-
+            ExceptionDialog.showError(ExceptionDialog.Operation.READING,"Ошибка при потытке открыть файл"+ exception.getMessage());
+        }catch (Exception exception) {
+            ExceptionDialog.showError(ExceptionDialog.Operation.READING,"неизвестная ошибка чтения файла"+ exception.getMessage());
         }
     }
 
@@ -212,8 +213,12 @@ public class GuiController {
 
         File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
         if (file != null) {
-            ObjWriter writer = new ObjWriter();
-            writer.write(selectedModel, file.getAbsolutePath());
+            try{
+                ObjWriter writer = new ObjWriter();
+                writer.write(selectedModel, file.getAbsolutePath());
+            }catch (Exception exception) {
+            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING,"Ошибка при сохранении файла"+ exception.getMessage());
+            }
         }
     }
 
@@ -312,62 +317,63 @@ public class GuiController {
     }
     @FXML
     private void deleteModel(){
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
+            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "выберите модель для удаления");
             return;
         }
         models.remove(selectedModelIndex);
         modelNames.remove(selectedModelIndex);
-        if(models.isEmpty()){
+
+        if (models.isEmpty()) {
             selectedModel = null;
-        } else{
+            selectedModelIndex = -1;
+        } else {
             selectedModel = models.get(0);
             selectedModelIndex = 0;
         }
-        selectedModelIndex = 0;
-
-        modelList.getItems().remove(selectedModelIndex);
+        //selectedModelIndex = 0;
+        //modelList.getItems().remove(selectedModelIndex);
     }
     @FXML
     private void deleteVertices() {
         try {
-            String input = textVertexDel.getText();
-            List<Integer> indicesToDelete;
-            try {
-                indicesToDelete = Arrays.stream(input.split(","))
-                        .map(String::trim)
-                        .map(Integer::parseInt)
-                        .toList();
-            } catch (NumberFormatException e) {
-                System.out.println("Ошибка: Некорректный формат ввода. Введите индексы через запятую.");
+            if(selectedModel == null){
+                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Модель не выбрана");
                 return;
             }
-            Model updatedModel = EraserV2.vertexDelete(
-                    selectedModel,             // Исходная модель
-                    indicesToDelete,           // Индексы для удаления
-                    true,                      // Создаем новую модель
-                    true,                     // удаляем висячие нормали
-                    true,                     // удаляем висячие текстуры
-                    true                       // Удаляем полигоны с менее чем 3 вершинами
-            );
-            // Заменяем старую модель в списке
-            int modelIndex = models.indexOf(selectedModel);
-            if (modelIndex != -1) {
-                models.set(modelIndex, updatedModel);
-                selectedModel = updatedModel;
+            // Считываем индексы вершин из текстового поля
+            String input = textVertexDel.getText();
+            if(input.isBlank()){
+                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Индексы не введены");
+                return;
             }
-            /*
-            // Очищаем Canvas
-            GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-            graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            // Преобразуем строку в список индексов
+            List<Integer> indicesToDelete = Arrays.stream(input.split(","))
+                    .map(String::trim)
+                    .map(Integer::parseInt)
+                    .toList();
 
-            // Рендерим обновленный список моделей
-            RenderEngine.render(graphicsContext, camera, models, (int) canvas.getWidth(), (int) canvas.getHeight());
+            Model uptadeModel = new Model();
 
+            // Удаляем вершины с использованием Eraser
+            uptadeModel = EraserV2.vertexDelete(
+                    selectedModel,                   // Исходная модель
+                    indicesToDelete,         // Индексы для удаления
+                    true,                    // Изменяем текущую модель (не создаем новую)
+                    false,                  // Не удаляем висячие нормали
+                    false,                   // Не удаляем висячие текстуры
+                    true                   // Удаляем полигоны с менее чем 3 вершинами
+            );
+            if (uptadeModel == null){
+                ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка при удалении вершин");
+                return;
+            }
+           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
+            Model newModel = ObjReader.read(uptadeModel.toString());
             // Очистка текстового поля после успешного выполнения
             textVertexDel.clear();
-*/
         } catch (Exception e) {
-            System.out.println("Ошибка при удалении вершин: " + e.getMessage());
+            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "неизвестная ошибка");
         }
     }
 
