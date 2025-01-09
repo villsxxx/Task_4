@@ -330,28 +330,42 @@ public class GuiController {
     @FXML
     private void deleteVertices() {
         try {
-            // Считываем индексы вершин из текстового поля
             String input = textVertexDel.getText();
-            // Преобразуем строку в список индексов
-            List<Integer> indicesToDelete = Arrays.stream(input.split(","))
-                    .map(String::trim)
-                    .map(Integer::parseInt)
-                    .toList();
-            Model uptadeModel = new Model();
-
-            // Удаляем вершины с использованием Eraser
-            uptadeModel = EraserV2.vertexDelete(
-                    selectedModel,                   // Исходная модель
-                    indicesToDelete,         // Индексы для удаления
-                    true,                    // Изменяем текущую модель (не создаем новую)
-                    false,                  // Не удаляем висячие нормали
-                    false,                   // Не удаляем висячие текстуры
-                    true                   // Удаляем полигоны с менее чем 3 вершинами
+            List<Integer> indicesToDelete;
+            try {
+                indicesToDelete = Arrays.stream(input.split(","))
+                        .map(String::trim)
+                        .map(Integer::parseInt)
+                        .toList();
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка: Некорректный формат ввода. Введите индексы через запятую.");
+                return;
+            }
+            Model updatedModel = EraserV2.vertexDelete(
+                    selectedModel,             // Исходная модель
+                    indicesToDelete,           // Индексы для удаления
+                    true,                      // Создаем новую модель
+                    true,                     // удаляем висячие нормали
+                    true,                     // удаляем висячие текстуры
+                    true                       // Удаляем полигоны с менее чем 3 вершинами
             );
-           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
-            Model newModel = ObjReader.read(uptadeModel.toString());
+            // Заменяем старую модель в списке
+            int modelIndex = models.indexOf(selectedModel);
+            if (modelIndex != -1) {
+                models.set(modelIndex, updatedModel);
+                selectedModel = updatedModel;
+            }
+            /*
+            // Очищаем Canvas
+            GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+            graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+            // Рендерим обновленный список моделей
+            RenderEngine.render(graphicsContext, camera, models, (int) canvas.getWidth(), (int) canvas.getHeight());
+
             // Очистка текстового поля после успешного выполнения
             textVertexDel.clear();
+*/
         } catch (Exception e) {
             System.out.println("Ошибка при удалении вершин: " + e.getMessage());
         }
