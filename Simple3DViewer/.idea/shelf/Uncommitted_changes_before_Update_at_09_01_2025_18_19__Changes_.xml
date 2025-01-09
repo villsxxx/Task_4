@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Update_at_09_01_2025_18_19_[Changes]" date="1736435968943" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_18_19_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 09.01.2025 18:19 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value=".idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_17_49_[Changes]/TriangulatorTest.class" />
+    <option name="AFTER_PATH" value=".idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_17_49_[Changes]/TriangulatorTest.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_18_19_[Changes]/TriangulatorTest.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/math/Vector2f.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/math/Vector2f.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_18_19_[Changes]/Vector2f.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/Camera.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/Camera.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_18_19_[Changes]/Camera.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/math/Vector.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/math/Vector.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_18_19_[Changes]/Vector.class" />
+  </binary>
+</changelist>

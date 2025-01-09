@@ -5,6 +5,9 @@ import com.cgvsu.model.Polygon;
 import com.cgvsu.math.Vector3f;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,6 +81,7 @@ public class TriangulatorTest {
         String expectedMessage = "Полигон должен иметь хотя бы 3 вершины для триангуляции";
         assertTrue(exception.getMessage().contains(expectedMessage));
     }
+
     // Тест для триангуляции сложного многоугольника
     @Test
     public void testTriangulateComplexPolygon() {
@@ -99,5 +103,63 @@ public class TriangulatorTest {
 
         // Проверяем, что хотя бы один треугольник был создан
         assertTrue(triangles.size() > 0);
+    }
+
+    // Тест для триангуляции загруженной модели
+    @Test
+    public void testTriangulateLoadedModel() throws Exception {
+        // Путь к файлу вашей модели (замените на действительный путь)
+        Path path = Paths.get("Simple3DViewer\\test\\com\\cgvsu\\triangulation\\caracal_cube.obj");
+
+        // Загрузка модели из файла
+        Model model = loadModelFromFile(path.toString()); // Используем path.toString()
+
+        // Создаем полигон, используя загруженную модель
+        Polygon polygon = createPolygonFromModel(model);
+
+        Triangulator triangulator = new Triangulator();
+
+        // Выполняем триангуляцию и получаем список треугольников
+        List<Polygon> triangles = triangulator.triangulate(polygon, model);
+
+        // Проверяем, что хотя бы один треугольник был создан
+        assertTrue(triangles.size() > 0);
+    }
+
+    // Метод загрузки модели из файла
+    private Model loadModelFromFile(String filePath) throws Exception {
+        Model model = new Model();
+
+        // Чтение файла и добавление вершин в модель
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+
+        for (String line : lines) {
+            if (line.startsWith("v ")) { // Предполагается, что вершины начинаются с "v"
+                String[] parts = line.split("\\s+");
+                Vector3f vertex = new Vector3f(
+                        Float.parseFloat(parts[1]),
+                        Float.parseFloat(parts[2]),
+                        Float.parseFloat(parts[3])
+                );
+                model.addVertex(vertex);
+            }
+
+        }
+
+        return model;
+    }
+
+    // Метод создания полигона из модели
+    private Polygon createPolygonFromModel(Model model) {
+        Polygon polygon = new Polygon();
+
+        // Устанавливаем индексы всех вершин в полигоне
+        ArrayList<Integer> vertexIndices = new ArrayList<>();
+        for (int i = 0; i < model.getVerticesSize(); i++) {
+            vertexIndices.add(i);
+        }
+
+        polygon.setVertexIndices(vertexIndices);
+        return polygon;
     }
 }
