@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import com.cgvsu.math.*;
 
@@ -351,9 +352,10 @@ public class GuiController {
         }
         String s = textRotate.getText();
         String[] coefficient = Reader.readNumbersInLineWithXYZ(s, "0");
-        double rotX = Float.parseFloat(coefficient[0]);
-        double rotY = Float.parseFloat(coefficient[1]);
-        double rotZ = Float.parseFloat(coefficient[2]);
+        Function<Double, Double> fromDegreeToRad = (a) -> (a*Math.PI)/180;
+        double rotX = fromDegreeToRad.apply(Double.parseDouble(coefficient[0]));
+        double rotY = fromDegreeToRad.apply(Double.parseDouble(coefficient[1]));
+        double rotZ = fromDegreeToRad.apply(Double.parseDouble(coefficient[2]));
         selectedModel.getTransformation().setRotation(
                 AffineTransforms.rotateX(Math.cos(rotX), Math.sin(rotX)).getMultiplicationWith(
                         AffineTransforms.rotateY(Math.cos(rotY), Math.sin(rotY)).getMultiplicationWith(
