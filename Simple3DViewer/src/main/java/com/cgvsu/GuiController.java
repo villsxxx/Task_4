@@ -7,7 +7,6 @@ import com.cgvsu.render_engine.RenderEngine;
 import com.cgvsu.triangulation.Triangulator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -23,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -35,6 +35,7 @@ import com.cgvsu.math.*;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
+
 
 import static com.cgvsu.ExceptionDialog.throwExceptionWindow;
 
@@ -92,6 +93,7 @@ public class GuiController {
     private CheckBox boxSaveTranslate;
     @FXML
     private Button buttonDeleteModel;
+
     @FXML
     private void initialize() {
         //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
@@ -99,58 +101,26 @@ public class GuiController {
         canvas.widthProperty().bind(centerPane.widthProperty());
         canvas.heightProperty().bind(centerPane.heightProperty());
 
-        // Обработка нажатия мыши
-        canvas.setOnMousePressed(event -> {
-            lastMouseX = event.getSceneX();
-            lastMouseY = event.getSceneY();
-        });
-
-        // Обработка перемещения мыши
-        canvas.setOnMouseDragged(event -> {
-            double currentMouseX = event.getSceneX();
-            double currentMouseY = event.getSceneY();
-
-            // Вычисляем разницу
-            double deltaX = currentMouseX - lastMouseX;
-            double deltaY = currentMouseY - lastMouseY;
-
-//             Двигаем камеру в зависимости от направления
-            camera.movePosition(new Vector3f(
-                    (float) -deltaX * MOUSE_SENSITIVITY,
-                    (float) deltaY * MOUSE_SENSITIVITY,
-                    0
-            ));
-
-            // Запоминаем текущие координаты мыши
-            lastMouseX = currentMouseX;
-            lastMouseY = currentMouseY;
-        });
-        canvas.setOnScroll(event -> {
-            double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)
-
-//             Двигаем камеру вперед или назад в зависимости от направления
-            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
-        });
+        canvas.setOnMousePressed(event -> onMousePressed(event));
+        canvas.setOnScroll(event -> scroll(event));
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
-        canvas.setOnScroll(event -> scroll(event));
+
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.clearRect(0,0,width,height);
-            if(grid.isSelected()){
-
-                drawGrid(gc,width,height);
+            gc.clearRect(0, 0, width, height);
+            if (grid.isSelected()) {
+                drawGrid(gc, width, height);
             }
             gc.setStroke(Color.BLACK);
             //canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
-
             if (models != null) {
-                for (Model mesh: models) {
+                for (Model mesh : models) {
                     RenderEngine.render(canvas.getGraphicsContext2D(), camera, models, (int) width, (int) height);
                 }
             }
@@ -166,10 +136,10 @@ public class GuiController {
 
         MultipleSelectionModel<String> modelsSelectionModel = modelList.getSelectionModel();
         //слушатель для отслеживания изменений
-        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){
-            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
+        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue) {
                 String item = modelsSelectionModel.getSelectedItem();
-                if(!Objects.isNull(item)) {
+                if (!Objects.isNull(item)) {
                     selectedModelIndex = modelNames.indexOf(item);
                     selectedModel = models.get(selectedModelIndex);
                 }
@@ -230,16 +200,16 @@ public class GuiController {
         }
     }
 
-     //простая сетка нужна другая
-    private void drawGrid(GraphicsContext gc, double w,double h){
+    //простая сетка нужна другая
+    private void drawGrid(GraphicsContext gc, double w, double h) {
         gc.setStroke(Color.GREEN);
         gc.setLineWidth(0.5);
-        double cellSize =50.0;
-        for(double x=0;x<w;x+=cellSize){
-            gc.strokeLine(x,0,x,h);
+        double cellSize = 50.0;
+        for (double x = 0; x < w; x += cellSize) {
+            gc.strokeLine(x, 0, x, h);
         }
-        for(double y=0;y<w;y+=cellSize){
-            gc.strokeLine(0,y,w,y);
+        for (double y = 0; y < w; y += cellSize) {
+            gc.strokeLine(0, y, w, y);
         }
     }
 /*
@@ -302,7 +272,7 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-       camera.movePosition(new Vector3f(0, 0, CAMERA_MOV_STEP));
+        camera.movePosition(new Vector3f(0, 0, CAMERA_MOV_STEP));
     }
 
     @FXML
@@ -329,23 +299,34 @@ public class GuiController {
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
+
     @FXML
     public void toggleGrid(ActionEvent actionEvent) {
     }
+
     //на себя колесико - приближаем камеру, от себя - удаляем камеру
     public void scroll(ScrollEvent event) {
-        if(event.getDeltaY()>0){
+        if (event.getDeltaY() > 0) {
             camera.movePosition(new Vector3f(0, 0, CAMERA_MOV_STEP));
         }
-        if(event.getDeltaY()<0){
+        if (event.getDeltaY() < 0) {
             camera.movePosition(new Vector3f(0, 0, -CAMERA_MOV_STEP));
 
         }
     }
 
+    public void onMousePressed(MouseEvent event) {
+        double aX = event.getSceneX() * MOUSE_SENSITIVITY;
+        double aY = event.getSceneY() * MOUSE_SENSITIVITY;
+        Vector3f v = new Vector3f((float) aX - camera.getPosition().getX(),
+                (float) aY - camera.getPosition().getY(), 0);
+        v.normalize();
+        camera.movePosition(Vector3f.multiply(v, CAMERA_MOV_STEP));
+    }
+
     @FXML
     private void scale(ActionEvent event) {
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         String s = textScale.getText();
@@ -357,9 +338,10 @@ public class GuiController {
         }
 
     }
+
     @FXML
     private void translate(ActionEvent event) {
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         String s = textTranslate.getText();
@@ -370,14 +352,15 @@ public class GuiController {
             selectedModel.saveTranslation();
         }
     }
+
     @FXML
     private void rotate(ActionEvent event) {
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         String s = textRotate.getText();
         String[] coefficient = Reader.readNumbersInLineWithXYZ(s, "0");
-        Function<Double, Double> fromDegreeToRad = (a) -> (a*Math.PI)/180;
+        Function<Double, Double> fromDegreeToRad = (a) -> (a * Math.PI) / 180;
         double rotX = fromDegreeToRad.apply(Double.parseDouble(coefficient[0]));
         double rotY = fromDegreeToRad.apply(Double.parseDouble(coefficient[1]));
         double rotZ = fromDegreeToRad.apply(Double.parseDouble(coefficient[2]));
@@ -390,16 +373,17 @@ public class GuiController {
             selectedModel.saveRotation();
         }
     }
+
     @FXML
-    private void deleteModel(){
-        if(Objects.isNull(selectedModel)){
+    private void deleteModel() {
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         models.remove(selectedModelIndex);
         modelNames.remove(selectedModelIndex);
-        if(models.isEmpty()){
+        if (models.isEmpty()) {
             selectedModel = null;
-        } else{
+        } else {
             selectedModel = models.get(0);
             selectedModelIndex = 0;
         }

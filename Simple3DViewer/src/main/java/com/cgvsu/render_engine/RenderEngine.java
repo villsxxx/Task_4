@@ -8,7 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
 import com.cgvsu.model.Model;
 import javafx.scene.paint.Color;
 
-import javax.vecmath.Point2f;
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
@@ -29,19 +28,19 @@ public class RenderEngine {
     }
     private static class PointVertexModel {
 
-        public PointVertexModel(Point2f point, int vertexIndex, Model model) {
-            this.point = new Point2f((float) Math.floor(point.x), (float) Math.floor(point.y));
+        public PointVertexModel(Vector2f point, int vertexIndex, Model model) {
+            this.point = new Vector2f((float) Math.floor(point.getX()), (float) Math.floor(point.getY()));
             this.vertexIndex = vertexIndex;
             this.model = model;
         }
 
         public PointVertexModel(int vertexIndex) {
-            this.point = new Point2f(0, 0);
+            this.point = new Vector2f(0, 0);
             this.vertexIndex = vertexIndex;
             this.model = new Model();
         }
 
-        public Point2f point;
+        public Vector2f point;
         public int vertexIndex;
 
         public Model model;
