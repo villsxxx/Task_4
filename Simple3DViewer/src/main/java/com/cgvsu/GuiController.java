@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.cgvsu.math.*;
 
@@ -53,7 +55,7 @@ public class GuiController {
 
     //private SceneManager sceneManager = new SceneManager();
     private Model selectedModel;
-    private int selectedModelIndex = 0;
+    private int selectedModelIndex = -1;
     private List<Float> modelCenters = new ArrayList<>();
     private float x = 0;
     private float spacing = 5.0f;
@@ -84,8 +86,8 @@ public class GuiController {
     private CheckBox boxSaveRotate;
     @FXML
     private CheckBox boxSaveTranslate;
-
-
+    @FXML
+    private Button buttonDeleteModel;
     @FXML
     private void initialize() {
         //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
@@ -157,12 +159,15 @@ public class GuiController {
         textRotate.setText("0x, 0y, 0z");
         textTranslate.setText("0 0 0");
 
+
         MultipleSelectionModel<String> modelsSelectionModel = modelList.getSelectionModel();
-        // устанавливаем слушатель для отслеживания изменений
+        //слушатель для отслеживания изменений
         modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){
             public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
                 String item = modelsSelectionModel.getSelectedItem();
-                selectedModel = models.get(Character.getNumericValue(item.charAt(item.length() - 1)) - 1);
+                if(!Objects.isNull(item)) {
+                    selectedModel = models.get(Character.getNumericValue(item.charAt(item.length() - 1)) - 1);
+                }
             }
         });
     }
@@ -189,7 +194,7 @@ public class GuiController {
             selectedModel = newModel;
             modelCenters.add(x);
             x += newModel.xSize + spacing;
-            modelList.getItems().add(file.getName() + " - " + (selectedModelIndex++ + 1));
+            modelList.getItems().add(file.getName() + " - " + (++selectedModelIndex + 1));
             // todo: обработка ошибок
         } catch (IOException exception) {
 
@@ -314,6 +319,9 @@ public class GuiController {
     }
     @FXML
     private void scale(ActionEvent event) {
+        if(Objects.isNull(selectedModel)){
+            return;
+        }
         String s = textScale.getText();
         String[] coefficient = Reader.readNumbersInLine(s, "1", 3);
         selectedModel.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),
@@ -325,6 +333,9 @@ public class GuiController {
     }
     @FXML
     private void translate(ActionEvent event) {
+        if(Objects.isNull(selectedModel)){
+            return;
+        }
         String s = textTranslate.getText();
         String[] coefficient = Reader.readNumbersInLine(s, "0", 3);
         selectedModel.getTransformation().setTranslation(AffineTransforms.translate(Float.parseFloat(coefficient[0]),
@@ -335,6 +346,9 @@ public class GuiController {
     }
     @FXML
     private void rotate(ActionEvent event) {
+        if(Objects.isNull(selectedModel)){
+            return;
+        }
         String s = textRotate.getText();
         String[] coefficient = Reader.readNumbersInLineWithXYZ(s, "0");
         double rotX = Float.parseFloat(coefficient[0]);
@@ -349,6 +363,20 @@ public class GuiController {
             selectedModel.saveRotation();
         }
     }
-
+    @FXML
+    private void deleteModel(){
+        if(Objects.isNull(selectedModel)){
+            return;
+        }
+        models.remove(selectedModelIndex);
+        modelList.getItems().remove(selectedModelIndex);
+        if(models.isEmpty()){
+            selectedModel = null;
+            selectedModelIndex = -1;
+        } else{
+            selectedModel = models.get(0);
+            selectedModelIndex = 0;
+        }
+    }
 }
 

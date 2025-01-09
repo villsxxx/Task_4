@@ -62,7 +62,8 @@
                <content>
                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
-                           <ListView fx:id="modelList" prefHeight="200.0" prefWidth="400.0" />
+
+                            <ListView fx:id="modelList" prefHeight="200.0" prefWidth="400.0" />
                            <CheckBox fx:id="grid" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Показать сетку" onAction="#toggleGrid" />
                            <CheckBox layoutX="14.0" layoutY="247.0" mnemonicParsing="false" text="Подгрузить текстуру" />
                            <TextField layoutX="14.0" layoutY="311.0" prefHeight="25.0" prefWidth="232.0" />
@@ -85,6 +86,8 @@
                             <TextField fx:id="textTranslate"  layoutX="14.0" layoutY="495.0" prefHeight="25.0" prefWidth="100.0" />
                             <Button  fx:id="buttonTranslate" onAction="#translate" layoutX="114.0" layoutY="495.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Переместить" />
                             <CheckBox  fx:id="boxSaveTranslate" layoutX="250.0" layoutY="495.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Сохранить" />
+
+                            <Button  fx:id="buttonDeleteModel" onAction="#deleteModel" layoutX="200.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Удалить модель" />
 
 
                         </children></AnchorPane>
