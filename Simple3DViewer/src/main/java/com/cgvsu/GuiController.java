@@ -13,6 +13,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -22,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -375,6 +378,26 @@ public class GuiController {
         } catch (Exception e) {
             ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "неизвестная ошибка");
         }
+    }
+
+    @FXML
+    private void switchThemeToDark() {
+        Scene scene = mainPane.getScene(); // Получаем текущую сцену
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear(); // Очищаем текущие стили
+        scene.getStylesheets().add(getClass().getResource("/styles/darker-theme.css").toExternalForm()); // Подключаем тёмную тему
+    }
+
+    @FXML
+    private void switchThemeToLight() {
+        Scene scene = mainPane.getScene(); // Получаем текущую сцену
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear(); // Очищаем текущие стили
+        scene.getStylesheets().add(getClass().getResource("/styles/lighter-theme.css").toExternalForm()); // Подключаем светлую тему
     }
 
 

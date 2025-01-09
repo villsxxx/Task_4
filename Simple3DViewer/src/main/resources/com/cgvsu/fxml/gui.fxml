@@ -21,6 +21,18 @@
                       </accelerator>
                   </MenuItem>
               </Menu>
+              <Menu mnemonicParsing="false" text="Tema">
+                  <MenuItem mnemonicParsing="false" onAction="#switchThemeToDark" text="Dark">
+                      <accelerator>
+                          <KeyCodeCombination alt="UP" code="D" control="DOWN"  />
+                      </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#switchThemeToLight" text="Light">
+                      <accelerator>
+                          <KeyCodeCombination alt="UP" code="L" control="DOWN"   />
+                      </accelerator>
+                  </MenuItem>
+              </Menu>
               <Menu mnemonicParsing="false" text="Camera Options">
                   <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
                       <accelerator>

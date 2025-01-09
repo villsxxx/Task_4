@@ -1,0 +1,613 @@
+Index: src/main/java/com/cgvsu/ExceptionDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\nimport java.awt.event.*;\r\n\r\npublic class ExceptionDialog extends JDialog {\r\n    private JPanel contentPane;\r\n    private JButton buttonOK;\r\n    private JLabel textMessage;\r\n    public Operation operation;\r\n    public enum Operation{\r\n        READING,\r\n        WRITING;\r\n    }\r\n\r\n    public ExceptionDialog(Operation operation) {\r\n        setContentPane(contentPane);\r\n        setModal(true);\r\n        getRootPane().setDefaultButton(buttonOK);\r\n        contentPane.setPreferredSize(new Dimension(800, 200));\r\n        if (operation.equals(Operation.READING)){\r\n            textMessage.setText(\"<html>Ошибка импорта модели. \\n\" +\r\n                    \"Убедитесь, что файл имеет \\n\" +\r\n                    \"расширение .obj или выберите другую модель</html>\");\r\n        }\r\n        else if (operation.equals(Operation.WRITING)){\r\n            textMessage.setText(\"<html>Ошибка экспорта модели. \\n\" +\r\n                    \"Убедитесь, что файл имеет \\n\" +\r\n                    \"расширение .obj или выберите другую модель</html>\");\r\n        }\r\n        buttonOK.addActionListener(new ActionListener() {\r\n            public void actionPerformed(ActionEvent e) {\r\n                onOK();\r\n            }\r\n        });\r\n\r\n\r\n\r\n        // call onCancel() when cross is clicked\r\n        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);\r\n        addWindowListener(new WindowAdapter() {\r\n            public void windowClosing(WindowEvent e) {\r\n                onCancel();\r\n            }\r\n        });\r\n\r\n        // call onCancel() on ESCAPE\r\n        contentPane.registerKeyboardAction(new ActionListener() {\r\n            public void actionPerformed(ActionEvent e) {\r\n                onCancel();\r\n            }\r\n        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);\r\n    }\r\n\r\n    private void onOK() {\r\n        // add your code here\r\n        dispose();\r\n    }\r\n\r\n    private void onCancel() {\r\n        // add your code here if necessary\r\n        dispose();\r\n    }\r\n\r\n\r\n    public static void throwExceptionWindow(Operation operation){\r\n        ExceptionDialog dialog = new ExceptionDialog(operation);\r\n        dialog.pack();\r\n        dialog.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - dialog.getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - dialog.getHeight()/2);\r\n        dialog.setVisible(true);\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/ExceptionDialog.java b/src/main/java/com/cgvsu/ExceptionDialog.java
+--- a/src/main/java/com/cgvsu/ExceptionDialog.java	(revision 6ea3bab9b6f981ebce8ff137c6597e08f25a6cb1)
++++ b/src/main/java/com/cgvsu/ExceptionDialog.java	(date 1736439665591)
+@@ -1,75 +1,19 @@
+ package com.cgvsu;
+ 
+-import javax.swing.*;
+-import java.awt.*;
+-import java.awt.event.*;
++import javafx.scene.control.Alert;
++import javafx.scene.control.Alert.AlertType;
+ 
+-public class ExceptionDialog extends JDialog {
+-    private JPanel contentPane;
+-    private JButton buttonOK;
+-    private JLabel textMessage;
+-    public Operation operation;
+-    public enum Operation{
++public class ExceptionDialog {
++    public static void showError(Operation operation, String message) {
++        Alert alert = new Alert(AlertType.ERROR);
++        alert.setTitle("Ошибка");
++        alert.setHeaderText(operation == Operation.READING ? "Ошибка чтения" : "Ошибка записи");
++        alert.setContentText(message);
++        alert.showAndWait();
++    }
++
++    public enum Operation {
+         READING,
+-        WRITING;
++        WRITING
+     }
+-
+-    public ExceptionDialog(Operation operation) {
+-        setContentPane(contentPane);
+-        setModal(true);
+-        getRootPane().setDefaultButton(buttonOK);
+-        contentPane.setPreferredSize(new Dimension(800, 200));
+-        if (operation.equals(Operation.READING)){
+-            textMessage.setText("<html>Ошибка импорта модели. \n" +
+-                    "Убедитесь, что файл имеет \n" +
+-                    "расширение .obj или выберите другую модель</html>");
+-        }
+-        else if (operation.equals(Operation.WRITING)){
+-            textMessage.setText("<html>Ошибка экспорта модели. \n" +
+-                    "Убедитесь, что файл имеет \n" +
+-                    "расширение .obj или выберите другую модель</html>");
+-        }
+-        buttonOK.addActionListener(new ActionListener() {
+-            public void actionPerformed(ActionEvent e) {
+-                onOK();
+-            }
+-        });
+-
+-
+-
+-        // call onCancel() when cross is clicked
+-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+-        addWindowListener(new WindowAdapter() {
+-            public void windowClosing(WindowEvent e) {
+-                onCancel();
+-            }
+-        });
+-
+-        // call onCancel() on ESCAPE
+-        contentPane.registerKeyboardAction(new ActionListener() {
+-            public void actionPerformed(ActionEvent e) {
+-                onCancel();
+-            }
+-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+-    }
+-
+-    private void onOK() {
+-        // add your code here
+-        dispose();
+-    }
+-
+-    private void onCancel() {
+-        // add your code here if necessary
+-        dispose();
+-    }
+-
+-
+-    public static void throwExceptionWindow(Operation operation){
+-        ExceptionDialog dialog = new ExceptionDialog(operation);
+-        dialog.pack();
+-        dialog.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - dialog.getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - dialog.getHeight()/2);
+-        dialog.setVisible(true);
+-    }
+-
+-
+ }
+Index: src/main/java/com/cgvsu/GuiController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu;\r\n\r\nimport com.cgvsu.VertexDelete.Eraser;\r\nimport com.cgvsu.VertexDelete.EraserV2;\r\nimport com.cgvsu.obj_writer.ObjWriter;\r\nimport com.cgvsu.reader.Reader;\r\nimport com.cgvsu.render_engine.RenderEngine;\r\nimport javafx.beans.value.ChangeListener;\r\nimport javafx.beans.value.ObservableValue;\r\nimport javafx.collections.ObservableList;\r\nimport javafx.fxml.FXML;\r\nimport javafx.animation.Animation;\r\nimport javafx.animation.KeyFrame;\r\nimport javafx.animation.Timeline;\r\nimport javafx.event.ActionEvent;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.control.*;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.layout.AnchorPane;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.stage.Stage;\r\nimport javafx.stage.FileChooser;\r\nimport javafx.util.Duration;\r\nimport java.nio.file.Files;\r\nimport java.nio.file.Path;\r\nimport java.io.IOException;\r\nimport java.io.File;\r\nimport java.util.*;\r\nimport java.util.function.Function;\r\n\r\nimport com.cgvsu.math.*;\r\n\r\nimport com.cgvsu.model.Model;\r\nimport com.cgvsu.objreader.ObjReader;\r\nimport com.cgvsu.render_engine.Camera;\r\n\r\nimport static com.cgvsu.ExceptionDialog.throwExceptionWindow;\r\nimport static com.cgvsu.render_engine.RenderEngine.renderModel;\r\n\r\npublic class GuiController {\r\n\r\n    final private float TRANSLATION = 0.5F;\r\n\r\n    @FXML\r\n    AnchorPane mainPane;\r\n    @FXML\r\n    AnchorPane centerPane;\r\n\r\n    @FXML\r\n    private Canvas canvas;\r\n\r\n    @FXML\r\n    private CheckBox grid;\r\n\r\n    @FXML\r\n    private ListView<String> modelList;\r\n\r\n    //private SceneManager sceneManager = new SceneManager();\r\n    private Model selectedModel;\r\n    private int selectedModelIndex;\r\n    private List<Float> modelCenters = new ArrayList<>();\r\n    private float x = 0;\r\n    private float spacing = 5.0f;\r\n\r\n    private List<Model> models = new ArrayList<>();\r\n\r\n    private Camera camera = new Camera(\r\n            new Vector3f(0, 0, 100),\r\n            new Vector3f(0, 0, 0),\r\n            1.0F, 1, 0.01F, 100);\r\n\r\n    private Timeline timeline;\r\n\r\n\r\n    private double lastMouseX; // Последняя X-координата мыши\r\n    private double lastMouseY; // Последняя Y-координата мыши\r\n    private static final float MOUSE_SENSITIVITY = 0.1f;\r\n    private List<String> modelNames = new ArrayList<>();\r\n    @FXML\r\n    private TextField textScale;\r\n    @FXML\r\n    private TextField textRotate;\r\n    @FXML\r\n    private TextField textTranslate;\r\n    @FXML\r\n    private CheckBox boxSaveScale;\r\n    @FXML\r\n    private CheckBox boxSaveRotate;\r\n    @FXML\r\n    private CheckBox boxSaveTranslate;\r\n    @FXML\r\n    private Button buttonDeleteModel;\r\n    @FXML\r\n    private TextField textVertexDel; // Поле для ввода индексов\r\n    @FXML\r\n    private void initialize() {\r\n        //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));\r\n        //centerPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));\r\n        canvas.widthProperty().bind(centerPane.widthProperty());\r\n        canvas.heightProperty().bind(centerPane.heightProperty());\r\n\r\n        // Обработка нажатия мыши\r\n        canvas.setOnMousePressed(event -> {\r\n            lastMouseX = event.getSceneX();\r\n            lastMouseY = event.getSceneY();\r\n        });\r\n\r\n        // Обработка перемещения мыши\r\n        canvas.setOnMouseDragged(event -> {\r\n            double currentMouseX = event.getSceneX();\r\n            double currentMouseY = event.getSceneY();\r\n\r\n            // Вычисляем разницу\r\n            double deltaX = currentMouseX - lastMouseX;\r\n            double deltaY = currentMouseY - lastMouseY;\r\n\r\n            // Двигаем камеру в зависимости от направления\r\n            camera.movePosition(new Vector3f(\r\n                    (float) -deltaX * MOUSE_SENSITIVITY,\r\n                    (float) deltaY * MOUSE_SENSITIVITY,\r\n                    0\r\n            ));\r\n\r\n            // Запоминаем текущие координаты мыши\r\n            lastMouseX = currentMouseX;\r\n            lastMouseY = currentMouseY;\r\n        });\r\n        canvas.setOnScroll(event -> {\r\n            double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)\r\n\r\n            // Двигаем камеру вперед или назад в зависимости от направления\r\n            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));\r\n        });\r\n\r\n        timeline = new Timeline();\r\n        timeline.setCycleCount(Animation.INDEFINITE);\r\n\r\n        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {\r\n            double width = canvas.getWidth();\r\n            double height = canvas.getHeight();\r\n\r\n            GraphicsContext gc = canvas.getGraphicsContext2D();\r\n            gc.clearRect(0,0,width,height);\r\n            if(grid.isSelected()){\r\n\r\n                drawGrid(gc,width,height);\r\n            }\r\n            gc.setStroke(Color.BLACK);\r\n            //canvas.getGraphicsContext2D().clearRect(0, 0, width, height);\r\n            camera.setAspectRatio((float) (width / height));\r\n\r\n            if (models != null) {\r\n                for (Model mesh: models) {\r\n                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, models, (int) width, (int) height);\r\n                }\r\n            }\r\n        });\r\n\r\n        timeline.getKeyFrames().add(frame);\r\n        timeline.play();\r\n\r\n        textScale.setText(\"1, 1, 1\");\r\n        textRotate.setText(\"0x, 0y, 0z\");\r\n        textTranslate.setText(\"0 0 0\");\r\n\r\n\r\n        MultipleSelectionModel<String> modelsSelectionModel = modelList.getSelectionModel();\r\n        //слушатель для отслеживания изменений\r\n        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){\r\n            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){\r\n                String item = modelsSelectionModel.getSelectedItem();\r\n                if(!Objects.isNull(item)) {\r\n                    selectedModelIndex = modelNames.indexOf(item);\r\n                    selectedModel = models.get(selectedModelIndex);\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    @FXML\r\n    private void onOpenModelMenuItemClick() {\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"Model (*.obj)\", \"*.obj\"));\r\n        fileChooser.setTitle(\"Load Model\");\r\n\r\n        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());\r\n        if (file == null) {\r\n            return;\r\n        }\r\n        Path fileName = Path.of(file.getAbsolutePath());\r\n        try {\r\n            String fileContent = Files.readString(fileName);\r\n            Model newModel = ObjReader.read(fileContent);\r\n            if (newModel == null) {\r\n                throwExceptionWindow(ExceptionDialog.Operation.READING);\r\n            }\r\n            models.add(newModel);\r\n            selectedModel = newModel;\r\n            modelList.getItems().add(file.getName());\r\n            // todo: обработка ошибок\r\n        } catch (IOException exception) {\r\n\r\n        }\r\n    }\r\n\r\n    @FXML\r\n    private void onSaveModelClick() {\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.setTitle(\"Save Model\");\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"OBJ files (*.obj)\", \"*.obj\"));\r\n\r\n        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());\r\n        if (file != null) {\r\n            ObjWriter writer = new ObjWriter();\r\n            writer.write(selectedModel, file.getAbsolutePath());\r\n        }\r\n    }\r\n\r\n     //простая сетка нужна другая\r\n    private void drawGrid(GraphicsContext gc, double w,double h){\r\n        gc.setStroke(Color.GREEN);\r\n        gc.setLineWidth(0.5);\r\n        double cellSize =50.0;\r\n        for(double x=0;x<w;x+=cellSize){\r\n            gc.strokeLine(x,0,x,h);\r\n        }\r\n        for(double y=0;y<w;y+=cellSize){\r\n            gc.strokeLine(0,y,w,y);\r\n        }\r\n    }\r\n\r\n\r\n    @FXML\r\n    public void handleCameraForward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraBackward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraLeft(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraRight(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraUp(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, TRANSLATION, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraDown(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));\r\n    }\r\n    @FXML\r\n    public void toggleGrid(ActionEvent actionEvent) {\r\n    }\r\n    @FXML\r\n    private void scale(ActionEvent event) {\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        String s = textScale.getText();\r\n        String[] coefficient = Reader.readNumbersInLine(s, \"1\", 3);\r\n        selectedModel.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),\r\n                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));\r\n        if (boxSaveScale.isSelected()) {\r\n            selectedModel.saveScale();\r\n        }\r\n\r\n    }\r\n    @FXML\r\n    private void translate(ActionEvent event) {\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        String s = textTranslate.getText();\r\n        String[] coefficient = Reader.readNumbersInLine(s, \"0\", 3);\r\n        selectedModel.getTransformation().setTranslation(AffineTransforms.translate(Float.parseFloat(coefficient[0]),\r\n                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));\r\n        if (boxSaveTranslate.isSelected()) {\r\n            selectedModel.saveTranslation();\r\n        }\r\n    }\r\n    @FXML\r\n    private void rotate(ActionEvent event) {\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        String s = textRotate.getText();\r\n        String[] coefficient = Reader.readNumbersInLineWithXYZ(s, \"0\");\r\n        Function<Double, Double> fromDegreeToRad = (a) -> (a*Math.PI)/180;\r\n        double rotX = fromDegreeToRad.apply(Double.parseDouble(coefficient[0]));\r\n        double rotY = fromDegreeToRad.apply(Double.parseDouble(coefficient[1]));\r\n        double rotZ = fromDegreeToRad.apply(Double.parseDouble(coefficient[2]));\r\n        selectedModel.getTransformation().setRotation(\r\n                AffineTransforms.rotateX(Math.cos(rotX), Math.sin(rotX)).getMultiplicationWith(\r\n                        AffineTransforms.rotateY(Math.cos(rotY), Math.sin(rotY)).getMultiplicationWith(\r\n                                AffineTransforms.rotateZ(Math.cos(rotZ), Math.sin(rotZ))\r\n                        )));\r\n        if (boxSaveRotate.isSelected()) {\r\n            selectedModel.saveRotation();\r\n        }\r\n    }\r\n    @FXML\r\n    private void deleteModel(){\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        models.remove(selectedModelIndex);\r\n        modelNames.remove(selectedModelIndex);\r\n        if(models.isEmpty()){\r\n            selectedModel = null;\r\n        } else{\r\n            selectedModel = models.get(0);\r\n            selectedModelIndex = 0;\r\n        }\r\n        selectedModelIndex = 0;\r\n\r\n        modelList.getItems().remove(selectedModelIndex);\r\n    }\r\n    @FXML\r\n    private void deleteVertices() {\r\n        try {\r\n            String input = textVertexDel.getText();\r\n            List<Integer> indicesToDelete;\r\n            try {\r\n                indicesToDelete = Arrays.stream(input.split(\",\"))\r\n                        .map(String::trim)\r\n                        .map(Integer::parseInt)\r\n                        .toList();\r\n            } catch (NumberFormatException e) {\r\n                System.out.println(\"Ошибка: Некорректный формат ввода. Введите индексы через запятую.\");\r\n                return;\r\n            }\r\n            Model updatedModel = EraserV2.vertexDelete(\r\n                    selectedModel,             // Исходная модель\r\n                    indicesToDelete,           // Индексы для удаления\r\n                    true,                      // Создаем новую модель\r\n                    true,                     // удаляем висячие нормали\r\n                    true,                     // удаляем висячие текстуры\r\n                    true                       // Удаляем полигоны с менее чем 3 вершинами\r\n            );\r\n            // Заменяем старую модель в списке\r\n            int modelIndex = models.indexOf(selectedModel);\r\n            if (modelIndex != -1) {\r\n                models.set(modelIndex, updatedModel);\r\n                selectedModel = updatedModel;\r\n            }\r\n            /*\r\n            // Очищаем Canvas\r\n            GraphicsContext graphicsContext = canvas.getGraphicsContext2D();\r\n            graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());\r\n\r\n            // Рендерим обновленный список моделей\r\n            RenderEngine.render(graphicsContext, camera, models, (int) canvas.getWidth(), (int) canvas.getHeight());\r\n\r\n            // Очистка текстового поля после успешного выполнения\r\n            textVertexDel.clear();\r\n*/\r\n        } catch (Exception e) {\r\n            System.out.println(\"Ошибка при удалении вершин: \" + e.getMessage());\r\n        }\r\n    }\r\n\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/GuiController.java b/src/main/java/com/cgvsu/GuiController.java
+--- a/src/main/java/com/cgvsu/GuiController.java	(revision 6ea3bab9b6f981ebce8ff137c6597e08f25a6cb1)
++++ b/src/main/java/com/cgvsu/GuiController.java	(date 1736439732489)
+@@ -35,8 +35,6 @@
+ import com.cgvsu.objreader.ObjReader;
+ import com.cgvsu.render_engine.Camera;
+ 
+-import static com.cgvsu.ExceptionDialog.throwExceptionWindow;
+-import static com.cgvsu.render_engine.RenderEngine.renderModel;
+ 
+ public class GuiController {
+ 
+@@ -66,7 +64,7 @@
+     private List<Model> models = new ArrayList<>();
+ 
+     private Camera camera = new Camera(
+-            new Vector3f(0, 0, 100),
++            new Vector3f(0, 00, 100),
+             new Vector3f(0, 0, 0),
+             1.0F, 1, 0.01F, 100);
+ 
+@@ -186,6 +184,7 @@
+ 
+         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+         if (file == null) {
++
+             return;
+         }
+         Path fileName = Path.of(file.getAbsolutePath());
+@@ -193,14 +192,16 @@
+             String fileContent = Files.readString(fileName);
+             Model newModel = ObjReader.read(fileContent);
+             if (newModel == null) {
+-                throwExceptionWindow(ExceptionDialog.Operation.READING);
++                ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка чтения модели");
+             }
+             models.add(newModel);
+             selectedModel = newModel;
+             modelList.getItems().add(file.getName());
+             // todo: обработка ошибок
+         } catch (IOException exception) {
+-
++            ExceptionDialog.showError(ExceptionDialog.Operation.READING,"Ошибка при потытке открыть файл"+ exception.getMessage());
++        }catch (Exception exception) {
++            ExceptionDialog.showError(ExceptionDialog.Operation.READING,"неизвестная ошибка чтения файла"+ exception.getMessage());
+         }
+     }
+ 
+@@ -212,8 +213,12 @@
+ 
+         File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+         if (file != null) {
+-            ObjWriter writer = new ObjWriter();
+-            writer.write(selectedModel, file.getAbsolutePath());
++            try{
++                ObjWriter writer = new ObjWriter();
++                writer.write(selectedModel, file.getAbsolutePath());
++            }catch (Exception exception) {
++            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING,"Ошибка при сохранении файла"+ exception.getMessage());
++            }
+         }
+     }
+ 
+@@ -312,62 +317,63 @@
+     }
+     @FXML
+     private void deleteModel(){
+-        if(Objects.isNull(selectedModel)){
++        if (Objects.isNull(selectedModel)) {
++            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "выберите модель для удаления");
+             return;
+         }
+         models.remove(selectedModelIndex);
+         modelNames.remove(selectedModelIndex);
+-        if(models.isEmpty()){
++
++        if (models.isEmpty()) {
+             selectedModel = null;
+-        } else{
++            selectedModelIndex = -1;
++        } else {
+             selectedModel = models.get(0);
+             selectedModelIndex = 0;
+         }
+-        selectedModelIndex = 0;
+-
+-        modelList.getItems().remove(selectedModelIndex);
++        //selectedModelIndex = 0;
++        //modelList.getItems().remove(selectedModelIndex);
+     }
+     @FXML
+     private void deleteVertices() {
+         try {
++            if(selectedModel == null){
++                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Модель не выбрана");
++                return;
++            }
++            // Считываем индексы вершин из текстового поля
+             String input = textVertexDel.getText();
+-            List<Integer> indicesToDelete;
+-            try {
+-                indicesToDelete = Arrays.stream(input.split(","))
+-                        .map(String::trim)
+-                        .map(Integer::parseInt)
+-                        .toList();
+-            } catch (NumberFormatException e) {
+-                System.out.println("Ошибка: Некорректный формат ввода. Введите индексы через запятую.");
+-                return;
+-            }
+-            Model updatedModel = EraserV2.vertexDelete(
+-                    selectedModel,             // Исходная модель
+-                    indicesToDelete,           // Индексы для удаления
+-                    true,                      // Создаем новую модель
+-                    true,                     // удаляем висячие нормали
+-                    true,                     // удаляем висячие текстуры
+-                    true                       // Удаляем полигоны с менее чем 3 вершинами
++            if(input.isBlank()){
++                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Индексы не введены");
++                return;
++            }
++            // Преобразуем строку в список индексов
++            List<Integer> indicesToDelete = Arrays.stream(input.split(","))
++                    .map(String::trim)
++                    .map(Integer::parseInt)
++                    .toList();
++
++            Model uptadeModel = new Model();
++
++            // Удаляем вершины с использованием Eraser
++            uptadeModel = EraserV2.vertexDelete(
++                    selectedModel,                   // Исходная модель
++                    indicesToDelete,         // Индексы для удаления
++                    true,                    // Изменяем текущую модель (не создаем новую)
++                    false,                  // Не удаляем висячие нормали
++                    false,                   // Не удаляем висячие текстуры
++                    true                   // Удаляем полигоны с менее чем 3 вершинами
+             );
+-            // Заменяем старую модель в списке
+-            int modelIndex = models.indexOf(selectedModel);
+-            if (modelIndex != -1) {
+-                models.set(modelIndex, updatedModel);
+-                selectedModel = updatedModel;
++            if (uptadeModel == null){
++                ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка при удалении вершин");
++                return;
+             }
+-            /*
+-            // Очищаем Canvas
+-            GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+-            graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+-
+-            // Рендерим обновленный список моделей
+-            RenderEngine.render(graphicsContext, camera, models, (int) canvas.getWidth(), (int) canvas.getHeight());
+-
++           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
++            Model newModel = ObjReader.read(uptadeModel.toString());
+             // Очистка текстового поля после успешного выполнения
+             textVertexDel.clear();
+-*/
+         } catch (Exception e) {
+-            System.out.println("Ошибка при удалении вершин: " + e.getMessage());
++            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "неизвестная ошибка");
+         }
+     }
+ 
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24__Changes_.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24__Changes_.xml
+new file mode 100644
+--- /dev/null	(date 1736439665584)
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24__Changes_.xml	(date 1736439665584)
+@@ -0,0 +1,9 @@
++<changelist name="Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]" date="1736436281809" recycled="true" deleted="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 09.01.2025 18:24 [Changes]" />
++  <binary>
++    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/GuiController.class" />
++    <option name="AFTER_PATH" value="target/classes/com/cgvsu/GuiController.class" />
++    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/GuiController.class" />
++  </binary>
++</changelist>
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$/..\" value=\"vertexDel\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;ver-a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/villsxxx/Task_4.git&quot;,\r\n    &quot;accountId&quot;: &quot;0185781d-679d-4445-9a9b-6deb367d84d9&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2rM825wAyoIzaHBQDPbWg9kSMv7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.Main.executor\": \"Run\",\r\n    \"Downloaded.Files.Path.Enabled\": \"false\",\r\n    \"Repository.Attach.Annotations\": \"false\",\r\n    \"Repository.Attach.JavaDocs\": \"false\",\r\n    \"Repository.Attach.Sources\": \"false\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu\",\r\n    \"project.structure.last.edited\": \"Project\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.45632184\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\IdeaProjects\\Task_4-main\\Task_4-main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.reader\" />\r\n      <recent name=\"com.cgvsu.render_engine\" />\r\n      <recent name=\"com.cgvsu.objreader\" />\r\n      <recent name=\"com.cgvsu\" />\r\n      <recent name=\"com.cgvsu.triangulation\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.model\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Main\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.Main\" />\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"AffineTransformsTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.math.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.math\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.math.AffineTransformsTest\" />\r\n      <option name=\"TEST_OBJECT\" value=\"class\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ1\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ1\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ3\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ3\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ4\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ4\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ4\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ3\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ1\" />\r\n        <item itemvalue=\"JUnit.AffineTransformsTest\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\" />\r\n      <created>1736357387439</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1736357387439</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>80</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"isCosAndSin\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/reader/ReaderTest.java</url>\r\n          <line>22</line>\r\n          <properties class=\"com.cgvsu.reader.ReaderTest\" method=\"testLineWithXYZ2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"10\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>24</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateY\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"14\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/Matrix.java</url>\r\n          <line>114</line>\r\n          <properties class=\"com.cgvsu.math.Matrix\" method=\"multiplication\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"22\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>38</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateZ\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"23\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/math/AffineTransformsTest.java</url>\r\n          <line>36</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransformsTest\" method=\"rotateXTest2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"24\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 6ea3bab9b6f981ebce8ff137c6597e08f25a6cb1)
++++ b/.idea/workspace.xml	(date 1736439744424)
+@@ -5,10 +5,21 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -25,7 +36,7 @@
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+       <map>
+-        <entry key="$PROJECT_DIR$/.." value="vertexDel" />
++        <entry key="$PROJECT_DIR$/.." value="main" />
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+@@ -50,25 +61,25 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.Main.executor": "Run",
+-    "Downloaded.Files.Path.Enabled": "false",
+-    "Repository.Attach.Annotations": "false",
+-    "Repository.Attach.JavaDocs": "false",
+-    "Repository.Attach.Sources": "false",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "git-widget-placeholder": "main",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu",
+-    "project.structure.last.edited": "Project",
+-    "project.structure.proportion": "0.15",
+-    "project.structure.side.proportion": "0.45632184"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
++    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
++    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;vertexDel&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.45632184&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="D:\IdeaProjects\Task_4-main\Task_4-main\Task_4\Simple3DViewer\src\main\java\com\cgvsu" />
+@@ -166,9 +177,9 @@
+     <recent_temporary>
+       <list>
+         <item itemvalue="Application.Main" />
++        <item itemvalue="JUnit.ReaderTest.testLineWithXYZ1" />
+         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ4" />
+         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ3" />
+-        <item itemvalue="JUnit.ReaderTest.testLineWithXYZ1" />
+         <item itemvalue="JUnit.AffineTransformsTest" />
+       </list>
+     </recent_temporary>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/shelved.patch
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/shelved.patch
+new file mode 100644
+--- /dev/null	(date 1736439665584)
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/shelved.patch	(date 1736439665584)
+@@ -0,0 +1,86 @@
++Index: .idea/workspace.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/../.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/../.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$/..\" value=\"main\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;ver-a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/villsxxx/Task_4.git&quot;,\r\n    &quot;accountId&quot;: &quot;0185781d-679d-4445-9a9b-6deb367d84d9&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2rM825wAyoIzaHBQDPbWg9kSMv7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;Application.Main.executor&quot;: &quot;Run&quot;,\r\n    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,\r\n    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,\r\n    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,\r\n    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;vertexDel&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.45632184&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\IdeaProjects\\Task_4-main\\Task_4-main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.reader\" />\r\n      <recent name=\"com.cgvsu.render_engine\" />\r\n      <recent name=\"com.cgvsu.objreader\" />\r\n      <recent name=\"com.cgvsu\" />\r\n      <recent name=\"com.cgvsu.triangulation\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.model\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Main\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.Main\" />\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"AffineTransformsTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.math.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.math\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.math.AffineTransformsTest\" />\r\n      <option name=\"TEST_OBJECT\" value=\"class\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ1\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ1\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ3\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ3\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ4\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ4\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ1\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ4\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ3\" />\r\n        <item itemvalue=\"JUnit.AffineTransformsTest\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\" />\r\n      <created>1736357387439</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1736357387439</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>80</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"isCosAndSin\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/reader/ReaderTest.java</url>\r\n          <line>22</line>\r\n          <properties class=\"com.cgvsu.reader.ReaderTest\" method=\"testLineWithXYZ2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"10\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>24</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateY\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"14\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/Matrix.java</url>\r\n          <line>114</line>\r\n          <properties class=\"com.cgvsu.math.Matrix\" method=\"multiplication\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"22\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>38</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateZ\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"23\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/math/AffineTransformsTest.java</url>\r\n          <line>36</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransformsTest\" method=\"rotateXTest2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"24\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/.idea/workspace.xml b/.idea/workspace.xml
++--- a/.idea/workspace.xml	(revision fdfb0c8cf8aa85c8a5788039ea3bcbd4062fdc62)
+++++ b/.idea/workspace.xml	(date 1736435460621)
++@@ -5,21 +5,8 @@
++   </component>
++   <component name="ChangeListManager">
++     <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
++-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
++-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" afterDir="false" />
++     </list>
++     <option name="SHOW_DIALOG" value="false" />
++     <option name="HIGHLIGHT_CONFLICTS" value="true" />
++@@ -210,7 +197,7 @@
++     <breakpoint-manager>
++       <breakpoints>
++         <line-breakpoint enabled="true" type="java-method">
++-          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
+++          <url>file://$PROJECT_DIR$/../../../../task4/Task_4/Simple3DViewer/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
++           <line>80</line>
++           <properties class="com.cgvsu.math.AffineTransforms" method="isCosAndSin">
++             <option name="EMULATED" value="true" />
++@@ -219,7 +206,7 @@
++           <option name="timeStamp" value="4" />
++         </line-breakpoint>
++         <line-breakpoint enabled="true" type="java-method">
++-          <url>file://$PROJECT_DIR$/test/com/cgvsu/reader/ReaderTest.java</url>
+++          <url>file://$PROJECT_DIR$/../../../../task4/Task_4/Simple3DViewer/test/com/cgvsu/reader/ReaderTest.java</url>
++           <line>22</line>
++           <properties class="com.cgvsu.reader.ReaderTest" method="testLineWithXYZ2">
++             <option name="EMULATED" value="true" />
++@@ -228,7 +215,7 @@
++           <option name="timeStamp" value="10" />
++         </line-breakpoint>
++         <line-breakpoint enabled="true" type="java-method">
++-          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
+++          <url>file://$PROJECT_DIR$/../../../../task4/Task_4/Simple3DViewer/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
++           <line>24</line>
++           <properties class="com.cgvsu.math.AffineTransforms" method="rotateY">
++             <option name="EMULATED" value="true" />
++@@ -237,7 +224,7 @@
++           <option name="timeStamp" value="14" />
++         </line-breakpoint>
++         <line-breakpoint enabled="true" type="java-method">
++-          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/Matrix.java</url>
+++          <url>file://$PROJECT_DIR$/../../../../task4/Task_4/Simple3DViewer/src/main/java/com/cgvsu/math/Matrix.java</url>
++           <line>114</line>
++           <properties class="com.cgvsu.math.Matrix" method="multiplication">
++             <option name="EMULATED" value="true" />
++@@ -246,7 +233,7 @@
++           <option name="timeStamp" value="22" />
++         </line-breakpoint>
++         <line-breakpoint enabled="true" type="java-method">
++-          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
+++          <url>file://$PROJECT_DIR$/../../../../task4/Task_4/Simple3DViewer/src/main/java/com/cgvsu/math/AffineTransforms.java</url>
++           <line>38</line>
++           <properties class="com.cgvsu.math.AffineTransforms" method="rotateZ">
++             <option name="EMULATED" value="true" />
++@@ -255,7 +242,7 @@
++           <option name="timeStamp" value="23" />
++         </line-breakpoint>
++         <line-breakpoint enabled="true" type="java-method">
++-          <url>file://$PROJECT_DIR$/test/com/cgvsu/math/AffineTransformsTest.java</url>
+++          <url>file://$PROJECT_DIR$/../../../../task4/Task_4/Simple3DViewer/test/com/cgvsu/math/AffineTransformsTest.java</url>
++           <line>36</line>
++           <properties class="com.cgvsu.math.AffineTransformsTest" method="rotateXTest2">
++             <option name="EMULATED" value="true" />
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26__Changes_.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26__Changes_.xml
+new file mode 100644
+--- /dev/null	(date 1736439665585)
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26__Changes_.xml	(date 1736439665585)
+@@ -0,0 +1,9 @@
++<changelist name="Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]" date="1736436428328" recycled="true" deleted="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 09.01.2025 18:26 [Changes]" />
++  <binary>
++    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/GuiController.class" />
++    <option name="AFTER_PATH" value="target/classes/com/cgvsu/GuiController.class" />
++    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/GuiController.class" />
++  </binary>
++</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/shelved.patch
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/shelved.patch
+new file mode 100644
+--- /dev/null	(date 1736439665585)
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/shelved.patch	(date 1736439665585)
+@@ -0,0 +1,99 @@
++Index: .idea/workspace.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$/..\" value=\"vertexDel\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;ver-a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/villsxxx/Task_4.git&quot;,\r\n    &quot;accountId&quot;: &quot;0185781d-679d-4445-9a9b-6deb367d84d9&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2rM825wAyoIzaHBQDPbWg9kSMv7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.Main.executor\": \"Run\",\r\n    \"Downloaded.Files.Path.Enabled\": \"false\",\r\n    \"Repository.Attach.Annotations\": \"false\",\r\n    \"Repository.Attach.JavaDocs\": \"false\",\r\n    \"Repository.Attach.Sources\": \"false\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu\",\r\n    \"project.structure.last.edited\": \"Project\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.45632184\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\IdeaProjects\\Task_4-main\\Task_4-main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.reader\" />\r\n      <recent name=\"com.cgvsu.render_engine\" />\r\n      <recent name=\"com.cgvsu.objreader\" />\r\n      <recent name=\"com.cgvsu\" />\r\n      <recent name=\"com.cgvsu.triangulation\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.model\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Main\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.Main\" />\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"AffineTransformsTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.math.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.math\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.math.AffineTransformsTest\" />\r\n      <option name=\"TEST_OBJECT\" value=\"class\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ1\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ1\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ3\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ3\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ4\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ4\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ4\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ3\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ1\" />\r\n        <item itemvalue=\"JUnit.AffineTransformsTest\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\" />\r\n      <created>1736357387439</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1736357387439</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>80</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"isCosAndSin\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/reader/ReaderTest.java</url>\r\n          <line>22</line>\r\n          <properties class=\"com.cgvsu.reader.ReaderTest\" method=\"testLineWithXYZ2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"10\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>24</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateY\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"14\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/Matrix.java</url>\r\n          <line>114</line>\r\n          <properties class=\"com.cgvsu.math.Matrix\" method=\"multiplication\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"22\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>38</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateZ\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"23\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/math/AffineTransformsTest.java</url>\r\n          <line>36</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransformsTest\" method=\"rotateXTest2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"24\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/.idea/workspace.xml b/.idea/workspace.xml
++--- a/.idea/workspace.xml	(revision 6ea3bab9b6f981ebce8ff137c6597e08f25a6cb1)
+++++ b/.idea/workspace.xml	(date 1736436287403)
++@@ -5,10 +5,21 @@
++   </component>
++   <component name="ChangeListManager">
++     <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
++-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" afterDir="false" />
++     </list>
++     <option name="SHOW_DIALOG" value="false" />
++     <option name="HIGHLIGHT_CONFLICTS" value="true" />
++@@ -25,7 +36,7 @@
++   <component name="Git.Settings">
++     <option name="RECENT_BRANCH_BY_REPOSITORY">
++       <map>
++-        <entry key="$PROJECT_DIR$/.." value="vertexDel" />
+++        <entry key="$PROJECT_DIR$/.." value="main" />
++       </map>
++     </option>
++     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
++@@ -50,25 +61,25 @@
++     <option name="hideEmptyMiddlePackages" value="true" />
++     <option name="showLibraryContents" value="true" />
++   </component>
++-  <component name="PropertiesComponent"><![CDATA[{
++-  "keyToString": {
++-    "Application.Main.executor": "Run",
++-    "Downloaded.Files.Path.Enabled": "false",
++-    "Repository.Attach.Annotations": "false",
++-    "Repository.Attach.JavaDocs": "false",
++-    "Repository.Attach.Sources": "false",
++-    "RunOnceActivity.OpenProjectViewOnStart": "true",
++-    "RunOnceActivity.ShowReadmeOnStart": "true",
++-    "RunOnceActivity.git.unshallow": "true",
++-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++-    "git-widget-placeholder": "main",
++-    "kotlin-language-version-configured": "true",
++-    "last_opened_file_path": "D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu",
++-    "project.structure.last.edited": "Project",
++-    "project.structure.proportion": "0.15",
++-    "project.structure.side.proportion": "0.45632184"
+++  <component name="PropertiesComponent">{
+++  &quot;keyToString&quot;: {
+++    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+++    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+++    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+++    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+++    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+++    &quot;git-widget-placeholder&quot;: &quot;vertexDel&quot;,
+++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+++    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu&quot;,
+++    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+++    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+++    &quot;project.structure.side.proportion&quot;: &quot;0.45632184&quot;
++   }
++-}]]></component>
+++}</component>
++   <component name="RecentsManager">
++     <key name="CopyFile.RECENT_KEYS">
++       <recent name="D:\IdeaProjects\Task_4-main\Task_4-main\Task_4\Simple3DViewer\src\main\java\com\cgvsu" />
++@@ -165,11 +176,11 @@
++     </configuration>
++     <recent_temporary>
++       <list>
++-        <item itemvalue="Application.Main" />
++         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ4" />
++         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ3" />
++         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ1" />
++         <item itemvalue="JUnit.AffineTransformsTest" />
+++        <item itemvalue="Application.Main" />
++       </list>
++     </recent_temporary>
++   </component>

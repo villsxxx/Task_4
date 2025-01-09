@@ -1,0 +1,41 @@
+<changelist name="Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]" date="1736439826325" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 09.01.2025 19:23 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/GuiController$1.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/GuiController$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/GuiController$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/ExceptionDialog$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/GuiController.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/GuiController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/GuiController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/ExceptionDialog$Operation.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/ExceptionDialog$Operation.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/ExceptionDialog$Operation.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/ExceptionDialog$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/ExceptionDialog.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/ExceptionDialog.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/ExceptionDialog.class" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value=".idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_26_[Changes]/GuiController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/GuiController1.class" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value=".idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_18_24_[Changes]/GuiController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_01_2025_19_23_[Changes]/GuiController2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/ExceptionDialog$3.class" />
+  </binary>
+</changelist>

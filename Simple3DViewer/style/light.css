@@ -1,0 +1,33 @@
+.root {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Arial";
+}
+
+/* Кнопки */
+.button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #000000;
+    -fx-border-color: #cccccc;
+}
+.button:hover {
+    -fx-background-color: #e6e6e6;
+}
+
+/* Текстовые поля */
+.text-field, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-border-color: #cccccc;
+}
+
+/* Метки */
+.label {
+    -fx-text-fill: #000000;
+}
+
+/* Список */
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
