@@ -157,4 +157,13 @@ public class Vector3f implements Vector<Vector3f> {
         return v1.getHomogeneous3f();
     }
 
+    @Override
+
+    public Vector3f clone()  {
+        try {
+            return (Vector3f) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

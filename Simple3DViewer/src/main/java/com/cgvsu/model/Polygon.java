@@ -17,6 +17,10 @@ public class Polygon {
         normalIndices = new ArrayList<>();
     }
 
+    public void setNormalIndices(ArrayList<Integer> normalIndices) {
+        this.normalIndices = normalIndices;
+    }
+
     public void setVertexIndices(ArrayList<Integer> vertexIndices) {
         if (vertexIndices.size() < 3) {
             throw new IllegalArgumentException("Полигон должен иметь хотя бы 3 вершины.");
@@ -78,6 +82,21 @@ public class Polygon {
             if (normalIndex >= normalsSize || normalIndex < 0) {
                 throw new FaceWordException("normal", lineIndex, i + 1);
             }
+        }
+    }
+    @Override
+    public Polygon clone() {
+        try {
+            Polygon clonedPolygon = (Polygon) super.clone();
+
+            // Глубокое копирование списков
+            clonedPolygon.vertexIndices = new ArrayList<>(this.vertexIndices);
+            clonedPolygon.textureVertexIndices = new ArrayList<>(this.textureVertexIndices);
+            clonedPolygon.normalIndices = new ArrayList<>(this.normalIndices);
+
+            return clonedPolygon;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Этот код никогда не должен выполняться
         }
     }
 }

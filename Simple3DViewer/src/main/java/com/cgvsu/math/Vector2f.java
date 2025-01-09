@@ -92,6 +92,14 @@ public class Vector2f implements Vector<Vector2f> {
     public static Vector2f multiply(final Vector2f v, final float a) {
         return new Vector2f(v.getX() * a, v.getY() * a);
     }
+    @Override
+    public Vector2f clone()  {
+        try {
+            return (Vector2f) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 

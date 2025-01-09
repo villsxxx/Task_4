@@ -1,5 +1,7 @@
 package com.cgvsu;
 
+import com.cgvsu.VertexDelete.Eraser;
+import com.cgvsu.VertexDelete.EraserV2;
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.reader.Reader;
 import com.cgvsu.render_engine.RenderEngine;
@@ -34,6 +36,7 @@ import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
 import static com.cgvsu.ExceptionDialog.throwExceptionWindow;
+import static com.cgvsu.render_engine.RenderEngine.renderModel;
 
 public class GuiController {
 
@@ -88,6 +91,8 @@ public class GuiController {
     private CheckBox boxSaveTranslate;
     @FXML
     private Button buttonDeleteModel;
+    @FXML
+    private TextField textVertexDel; // Поле для ввода индексов
     @FXML
     private void initialize() {
         //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
@@ -186,17 +191,12 @@ public class GuiController {
         Path fileName = Path.of(file.getAbsolutePath());
         try {
             String fileContent = Files.readString(fileName);
-            addToModelsList(fileName);
             Model newModel = ObjReader.read(fileContent);
             if (newModel == null) {
                 throwExceptionWindow(ExceptionDialog.Operation.READING);
             }
             models.add(newModel);
-            modelNames.add(file.getName());
             selectedModel = newModel;
-            modelCenters.add(x);
-            selectedModelIndex = Math.max(0, models.size() - 1);
-            x += newModel.xSize + spacing;
             modelList.getItems().add(file.getName());
             // todo: обработка ошибок
         } catch (IOException exception) {
@@ -214,7 +214,6 @@ public class GuiController {
         if (file != null) {
             ObjWriter writer = new ObjWriter();
             writer.write(selectedModel, file.getAbsolutePath());
-            //ObjWriter.write(selectedModel, file.getAbsolutePath());
         }
     }
 
@@ -229,62 +228,6 @@ public class GuiController {
         for(double y=0;y<w;y+=cellSize){
             gc.strokeLine(0,y,w,y);
         }
-    }
-/*
-    @FXML
-    private void updateModelList() {
-        List<String> modelNames = new ArrayList<>();
-        for (int i = 0; i < sceneManager.getModels().size(); i++) {
-
-            modelNames.add("Model " + (i + 1)); // Названия моделей (можно заменить на более осмысленные)
-        }
-        modelList.getItems().setAll(modelNames); // Обновляем ListView
-    }
-    @FXML
-    private void onModelSelected(){
-        int selectedIndex = modelList.getSelectionModel().getSelectedIndex();
-        if (selectedIndex >=0){
-            sceneManager.setActiveModel(selectedIndex);
-        }
-    }
-    @FXML
-    private void onRender() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Очищаем область рисования
-
-        sceneManager.renderAllModels(gc, camera, (int) canvas.getWidth(), (int) canvas.getHeight());
-    }*/
-
-
-    /*
-    !!!!!!!!!!!!!!!!!!!!!!!
-    */
-    @FXML
-    private void addToModelsList(Path fileName) {
-        String name = fileName.toString();
-        MenuButton modelButton = new MenuButton(name.split("\\\\")[name.split("\\\\").length - 1]);
-        modelButton.setMinWidth(240);
-        modelButton.setMaxWidth(240);
-        CheckMenuItem polygonMeshShow = new CheckMenuItem("Полигональная сетка");
-        polygonMeshShow.setSelected(true);
-        CheckMenuItem textureShow = new CheckMenuItem("Текстура");
-        textureShow.setSelected(false);
-        CheckMenuItem lightingShow = new CheckMenuItem("Освещение");
-        lightingShow.setSelected(false);
-        RadioMenuItem pinCamera = new RadioMenuItem("Центрировать камеру");
-        pinCamera.setSelected(models.isEmpty());
-        int modelIndex = models.size();
-
-        //pinCamera.setOnAction(actionEvent -> setCameraTarget(modelIndex));
-
-        //camerasPinGroup.getToggles().add(camerasPinGroup.getToggles().size(), pinCamera);
-        modelButton.getItems().add(pinCamera);
-
-        modelButton.getItems().add(polygonMeshShow);
-        modelButton.getItems().add(textureShow);
-        modelButton.getItems().add(lightingShow);
-
-        //modelsMenuBox.getChildren().add(modelButton);
     }
 
 
@@ -384,5 +327,36 @@ public class GuiController {
 
         modelList.getItems().remove(selectedModelIndex);
     }
+    @FXML
+    private void deleteVertices() {
+        try {
+            // Считываем индексы вершин из текстового поля
+            String input = textVertexDel.getText();
+            // Преобразуем строку в список индексов
+            List<Integer> indicesToDelete = Arrays.stream(input.split(","))
+                    .map(String::trim)
+                    .map(Integer::parseInt)
+                    .toList();
+            Model uptadeModel = new Model();
+
+            // Удаляем вершины с использованием Eraser
+            uptadeModel = EraserV2.vertexDelete(
+                    selectedModel,                   // Исходная модель
+                    indicesToDelete,         // Индексы для удаления
+                    true,                    // Изменяем текущую модель (не создаем новую)
+                    false,                  // Не удаляем висячие нормали
+                    false,                   // Не удаляем висячие текстуры
+                    true                   // Удаляем полигоны с менее чем 3 вершинами
+            );
+           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
+            Model newModel = ObjReader.read(uptadeModel.toString());
+            // Очистка текстового поля после успешного выполнения
+            textVertexDel.clear();
+        } catch (Exception e) {
+            System.out.println("Ошибка при удалении вершин: " + e.getMessage());
+        }
+    }
+
+
 }
 

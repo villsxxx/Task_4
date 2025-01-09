@@ -70,8 +70,8 @@
                                         <TextField fx:id="textRotate" layoutX="16.0" layoutY="430.0" prefHeight="29.0" prefWidth="107.0" />
                                        <CheckBox fx:id="grid" layoutX="14.0" layoutY="181.0" mnemonicParsing="false" onAction="#toggleGrid" text="Показать сетку" />
                                        <CheckBox layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Подгрузить текстуру" />
-                                       <TextField layoutX="14.0" layoutY="282.0" prefHeight="25.0" prefWidth="237.0" />
-                                       <Button layoutX="259.0" layoutY="282.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Удалить" />
+                                       <TextField fx:id="textVertexDel" layoutX="14.0" layoutY="282.0" prefHeight="25.0" prefWidth="237.0" />
+                                       <Button layoutX="259.0" layoutY="282.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0"  onAction="#deleteVertices" text="Удалить" />
                                        <Label layoutX="15.0" layoutY="245.0" prefHeight="25.0" prefWidth="231.0" text="Введите индексы вершин для удаления" />
             
                                         <Label layoutX="15.0" layoutY="314.0" prefHeight="24.0" prefWidth="300.0" text="Введите коэффициенты масштабирования:" />
