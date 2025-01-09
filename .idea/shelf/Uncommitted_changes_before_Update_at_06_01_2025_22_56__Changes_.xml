@@ -1,0 +1,59 @@
+<changelist name="Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]" date="1736193404614" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 06.01.2025 22:56 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderException.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/ObjReaderException.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/ObjReaderException.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/ArgumentsErrorType.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/WordType.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/WordType.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/WordType.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/GuiController.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/GuiController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/GuiController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsException.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ArgumentsException.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/ArgumentsException.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ParsingException.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ParsingException.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/ParsingException.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/obj_writer/ObjWriter.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/ObjWriter.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ObjReaderException.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/ObjReaderException.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/ObjReaderException1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/FaceWordException.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/objreader/exceptions/FaceWordException.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/FaceWordException.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/math/Matrix.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/math/Matrix.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/Matrix.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" />
+    <option name="AFTER_PATH" value="Simple3DViewer/target/classes/com/cgvsu/math/Vector2f.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06_01_2025_22_56_[Changes]/Vector2f.class" />
+  </binary>
+</changelist>

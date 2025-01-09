@@ -114,12 +114,12 @@ public class GuiController {
             double deltaX = currentMouseX - lastMouseX;
             double deltaY = currentMouseY - lastMouseY;
 
-            // Двигаем камеру в зависимости от направления
-//            camera.movePosition(new Vector3f(
-//                    (float) -deltaX * MOUSE_SENSITIVITY,
-//                    (float) deltaY * MOUSE_SENSITIVITY,
-//                    0
-//            ));
+//             Двигаем камеру в зависимости от направления
+            camera.movePosition(new Vector3f(
+                    (float) -deltaX * MOUSE_SENSITIVITY,
+                    (float) deltaY * MOUSE_SENSITIVITY,
+                    0
+            ));
 
             // Запоминаем текущие координаты мыши
             lastMouseX = currentMouseX;
@@ -128,8 +128,8 @@ public class GuiController {
         canvas.setOnScroll(event -> {
             double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)
 
-            // Двигаем камеру вперед или назад в зависимости от направления
-//            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
+//             Двигаем камеру вперед или назад в зависимости от направления
+            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
         });
 
         timeline = new Timeline();
@@ -195,11 +195,12 @@ public class GuiController {
             if (newModel == null) {
                 throwExceptionWindow(ExceptionDialog.Operation.READING);
             }
-            Model model = newModel;
-//            Triangulator triangulator = new Triangulator();
-//            Model model = new Model(newModel.getVertices(), newModel.getTextureVertices(),
-//                    newModel.getNormals(), (ArrayList<Polygon>) triangulator.triangulate(newModel),
-//                    newModel.getGroups(), newModel.getTransformation());
+            Triangulator triangulator = new Triangulator();
+
+            List<Polygon> triangles = triangulator.triangulate(newModel);
+            Model model = new Model(newModel.getVertices(), newModel.getTextureVertices(),
+                    newModel.getNormals(), (ArrayList<Polygon>) triangles,
+                    newModel.getGroups(), newModel.getTransformation());
             models.add(model);
 
             modelNames.add(file.getName());
@@ -301,32 +302,32 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-//        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
+       camera.movePosition(new Vector3f(0, 0, CAMERA_MOV_STEP));
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-//        camera.movePosition(new Vector3f(0, 0, TRANSLATION));
+        camera.movePosition(new Vector3f(0, 0, -CAMERA_MOV_STEP));
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-//        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
+        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-//        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
+        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-//        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
+        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-//        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
+        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
     @FXML
     public void toggleGrid(ActionEvent actionEvent) {

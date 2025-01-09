@@ -5,57 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_jupiter_api1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/cgvsu/math/VectorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/cgvsu/render_engine/CameraMovingTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/new_main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/new_main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__java3d_vecmath_1_3_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_20_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_win_20_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_controls_17_0_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_controls_win_17_0_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_fxml_17_0_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_fxml_win_17_0_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_graphics_20_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_graphics_win_20_0_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cgvsu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/cgvsu.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/triangulation/Triangulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/triangulation/Triangulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$Operation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Matrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Matrix.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector4f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector4f.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/obj_writer/ObjWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/obj_writer/ObjWriter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReaderException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReaderException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/WordType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/WordType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ArgumentsErrorType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ArgumentsException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ArgumentsException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/FaceWordException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/FaceWordException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ObjReaderException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ObjReaderException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ParsingException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/exceptions/ParsingException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/Camera.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/Camera.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,6 +70,7 @@
       <recent name="com.cgvsu.triangulation" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.cgvsu.triangulation" />
       <recent name="com.cgvsu.math" />
       <recent name="com.cgvsu.model" />
     </key>
@@ -254,15 +214,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java</url>
-          <line>333</line>
-          <properties class="com.cgvsu.GuiController" method="scroll">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java</url>

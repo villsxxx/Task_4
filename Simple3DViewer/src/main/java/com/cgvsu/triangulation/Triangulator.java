@@ -1,23 +1,24 @@
 package com.cgvsu.triangulation;
 
-import com.cgvsu.model.Polygon;
-import com.cgvsu.model.Model;
 import com.cgvsu.math.Vector3f;
+import com.cgvsu.model.Model;
+import com.cgvsu.model.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Triangulator {
     public List<Polygon> triangulate(Model model) {
         List<Polygon> triangles = new ArrayList<>();
-        List<Polygon> polygons = model.getPolygons();
-        for(Polygon p: polygons){
+        for(Polygon p: model.getPolygons()){
             triangles.addAll(triangulate(p, model));
         }
         return triangles;
     }
 
-    public List<Polygon> triangulate(Polygon polygon, Model model) {
+
+        public List<Polygon> triangulate(Polygon polygon, Model model) {
         List<Polygon> triangles = new ArrayList<>();
 
         // Получаем вершины из полигона
@@ -59,12 +60,83 @@ public class Triangulator {
             }
 
             if (!foundEar) {
-                throw new RuntimeException("Не найдено ушко. Полигон может быть невыпуклым.");
+                // Попробуем разбить полигон на меньшие участки
+                if (!trySplitPolygon(remainingVertices, remainingIndices, triangles)) {
+                    throw new RuntimeException("Не удалось разбить полигон. Полигон может быть невыпуклым.");
+                }
             }
         }
 
         return triangles;
     }
+
+    private boolean trySplitPolygon(List<Vector3f> remainingVertices, List<Integer> remainingIndices, List<Polygon> triangles) {
+        // Ищем возможность добавить диагональ между двумя непоследовательными вершинами
+        for (int i = 0; i < remainingVertices.size(); i++) {
+            for (int j = i + 2; j < remainingVertices.size(); j++) {
+                if (j != (i + 1) % remainingVertices.size() && canAddDiagonal(remainingVertices, i, j)) {
+                    // Создаем новый треугольник и добавляем его в список
+                    Polygon triangle = new Polygon();
+                    int finalI = i;
+                    int finalJ = j;
+                    triangle.setVertexIndices(new ArrayList<Integer>() {{
+                        add(remainingIndices.get(finalI));
+                        add(remainingIndices.get((finalI + 1) % remainingVertices.size()));
+                        add(remainingIndices.get(finalJ));
+                    }});
+                    triangles.add(triangle);
+
+                    // Удаляем одну из вершин, чтобы уменьшить полигон
+                    remainingVertices.remove(j);
+                    remainingIndices.remove(j);
+                    return true; // Успех, мы смогли разбить полигон
+                }
+            }
+        }
+
+        return false; // Не удалось разбить полигон
+    }
+
+    private boolean canAddDiagonal(List<Vector3f> vertices, int indexA, int indexB) {
+        Vector3f a = vertices.get(indexA);
+        Vector3f b = vertices.get(indexB);
+
+        for (int i = 0; i < vertices.size(); i++) {
+            int nextIndex = (i + 1) % vertices.size();
+
+            // Пропускаем рёбра, к которым принадлежит одна из вершин диагонали
+            if (i == indexA || i == nextIndex || i == indexB) continue;
+
+            Vector3f c = vertices.get(i);
+            Vector3f d = vertices.get(nextIndex);
+
+            if (linesIntersect(a, b, c, d)) {
+                return false; // Диагональ пересекает другое ребро
+            }
+        }
+
+        return true; // Диагональ безопасна
+    }
+
+    private boolean linesIntersect(Vector3f p1, Vector3f p2, Vector3f q1, Vector3f q2) {
+        float d1 = direction(q1, q2, p1);
+        float d2 = direction(q1, q2, p2);
+        float d3 = direction(p1, p2, q1);
+        float d4 = direction(p1, p2, q2);
+
+        // Если p1 и p2 находятся по разные стороны от линии q1q2
+        if (d1 * d2 < 0 && d3 * d4 < 0) {
+            return true;
+        }
+        // Коллинеарные случаи могут быть обработаны отдельно при необходимости
+        return false;
+    }
+
+    private float direction(Vector3f pi, Vector3f pj, Vector3f pk) {
+        return (pk.getY() - pi.getY()) * (pj.getX() - pi.getX()) - (pk.getX() - pi.getX()) * (pj.getY() - pi.getY());
+    }
+
+
 
     private List<Vector3f> getVerticesFromPolygon(Polygon polygon, Model model) {
         List<Vector3f> vertices = new ArrayList<>();
@@ -107,14 +179,6 @@ public class Triangulator {
 
         // Проверка знака Z-компоненты векторного произведения
         return crossProduct.getZ() > 0;
-//        Vector3f ab = Vector3f.subtract(b, a); // Получаем вектор ab
-//        Vector3f ac = Vector3f.subtract(c, a); // Получаем вектор ac
-//
-//        // Векторное произведение ab и ac (в данном случае учитываем только Z-компонент)
-//        float crossProductZ = ab.getX() * ac.getY() - ab.getY() * ac.getX();
-//
-//        // Если результат больше 0, угол является выпуклым
-//        return crossProductZ > 0;
     }
 
     // Метод для проверки принадлежности точки треугольнику
@@ -133,5 +197,19 @@ public class Triangulator {
         return Math.abs((a.getX() * (b.getY() - c.getY()) +
                 b.getX() * (c.getY() - a.getY()) +
                 c.getX() * (a.getY() - b.getY())) / 2.0f);
+    }
+
+    // Метод создания полигона из модели
+    public Polygon createPolygonFromModel(Model model) {
+        Polygon polygon = new Polygon();
+
+        // Устанавливаем индексы всех вершин в полигоне
+        ArrayList<Integer> vertexIndices = new ArrayList<>();
+        for (int i = 0; i < model.getVerticesSize(); i++) {
+            vertexIndices.add(i);
+        }
+
+        polygon.setVertexIndices(vertexIndices); // Убедитесь, что этот метод принимает ArrayList
+        return polygon;
     }
 }

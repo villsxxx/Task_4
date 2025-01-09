@@ -1,0 +1,374 @@
+Index: Simple3DViewer/src/main/java/com/cgvsu/GuiController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu;\r\n\r\nimport com.cgvsu.render_engine.RenderEngine;\r\nimport javafx.fxml.FXML;\r\nimport javafx.animation.Animation;\r\nimport javafx.animation.KeyFrame;\r\nimport javafx.animation.Timeline;\r\nimport javafx.event.ActionEvent;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.layout.AnchorPane;\r\nimport javafx.stage.Stage;\r\nimport javafx.stage.FileChooser;\r\nimport javafx.util.Duration;\r\nimport java.nio.file.Files;\r\nimport java.nio.file.Path;\r\nimport java.io.IOException;\r\nimport java.io.File;\r\nimport com.cgvsu.math.*;\r\n\r\nimport com.cgvsu.model.Model;\r\nimport com.cgvsu.objreader.ObjReader;\r\nimport com.cgvsu.render_engine.Camera;\r\n\r\npublic class GuiController {\r\n\r\n    final private float TRANSLATION = 0.5F;\r\n\r\n    @FXML\r\n    AnchorPane anchorPane;\r\n\r\n    @FXML\r\n    private Canvas canvas;\r\n\r\n    private Model mesh = null;\r\n\r\n    private Camera camera = new Camera(\r\n            new Vector3f(0, 00, 100),\r\n            new Vector3f(0, 0, 0),\r\n            1.0F, 1, 0.01F, 100);\r\n\r\n    private Timeline timeline;\r\n\r\n    @FXML\r\n    private void initialize() {\r\n        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));\r\n        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));\r\n\r\n        timeline = new Timeline();\r\n        timeline.setCycleCount(Animation.INDEFINITE);\r\n\r\n        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {\r\n            double width = canvas.getWidth();\r\n            double height = canvas.getHeight();\r\n\r\n            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);\r\n            camera.setAspectRatio((float) (width / height));\r\n\r\n            if (mesh != null) {\r\n                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);\r\n            }\r\n        });\r\n\r\n        timeline.getKeyFrames().add(frame);\r\n        timeline.play();\r\n    }\r\n\r\n    @FXML\r\n    private void onOpenModelMenuItemClick() {\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"Model (*.obj)\", \"*.obj\"));\r\n        fileChooser.setTitle(\"Load Model\");\r\n\r\n        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());\r\n        if (file == null) {\r\n            return;\r\n        }\r\n\r\n        Path fileName = Path.of(file.getAbsolutePath());\r\n\r\n        try {\r\n            String fileContent = Files.readString(fileName);\r\n            mesh = ObjReader.read(fileContent);\r\n            // todo: обработка ошибок\r\n        } catch (IOException exception) {\r\n\r\n        }\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraForward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraBackward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraLeft(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraRight(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraUp(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, TRANSLATION, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraDown(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java b/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java
+--- a/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java	(revision 3c3cd078e4e7d47be7d597bafbb8af71b0285bee)
++++ b/Simple3DViewer/src/main/java/com/cgvsu/GuiController.java	(date 1736193325564)
+@@ -1,118 +1,130 @@
+ package com.cgvsu;
+ 
++import com.cgvsu.model.Model;
++import com.cgvsu.obj_writer.ObjWriter;
++import com.cgvsu.objreader.ObjReader;
++import com.cgvsu.render_engine.Camera;
+ import com.cgvsu.render_engine.RenderEngine;
+-import javafx.fxml.FXML;
+-import javafx.animation.Animation;
++import java.io.File;
++import java.io.IOException;
++import java.nio.file.Files;
++import java.nio.file.Path;
+ import javafx.animation.KeyFrame;
++import javafx.animation.KeyValue;
+ import javafx.animation.Timeline;
+ import javafx.event.ActionEvent;
++import javafx.fxml.FXML;
+ import javafx.scene.canvas.Canvas;
+ import javafx.scene.layout.AnchorPane;
+-import javafx.stage.Stage;
+ import javafx.stage.FileChooser;
++import javafx.stage.Stage;
+ import javafx.util.Duration;
+-import java.nio.file.Files;
+-import java.nio.file.Path;
+-import java.io.IOException;
+-import java.io.File;
+ import com.cgvsu.math.*;
+ 
+-import com.cgvsu.model.Model;
+-import com.cgvsu.objreader.ObjReader;
+-import com.cgvsu.render_engine.Camera;
+-
+ public class GuiController {
+-
+-    final private float TRANSLATION = 0.5F;
+-
++    private final float TRANSLATION = 0.5F;
+     @FXML
+     AnchorPane anchorPane;
+-
+     @FXML
+     private Canvas canvas;
+-
+     private Model mesh = null;
+-
+-    private Camera camera = new Camera(
+-            new Vector3f(0, 00, 100),
+-            new Vector3f(0, 0, 0),
+-            1.0F, 1, 0.01F, 100);
+-
++    private Camera camera = new Camera(new Vector3f(0.0F, 0.0F, 100.0F), new Vector3f(0.0F, 0.0F, 0.0F), 1.0F, 1.0F, 0.01F, 100.0F);
+     private Timeline timeline;
+ 
++    public GuiController() {
++    }
++
+     @FXML
+     private void initialize() {
+-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+-
+-        timeline = new Timeline();
+-        timeline.setCycleCount(Animation.INDEFINITE);
+-
+-        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
+-            double width = canvas.getWidth();
+-            double height = canvas.getHeight();
+-
+-            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+-            camera.setAspectRatio((float) (width / height));
+-
+-            if (mesh != null) {
+-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
++        this.anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
++            this.canvas.setWidth(newValue.doubleValue());
++        });
++        this.anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> {
++            this.canvas.setHeight(newValue.doubleValue());
++        });
++        this.timeline = new Timeline();
++        this.timeline.setCycleCount(-1);
++        KeyFrame frame = new KeyFrame(Duration.millis(15.0), (event) -> {
++            double width = this.canvas.getWidth();
++            double height = this.canvas.getHeight();
++            this.canvas.getGraphicsContext2D().clearRect(0.0, 0.0, width, height);
++            this.camera.setAspectRatio((float)(width / height));
++            if (this.mesh != null) {
++                RenderEngine.render(this.canvas.getGraphicsContext2D(), this.camera, this.mesh, (int)width, (int)height);
+             }
+-        });
+ 
+-        timeline.getKeyFrames().add(frame);
+-        timeline.play();
++        }, new KeyValue[0]);
++        this.timeline.getKeyFrames().add(frame);
++        this.timeline.play();
+     }
+ 
+     @FXML
+     private void onOpenModelMenuItemClick() {
+         FileChooser fileChooser = new FileChooser();
+-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
++        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", new String[]{"*.obj"}));
+         fileChooser.setTitle("Load Model");
+-
+-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+-        if (file == null) {
+-            return;
+-        }
+-
+-        Path fileName = Path.of(file.getAbsolutePath());
++        File file = fileChooser.showOpenDialog((Stage)this.canvas.getScene().getWindow());
++        if (file != null) {
++            Path fileName = Path.of(file.getAbsolutePath());
+ 
+-        try {
+-            String fileContent = Files.readString(fileName);
+-            mesh = ObjReader.read(fileContent);
+-            // todo: обработка ошибок
+-        } catch (IOException exception) {
++            try {
++                String fileContent = Files.readString(fileName);
++                this.mesh = ObjReader.read(fileContent);
++            } catch (IOException var5) {
++            }
++
++        }
++    }
++
++    @FXML
++    private void onSaveModelClick() {
++        if (this.mesh == null) {
++            System.out.println("No model to save.");
++        } else {
++            FileChooser fileChooser = new FileChooser();
++            fileChooser.setTitle("Save Model");
++            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", new String[]{"*.obj"}));
++            File file = fileChooser.showSaveDialog((Stage)this.canvas.getScene().getWindow());
++            if (file != null) {
++                try {
++                    ObjWriter writer = new ObjWriter();
++                    writer.write(this.mesh, file.getAbsolutePath());
++                    System.out.println("Model saved successfully!");
++                } catch (Exception var4) {
++                    System.err.println("Failed to save model: " + var4.getMessage());
++                }
++            }
+ 
+         }
+     }
+ 
+     @FXML
+     public void handleCameraForward(ActionEvent actionEvent) {
+-        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
++        this.camera.movePosition(new Vector3f(0.0F, 0.0F, -0.5F));
+     }
+ 
+     @FXML
+     public void handleCameraBackward(ActionEvent actionEvent) {
+-        camera.movePosition(new Vector3f(0, 0, TRANSLATION));
++        this.camera.movePosition(new Vector3f(0.0F, 0.0F, 0.5F));
+     }
+ 
+     @FXML
+     public void handleCameraLeft(ActionEvent actionEvent) {
+-        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
++        this.camera.movePosition(new Vector3f(0.5F, 0.0F, 0.0F));
+     }
+ 
+     @FXML
+     public void handleCameraRight(ActionEvent actionEvent) {
+-        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
++        this.camera.movePosition(new Vector3f(-0.5F, 0.0F, 0.0F));
+     }
+ 
+     @FXML
+     public void handleCameraUp(ActionEvent actionEvent) {
+-        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
++        this.camera.movePosition(new Vector3f(0.0F, 0.5F, 0.0F));
+     }
+ 
+     @FXML
+     public void handleCameraDown(ActionEvent actionEvent) {
+-        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
++        this.camera.movePosition(new Vector3f(0.0F, -0.5F, 0.0F));
+     }
+-}
+\ No newline at end of file
++}
+Index: Simple3DViewer/src/main/java/com/cgvsu/obj_writer/ObjWriter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Simple3DViewer/src/main/java/com/cgvsu/obj_writer/ObjWriter.java b/Simple3DViewer/src/main/java/com/cgvsu/obj_writer/ObjWriter.java
+new file mode 100644
+--- /dev/null	(date 1736192629099)
++++ b/Simple3DViewer/src/main/java/com/cgvsu/obj_writer/ObjWriter.java	(date 1736192629099)
+@@ -0,0 +1,101 @@
++package com.cgvsu.obj_writer;
++
++
++
++import com.cgvsu.math.Vector2f;
++import com.cgvsu.math.Vector3f;
++import com.cgvsu.model.Model;
++import com.cgvsu.model.Polygon;
++
++import java.io.File;
++import java.io.IOException;
++import java.io.PrintWriter;
++import java.util.List;
++
++public class ObjWriter {
++    private static final String OBJ_VERTEX_TOKEN = "v";
++    private static final String OBJ_TEXTURE_TOKEN = "vt";
++    private static final String OBJ_NORMAL_TOKEN = "vn";
++    private static final String OBJ_FACE_TOKEN = "f";
++
++    public void write(Model model, String filename) {
++        File file = new File(filename);
++        if (!createDir(file.getParentFile()))
++            return;
++        if (!createFile(file))
++            return;
++        try (PrintWriter writer = new PrintWriter(file)) {
++            model.vertices.forEach(v -> writer.println(vertexToString(v)));
++            model.textureVertices.forEach(v -> writer.println(textureVertexToString(v)));
++            model.normals.forEach(v -> writer.println(normalToString(v)));
++            model.polygons.forEach(v -> writer.println(polygonToString(v)));
++        } catch (IOException e) {
++            System.out.println("Error while writing file");
++        }
++    }
++
++    private boolean createDir(File directory) {
++        if (directory != null && !directory.exists() && !directory.mkdirs()) {
++            System.out.println("Couldn't create dir: " + directory);
++            return false;
++        }
++        return true;
++    }
++
++    private boolean createFile(File file) {
++        try {
++            if (!file.createNewFile())
++                System.out.println("Warning: " + file.getName() + " already exists");
++        } catch (IOException e) {
++            System.out.println("Error while creating the file");
++            return false;
++        }
++        return true;
++    }
++
++    protected String vertexToString(Vector3f vector) {
++        return OBJ_VERTEX_TOKEN + " " + vector.getX() + " " + vector.getY() + " " + vector.getZ();
++    }
++
++    protected String textureVertexToString(Vector2f vector) {
++        return OBJ_TEXTURE_TOKEN + " " + vector.getX() + " " + vector.getY();
++    }
++
++    protected String normalToString(Vector3f vector) {
++        return OBJ_NORMAL_TOKEN + " " + vector.getX() + " " + vector.getY() + " " + vector.getZ();
++    }
++
++    protected String polygonToString(Polygon polygon) {
++        StringBuilder stringBuilder = new StringBuilder(OBJ_FACE_TOKEN);
++        List<Integer> vertexIndices = polygon.getVertexIndices();
++        List<Integer> textureVertexIndices = polygon.getTextureVertexIndices();
++        List<Integer> normalIndices = polygon.getNormalIndices();
++        boolean hasTextures = textureVertexIndices.size() == vertexIndices.size();
++        boolean hasNormals = normalIndices.size() == vertexIndices.size();
++        for (int i = 0; i < vertexIndices.size(); i++) {
++            stringBuilder.append(" ")
++                    .append(getFormattedIndex(vertexIndices, i));
++            if (hasNormals) {
++                stringBuilder.append("/");
++                if (hasTextures) {
++                    stringBuilder.append(getFormattedIndex(textureVertexIndices, i))
++                            .append("/")
++                            .append(getFormattedIndex(normalIndices, i));
++                } else {
++                    stringBuilder.append("/")
++                            .append(getFormattedIndex(normalIndices, i));
++                }
++            } else {
++                if (hasTextures) {
++                    stringBuilder.append("/")
++                            .append(getFormattedIndex(textureVertexIndices, i));
++                }
++            }
++        }
++        return stringBuilder.toString();
++    }
++
++    private int getFormattedIndex(List<Integer> indices, int index) {
++        return indices.get(index) + 1;
++    }
++}
+Index: Simple3DViewer/src/main/resources/com/cgvsu/fxml/gui.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.scene.control.MenuBar?>\r\n<?import javafx.scene.control.Menu?>\r\n<?import javafx.scene.control.MenuItem?>\r\n<?import javafx.scene.input.KeyCodeCombination?>\r\n<?import javafx.scene.layout.AnchorPane?>\r\n<?import javafx.scene.canvas.Canvas?>\r\n\r\n<AnchorPane fx:id=\"anchorPane\" xmlns:fx=\"http://javafx.com/fxml\" fx:controller=\"com.cgvsu.GuiController\">\r\n    <MenuBar>\r\n        <Menu mnemonicParsing=\"false\" text=\"File\">\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#onOpenModelMenuItemClick\" text=\"Load Model\">\r\n            <accelerator>\r\n                <KeyCodeCombination alt=\"UP\" control=\"DOWN\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"F\"/>\r\n            </accelerator>\r\n            </MenuItem>\r\n        </Menu>\r\n        <Menu mnemonicParsing=\"false\" text=\"Camera Options\">\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraForward\" text=\"Forward\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"UP\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraBackward\" text=\"Backward\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"DOWN\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraLeft\" text=\"Left\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"LEFT\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraRight\" text=\"Right\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"RIGHT\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraUp\" text=\"Up\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"W\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraDown\" text=\"Down\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"S\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n        </Menu>\r\n    </MenuBar>\r\n\r\n    <Canvas fx:id=\"canvas\" width=\"1600\" height=\"870\" AnchorPane.topAnchor=\"30.0\"/>\r\n</AnchorPane>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Simple3DViewer/src/main/resources/com/cgvsu/fxml/gui.fxml b/Simple3DViewer/src/main/resources/com/cgvsu/fxml/gui.fxml
+--- a/Simple3DViewer/src/main/resources/com/cgvsu/fxml/gui.fxml	(revision 3c3cd078e4e7d47be7d597bafbb8af71b0285bee)
++++ b/Simple3DViewer/src/main/resources/com/cgvsu/fxml/gui.fxml	(date 1736192629100)
+@@ -15,6 +15,11 @@
+                 <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="F"/>
+             </accelerator>
+             </MenuItem>
++            <MenuItem mnemonicParsing="false" onAction="#onSaveModelClick" text="Save Model">
++                <accelerator>
++                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="S"/>
++                </accelerator>
++            </MenuItem>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Camera Options">
+             <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
+Index: Simple3DViewer/target/classes/com/cgvsu/fxml/gui.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.scene.control.MenuBar?>\r\n<?import javafx.scene.control.Menu?>\r\n<?import javafx.scene.control.MenuItem?>\r\n<?import javafx.scene.input.KeyCodeCombination?>\r\n<?import javafx.scene.layout.AnchorPane?>\r\n<?import javafx.scene.canvas.Canvas?>\r\n\r\n<AnchorPane fx:id=\"anchorPane\" xmlns:fx=\"http://javafx.com/fxml\" fx:controller=\"com.cgvsu.GuiController\">\r\n    <MenuBar>\r\n        <Menu mnemonicParsing=\"false\" text=\"File\">\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#onOpenModelMenuItemClick\" text=\"Load Model\">\r\n            <accelerator>\r\n                <KeyCodeCombination alt=\"UP\" control=\"DOWN\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"F\"/>\r\n            </accelerator>\r\n            </MenuItem>\r\n        </Menu>\r\n        <Menu mnemonicParsing=\"false\" text=\"Camera Options\">\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraForward\" text=\"Forward\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"UP\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraBackward\" text=\"Backward\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"DOWN\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraLeft\" text=\"Left\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"LEFT\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraRight\" text=\"Right\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"RIGHT\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraUp\" text=\"Up\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"W\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n            <MenuItem mnemonicParsing=\"false\" onAction=\"#handleCameraDown\" text=\"Down\">\r\n                <accelerator>\r\n                    <KeyCodeCombination alt=\"UP\" control=\"UP\" meta=\"UP\" shift=\"UP\" shortcut=\"UP\" code=\"S\"/>\r\n                </accelerator>\r\n            </MenuItem>\r\n        </Menu>\r\n    </MenuBar>\r\n\r\n    <Canvas fx:id=\"canvas\" width=\"1600\" height=\"870\" AnchorPane.topAnchor=\"30.0\"/>\r\n</AnchorPane>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Simple3DViewer/target/classes/com/cgvsu/fxml/gui.fxml b/Simple3DViewer/target/classes/com/cgvsu/fxml/gui.fxml
+--- a/Simple3DViewer/target/classes/com/cgvsu/fxml/gui.fxml	(revision 3c3cd078e4e7d47be7d597bafbb8af71b0285bee)
++++ b/Simple3DViewer/target/classes/com/cgvsu/fxml/gui.fxml	(date 1736192629100)
+@@ -15,6 +15,11 @@
+                 <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="F"/>
+             </accelerator>
+             </MenuItem>
++            <MenuItem mnemonicParsing="false" onAction="#onSaveModelClick" text="Save Model">
++                <accelerator>
++                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="S"/>
++                </accelerator>
++            </MenuItem>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Camera Options">
+             <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
+Index: Simple3DViewer/cgvsu.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Simple3DViewer/cgvsu.iml b/Simple3DViewer/cgvsu.iml
+new file mode 100644
+--- /dev/null	(date 1736192629098)
++++ b/Simple3DViewer/cgvsu.iml	(date 1736192629098)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module version="4">
++  <component name="SonarLintModuleSettings">
++    <option name="uniqueId" value="d1b1285a-03f1-4908-9563-a2f0eb1535ae" />
++  </component>
++</module>
+\ No newline at end of file
