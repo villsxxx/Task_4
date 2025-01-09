@@ -11,14 +11,18 @@ public class Polygon {
     private ArrayList<Integer> normalIndices;
     private int lineIndex;
 
+    // Конструктор по умолчанию
     public Polygon() {
         vertexIndices = new ArrayList<>();
         textureVertexIndices = new ArrayList<>();
         normalIndices = new ArrayList<>();
     }
 
-    public void setNormalIndices(ArrayList<Integer> normalIndices) {
-        this.normalIndices = normalIndices;
+    // Конструктор с параметрами
+    public Polygon(ArrayList<Integer> vertexIndices, ArrayList<Integer> textureVertexIndices, ArrayList<Integer> normalIndices) {
+        setVertexIndices(vertexIndices);
+        setTextureVertexIndices(textureVertexIndices);
+        setNormalIndices(normalIndices); // Используем метод установки для нормалей
     }
 
     public void setVertexIndices(ArrayList<Integer> vertexIndices) {
@@ -29,19 +33,13 @@ public class Polygon {
     }
 
     public void setTextureVertexIndices(ArrayList<Integer> textureVertexIndices) {
-        if (textureVertexIndices.size() < 3) {
-            throw new IllegalArgumentException("Полигоны с текстурами должны иметь хотя бы 3 текстурные вершины.");
-        }
         this.textureVertexIndices = textureVertexIndices;
     }
-/*
-    public void setNormalIndices(ArrayList<Integer> normalIndices) {
-        if (normalIndices.size() < 3) {
-            throw new IllegalArgumentException("Полигон должен иметь хотя бы 3 нормали.");
-        }
+
+    public void setNormalIndices(ArrayList<Integer> normalIndices) { // Новый метод установки нормалей
         this.normalIndices = normalIndices;
     }
-*/
+
     public ArrayList<Integer> getVertexIndices() {
         return vertexIndices;
     }
@@ -63,40 +61,48 @@ public class Polygon {
     }
 
     public void checkIndices(int verticesSize, int textureVerticesSize, int normalsSize) {
-        for (int i = 0; i < vertexIndices.size(); i++) {
-            int vertexIndex = vertexIndices.get(i);
-            if (vertexIndex >= verticesSize || vertexIndex < 0) {
-                throw new FaceWordException("vertex", lineIndex, i + 1);
-            }
-        }
+        validateIndices(vertexIndices, verticesSize, "vertex");
+        validateIndices(textureVertexIndices, textureVerticesSize, "texture vertex");
+        validateIndices(normalIndices, normalsSize, "normal");
+    }
 
-        for (int i = 0; i < textureVertexIndices.size(); i++) {
-            int textureVertexIndex = textureVertexIndices.get(i);
-            if (textureVertexIndex >= textureVerticesSize || textureVertexIndex < 0) {
-                throw new FaceWordException("texture vertex", lineIndex, i + 1);
-            }
-        }
-
-        for (int i = 0; i < normalIndices.size(); i++) {
-            int normalIndex = normalIndices.get(i);
-            if (normalIndex >= normalsSize || normalIndex < 0) {
-                throw new FaceWordException("normal", lineIndex, i + 1);
+    private void validateIndices(ArrayList<Integer> indices, int size, String type) { // Вынесена общая проверка
+        for (int i = 0; i < indices.size(); i++) {
+            int index = indices.get(i);
+            if (index >= size || index < 0) {
+                throw new FaceWordException(type, lineIndex, i + 1);
             }
         }
     }
+
     @Override
-    public Polygon clone() {
-        try {
-            Polygon clonedPolygon = (Polygon) super.clone();
+    public String toString() {
+        return "Polygon{" +
+                "vertexIndices=" + vertexIndices +
+                ", textureVertexIndices=" + textureVertexIndices +
+                ", normalIndices=" + normalIndices +
+                '}';
+    }
 
-            // Глубокое копирование списков
-            clonedPolygon.vertexIndices = new ArrayList<>(this.vertexIndices);
-            clonedPolygon.textureVertexIndices = new ArrayList<>(this.textureVertexIndices);
-            clonedPolygon.normalIndices = new ArrayList<>(this.normalIndices);
+    // Методы для добавления индексов
+    public void addVertexIndex(int vertexIndex) {
+        validateNonNegativeIndex(vertexIndex, "vertex");
+        vertexIndices.add(vertexIndex);
+    }
 
-            return clonedPolygon;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(); // Этот код никогда не должен выполняться
+    public void addTextureVertexIndex(int textureVertexIndex) {
+        validateNonNegativeIndex(textureVertexIndex, "texture");
+        textureVertexIndices.add(textureVertexIndex);
+    }
+
+    public void addNormalIndex(int normalIndex) {
+        validateNonNegativeIndex(normalIndex, "normal");
+        normalIndices.add(normalIndex);
+    }
+
+    private void validateNonNegativeIndex(int index, String type) { // Общая проверка на отрицательные индексы
+        if (index < 0) {
+            throw new IllegalArgumentException("Индекс " + type + " не может быть отрицательным.");
         }
     }
 }

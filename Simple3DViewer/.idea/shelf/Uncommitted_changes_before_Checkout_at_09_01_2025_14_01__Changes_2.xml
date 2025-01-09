@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_09_01_2025_14_01_[Changes]2" date="1736420512598" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_14_01_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 09.01.2025 14:01 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_14_01_[Changes]/RenderEngine.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/model/Model.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/model/Model.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_14_01_[Changes]/Model.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/GuiController.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/GuiController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_14_01_[Changes]/GuiController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/triangulation/Triangulator$1.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/triangulation/Triangulator$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_01_2025_14_01_[Changes]/Triangulator$1.class" />
+  </binary>
+</changelist>
