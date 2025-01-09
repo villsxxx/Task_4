@@ -1,33 +1,29 @@
 .root {
-    -fx-background-color: #2b2b2b;
-    -fx-text-fill: #ffffff;
-    -fx-font-family: "Arial";
+    -fx-base: #2b2b2b;
+    -fx-background: #2b2b2b;
+    -fx-text-fill: #e0e0e0;
 }
 
-/* Кнопки */
+.label, .menu, .menu-bar, .tab {
+    -fx-text-fill: #e0e0e0;
+}
+
 .button {
     -fx-background-color: #3c3f41;
-    -fx-text-fill: #ffffff;
-    -fx-border-color: #555555;
-}
-.button:hover {
-    -fx-background-color: #4e5254;
+    -fx-text-fill: #e0e0e0;
 }
 
-/* Текстовые поля */
-.text-field, .text-area {
+.text-field {
     -fx-background-color: #3c3f41;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #e0e0e0;
     -fx-border-color: #555555;
 }
 
-/* Метки */
-.label {
-    -fx-text-fill: #ffffff;
+.scroll-pane, .tab-pane {
+    -fx-background: #2b2b2b;
 }
 
-/* Список */
 .list-view {
     -fx-background-color: #3c3f41;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #e0e0e0;
 }
