@@ -24,12 +24,12 @@
               <Menu mnemonicParsing="false" text="Tema">
                   <MenuItem mnemonicParsing="false" onAction="#switchThemeToDark" text="Dark">
                       <accelerator>
-                          <KeyCodeCombination alt="UP" code="D" control="DOWN"  />
+                          <KeyCodeCombination  code="D" control="DOWN"  />
                       </accelerator>
                   </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#switchThemeToLight" text="Light">
                       <accelerator>
-                          <KeyCodeCombination alt="UP" code="L" control="DOWN"   />
+                          <KeyCodeCombination  code="L" control="DOWN"   />
                       </accelerator>
                   </MenuItem>
               </Menu>
