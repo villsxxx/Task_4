@@ -5,6 +5,7 @@ import com.cgvsu.reader.Reader;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -23,9 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 import com.cgvsu.math.*;
@@ -56,7 +55,7 @@ public class GuiController {
 
     //private SceneManager sceneManager = new SceneManager();
     private Model selectedModel;
-    private int selectedModelIndex = -1;
+    private int selectedModelIndex;
     private List<Float> modelCenters = new ArrayList<>();
     private float x = 0;
     private float spacing = 5.0f;
@@ -74,7 +73,7 @@ public class GuiController {
     private double lastMouseX; // Последняя X-координата мыши
     private double lastMouseY; // Последняя Y-координата мыши
     private static final float MOUSE_SENSITIVITY = 0.1f;
-
+    private List<String> modelNames = new ArrayList<>();
     @FXML
     private TextField textScale;
     @FXML
@@ -167,7 +166,8 @@ public class GuiController {
             public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
                 String item = modelsSelectionModel.getSelectedItem();
                 if(!Objects.isNull(item)) {
-                    selectedModel = models.get(Character.getNumericValue(item.charAt(item.length() - 1)) - 1);
+                    selectedModelIndex = modelNames.indexOf(item);
+                    selectedModel = models.get(selectedModelIndex);
                 }
             }
         });
@@ -192,10 +192,12 @@ public class GuiController {
                 throwExceptionWindow(ExceptionDialog.Operation.READING);
             }
             models.add(newModel);
+            modelNames.add(file.getName());
             selectedModel = newModel;
             modelCenters.add(x);
+            selectedModelIndex = Math.max(0, models.size() - 1);
             x += newModel.xSize + spacing;
-            modelList.getItems().add(file.getName() + " - " + (++selectedModelIndex + 1));
+            modelList.getItems().add(file.getName());
             // todo: обработка ошибок
         } catch (IOException exception) {
 
@@ -371,14 +373,16 @@ public class GuiController {
             return;
         }
         models.remove(selectedModelIndex);
-        modelList.getItems().remove(selectedModelIndex);
+        modelNames.remove(selectedModelIndex);
         if(models.isEmpty()){
             selectedModel = null;
-            selectedModelIndex = -1;
         } else{
             selectedModel = models.get(0);
             selectedModelIndex = 0;
         }
+        selectedModelIndex = 0;
+
+        modelList.getItems().remove(selectedModelIndex);
     }
 }
 
