@@ -1,8 +1,10 @@
 package com.cgvsu;
 
+import com.cgvsu.model.Polygon;
 import com.cgvsu.obj_writer.ObjWriter;
 import com.cgvsu.reader.Reader;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.triangulation.Triangulator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -15,6 +17,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -36,6 +39,7 @@ import com.cgvsu.render_engine.Camera;
 import static com.cgvsu.ExceptionDialog.throwExceptionWindow;
 
 public class GuiController {
+    private final static float CAMERA_MOV_STEP = 5F;
 
     final private float TRANSLATION = 0.5F;
 
@@ -111,11 +115,11 @@ public class GuiController {
             double deltaY = currentMouseY - lastMouseY;
 
             // Двигаем камеру в зависимости от направления
-            camera.movePosition(new Vector3f(
-                    (float) -deltaX * MOUSE_SENSITIVITY,
-                    (float) deltaY * MOUSE_SENSITIVITY,
-                    0
-            ));
+//            camera.movePosition(new Vector3f(
+//                    (float) -deltaX * MOUSE_SENSITIVITY,
+//                    (float) deltaY * MOUSE_SENSITIVITY,
+//                    0
+//            ));
 
             // Запоминаем текущие координаты мыши
             lastMouseX = currentMouseX;
@@ -125,12 +129,12 @@ public class GuiController {
             double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)
 
             // Двигаем камеру вперед или назад в зависимости от направления
-            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
+//            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));
         });
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
-
+        canvas.setOnScroll(event -> scroll(event));
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
@@ -191,9 +195,16 @@ public class GuiController {
             if (newModel == null) {
                 throwExceptionWindow(ExceptionDialog.Operation.READING);
             }
-            models.add(newModel);
+            Model model = newModel;
+//            Triangulator triangulator = new Triangulator();
+//            Model model = new Model(newModel.getVertices(), newModel.getTextureVertices(),
+//                    newModel.getNormals(), (ArrayList<Polygon>) triangulator.triangulate(newModel),
+//                    newModel.getGroups(), newModel.getTransformation());
+            models.add(model);
+
             modelNames.add(file.getName());
-            selectedModel = newModel;
+            selectedModel = model;
+
             modelCenters.add(x);
             selectedModelIndex = Math.max(0, models.size() - 1);
             x += newModel.xSize + spacing;
@@ -290,36 +301,47 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
+//        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3f(0, 0, TRANSLATION));
+//        camera.movePosition(new Vector3f(0, 0, TRANSLATION));
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
+//        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
+//        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
+//        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
+//        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
     @FXML
     public void toggleGrid(ActionEvent actionEvent) {
     }
+    //на себя колесико - приближаем камеру, от себя - удаляем камеру
+    public void scroll(ScrollEvent event) {
+        if(event.getDeltaY()>0){
+            camera.movePosition(new Vector3f(0, 0, CAMERA_MOV_STEP));
+        }
+        if(event.getDeltaY()<0){
+            camera.movePosition(new Vector3f(0, 0, -CAMERA_MOV_STEP));
+
+        }
+    }
+
     @FXML
     private void scale(ActionEvent event) {
         if(Objects.isNull(selectedModel)){

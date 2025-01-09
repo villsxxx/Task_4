@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Triangulator {
+    public List<Polygon> triangulate(Model model) {
+        List<Polygon> triangles = new ArrayList<>();
+        List<Polygon> polygons = model.getPolygons();
+        for(Polygon p: polygons){
+            triangles.addAll(triangulate(p, model));
+        }
+        return triangles;
+    }
 
     public List<Polygon> triangulate(Polygon polygon, Model model) {
         List<Polygon> triangles = new ArrayList<>();
@@ -90,14 +98,23 @@ public class Triangulator {
 
 
     private boolean isConvex(Vector3f a, Vector3f b, Vector3f c) {
-        Vector3f ab = Vector3f.subtract(b, a); // Получаем вектор ab
-        Vector3f ac = Vector3f.subtract(c, a); // Получаем вектор ac
+        // Векторы AB и AC
+        Vector3f ab = Vector3f.subtract(b, a);
+        Vector3f ac = Vector3f.subtract(c, a);
 
-        // Векторное произведение ab и ac (в данном случае учитываем только Z-компонент)
-        float crossProductZ = ab.getX() * ac.getY() - ab.getY() * ac.getX();
+        // Векторное произведение AB x AC
+        Vector3f crossProduct = Vector3f.cross(ab, ac);
 
-        // Если результат больше 0, угол является выпуклым
-        return crossProductZ > 0;
+        // Проверка знака Z-компоненты векторного произведения
+        return crossProduct.getZ() > 0;
+//        Vector3f ab = Vector3f.subtract(b, a); // Получаем вектор ab
+//        Vector3f ac = Vector3f.subtract(c, a); // Получаем вектор ac
+//
+//        // Векторное произведение ab и ac (в данном случае учитываем только Z-компонент)
+//        float crossProductZ = ab.getX() * ac.getY() - ab.getY() * ac.getX();
+//
+//        // Если результат больше 0, угол является выпуклым
+//        return crossProductZ > 0;
     }
 
     // Метод для проверки принадлежности точки треугольнику
