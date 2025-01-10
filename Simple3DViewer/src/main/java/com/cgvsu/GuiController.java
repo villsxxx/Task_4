@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.TL.ImageToText;
 import com.cgvsu.VertexDelete.Eraser;
 import com.cgvsu.VertexDelete.EraserV2;
 import com.cgvsu.obj_writer.ObjWriter;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
+import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,6 +39,8 @@ import com.cgvsu.math.*;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
+import javax.imageio.ImageIO;
+import static com.cgvsu.TL.ImageToText.pixelData;
 
 
 public class GuiController {
@@ -413,25 +417,30 @@ public class GuiController {
 
     // метод для загрузки текстуры
     @FXML
-    private void onLoadTextureMenuItemClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-        fileChooser.setTitle("Load Texture");
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
-        if (file != null && mesh != null) {
-            try {
-                String texturePath = file.getAbsolutePath();
-                mesh.setTexture(texturePath);
-                System.out.println("Texture loaded successfully!");
-            } catch (Exception e) {
+    public void loadImage(String path) {
 
-                System.err.println("Failed to load texture: " + e.getMessage());
+        BufferedImage img;
+
+        try {
+            img = ImageIO.read(new File(path));
+
+            pixelData = new int[img.getWidth()][img.getHeight()][3];
+            int wight = img.getWidth();
+            int height = img.getHeight();
+            int[] rgb;
+
+            for (int i = 0; i < img.getWidth(); i++){ //для лица и куба
+                for (int j = 0; j < img.getHeight(); j++){
+                    rgb = ImageToText.getPixelData(img, i, j);
+                    pixelData[img.getWidth() - 1 - i][img.getHeight() - 1 - j][0] = rgb[0];
+                    pixelData[img.getWidth() - 1 - i][img.getHeight() - 1 - j][1] = rgb[1];
+                    pixelData[img.getWidth() - 1 - i][img.getHeight() - 1 - j][2] = rgb[2];
+                }
             }
-        } else {
-            System.out.println("No model loaded or texture file not selected.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
-
 
 

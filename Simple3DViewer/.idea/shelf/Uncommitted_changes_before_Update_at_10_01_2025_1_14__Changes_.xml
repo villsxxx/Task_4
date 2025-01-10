@@ -1,0 +1,92 @@
+<changelist name="Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]" date="1736460896030" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 10.01.2025 1:14 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/RenderEngine.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/ExceptionDialog.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/ExceptionDialog.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/ExceptionDialog.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/math/Vector4f.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/math/Vector4f.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Vector4f.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/GraphicConveyor.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/GraphicConveyor.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/GraphicConveyor.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/math/Vector.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/math/Vector.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Vector.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/model/Model.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/model/Model.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Model.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/math/Vector2f.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/math/Vector2f.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Vector2f.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine$SelectedPolygon.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine$SelectedPolygon.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/RenderEngine$SelectedPolygon.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/PolygonRasterizer.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/Camera.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/Camera.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Camera.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine$PointVertexModel.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/render_engine/RenderEngine$PointVertexModel.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/RenderEngine$PointVertexModel.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/model/Polygon.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/model/Polygon.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Polygon.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/triangulation/Triangulator.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/triangulation/Triangulator.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Triangulator.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/math/Vector3f.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/math/Vector3f.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Vector3f.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/TL/Light.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/TL/Light.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Light.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/objreader/ObjReader.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/objreader/ObjReader.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/ObjReader.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/GuiController.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/GuiController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/GuiController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/triangulation/Triangulator$1.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/triangulation/Triangulator$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_01_2025_1_14_[Changes]/Triangulator$1.class" />
+  </binary>
+</changelist>

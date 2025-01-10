@@ -1,0 +1,314 @@
+Index: src/main/java/com/cgvsu/GuiController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu;\r\n\r\nimport com.cgvsu.obj_writer.ObjWriter;\r\nimport com.cgvsu.render_engine.RenderEngine;\r\nimport javafx.fxml.FXML;\r\nimport javafx.animation.Animation;\r\nimport javafx.animation.KeyFrame;\r\nimport javafx.animation.Timeline;\r\nimport javafx.event.ActionEvent;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.layout.AnchorPane;\r\nimport javafx.stage.Stage;\r\nimport javafx.stage.FileChooser;\r\nimport javafx.util.Duration;\r\nimport java.nio.file.Files;\r\nimport java.nio.file.Path;\r\nimport java.io.IOException;\r\nimport java.io.File;\r\nimport com.cgvsu.math.*;\r\n\r\nimport com.cgvsu.model.Model;\r\nimport com.cgvsu.objreader.ObjReader;\r\nimport com.cgvsu.render_engine.Camera;\r\n\r\npublic class GuiController {\r\n\r\n    final private float TRANSLATION = 0.5F;\r\n\r\n    @FXML\r\n    AnchorPane mainPane;\r\n    @FXML\r\n    AnchorPane centerPane;\r\n\r\n    @FXML\r\n    private Canvas canvas;\r\n\r\n    private Model mesh = null;\r\n\r\n    private Camera camera = new Camera(\r\n            new Vector3f(0, 00, 100),\r\n            new Vector3f(0, 0, 0),\r\n            1.0F, 1, 0.01F, 100);\r\n\r\n    private Timeline timeline;\r\n\r\n\r\n    private double lastMouseX; // Последняя X-координата мыши\r\n    private double lastMouseY; // Последняя Y-координата мыши\r\n    private static final float MOUSE_SENSITIVITY = 0.1f;\r\n\r\n\r\n    @FXML\r\n    private void initialize() {\r\n        //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));\r\n        //centerPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));\r\n        canvas.widthProperty().bind(centerPane.widthProperty()); // Вычитаем ширину боковой панели\r\n        canvas.heightProperty().bind(centerPane.heightProperty());\r\n\r\n        // Обработка нажатия мыши\r\n        canvas.setOnMousePressed(event -> {\r\n            lastMouseX = event.getSceneX();\r\n            lastMouseY = event.getSceneY();\r\n        });\r\n\r\n        // Обработка перемещения мыши\r\n        canvas.setOnMouseDragged(event -> {\r\n            double currentMouseX = event.getSceneX();\r\n            double currentMouseY = event.getSceneY();\r\n\r\n            // Вычисляем разницу\r\n            double deltaX = currentMouseX - lastMouseX;\r\n            double deltaY = currentMouseY - lastMouseY;\r\n\r\n            // Двигаем камеру в зависимости от направления\r\n            camera.movePosition(new Vector3f(\r\n                    (float) -deltaX * MOUSE_SENSITIVITY,\r\n                    (float) deltaY * MOUSE_SENSITIVITY,\r\n                    0\r\n            ));\r\n\r\n            // Запоминаем текущие координаты мыши\r\n            lastMouseX = currentMouseX;\r\n            lastMouseY = currentMouseY;\r\n        });\r\n        canvas.setOnScroll(event -> {\r\n            double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)\r\n\r\n            // Двигаем камеру вперед или назад в зависимости от направления\r\n            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));\r\n        });\r\n\r\n        timeline = new Timeline();\r\n        timeline.setCycleCount(Animation.INDEFINITE);\r\n\r\n        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {\r\n            double width = canvas.getWidth();\r\n            double height = canvas.getHeight();\r\n\r\n            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);\r\n            camera.setAspectRatio((float) (width / height));\r\n\r\n            if (mesh != null) {\r\n                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);\r\n            }\r\n        });\r\n\r\n        timeline.getKeyFrames().add(frame);\r\n        timeline.play();\r\n    }\r\n\r\n    @FXML\r\n    private void onOpenModelMenuItemClick() {\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"Model (*.obj)\", \"*.obj\"));\r\n        fileChooser.setTitle(\"Load Model\");\r\n\r\n        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());\r\n        if (file == null) {\r\n            return;\r\n        }\r\n        Path fileName = Path.of(file.getAbsolutePath());\r\n        try {\r\n            String fileContent = Files.readString(fileName);\r\n            mesh = ObjReader.read(fileContent);\r\n            // todo: обработка ошибок\r\n        } catch (IOException exception) {\r\n        }\r\n    }\r\n\r\n\r\n    @FXML\r\n    private void onSaveModelClick() {\r\n        if (mesh == null) {\r\n            System.out.println(\"No model to save.\");\r\n            return;\r\n        }\r\n\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.setTitle(\"Save Model\");\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"OBJ files (*.obj)\", \"*.obj\"));\r\n\r\n        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());\r\n        if (file != null) {\r\n            try {\r\n                ObjWriter writer = new ObjWriter();\r\n                writer.write(mesh, file.getAbsolutePath());\r\n                System.out.println(\"Model saved successfully!\");\r\n            } catch (Exception e) {\r\n                System.err.println(\"Failed to save model: \" + e.getMessage());\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n\r\n    @FXML\r\n    public void handleCameraForward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraBackward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraLeft(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraRight(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraUp(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, TRANSLATION, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraDown(ActionEvent actionEvent) {camera.movePosition(new Vector3f(0, -TRANSLATION, 0));}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/GuiController.java b/src/main/java/com/cgvsu/GuiController.java
+--- a/src/main/java/com/cgvsu/GuiController.java	(revision 0dcfe2196a4877183de50914c0379b72587b43db)
++++ b/src/main/java/com/cgvsu/GuiController.java	(date 1736443227051)
+@@ -8,6 +8,7 @@
+ import javafx.animation.Timeline;
+ import javafx.event.ActionEvent;
+ import javafx.scene.canvas.Canvas;
++import javafx.scene.control.CheckBox;
+ import javafx.scene.layout.AnchorPane;
+ import javafx.stage.Stage;
+ import javafx.stage.FileChooser;
+@@ -34,6 +35,10 @@
+     @FXML
+     private Canvas canvas;
+ 
++    @FXML
++    private CheckBox textyre;
++
++
+     private Model mesh = null;
+ 
+     private Camera camera = new Camera(
+@@ -151,6 +156,18 @@
+         }
+     }
+ 
++    @FXML
++    public void handleTextureCheckbox(ActionEvent event) {
++        CheckBox checkBox = (CheckBox) event.getSource();
++        if (checkBox.isSelected()) {
++            // Логика для загрузки текстуры
++            System.out.println("Texture loading enabled.");
++        } else {
++            // Логика для отключения текстуры
++            System.out.println("Texture loading disabled.");
++        }
++    }
++
+ 
+ 
+     @FXML
+Index: src/main/java/com/cgvsu/model/Model.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu.model;\r\nimport com.cgvsu.math.Vector3f;\r\nimport com.cgvsu.math.Vector2f;\r\nimport java.util.*;\r\n\r\npublic class Model {\r\n\r\n    public ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();\r\n    public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();\r\n    public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();\r\n    public ArrayList<Polygon> polygons = new ArrayList<Polygon>();\r\n    private ArrayList<Group> groups = new ArrayList<>();\r\n\r\n    public void addVertex(Vector3f vertex) {\r\n        vertices.add(vertex);\r\n    }\r\n\r\n    public void addTextureVertex(Vector2f textureVertex) {\r\n        textureVertices.add(textureVertex);\r\n    }\r\n\r\n    public void addNormal(Vector3f normal) {\r\n        normals.add(normal);\r\n    }\r\n\r\n    public void addPolygon(Polygon polygon) {\r\n        polygons.add(polygon);\r\n    }\r\n\r\n    public void addGroup(Group group) {\r\n        groups.add(group);\r\n    }\r\n\r\n    public Polygon getFirstPolygon() {\r\n        return polygons.get(0);\r\n    }\r\n\r\n\r\n    public int getVerticesSize() {\r\n        return vertices.size();\r\n    }\r\n\r\n    public int getTextureVerticesSize() {\r\n        return textureVertices.size();\r\n    }\r\n\r\n    public int getNormalsSize() {\r\n        return normals.size();\r\n    }\r\n\r\n    public int getPolygonsSize() {\r\n        return polygons.size();\r\n    }\r\n\r\n    public ArrayList<Vector3f> getVertices() {\r\n        return vertices;\r\n    }\r\n\r\n    public ArrayList<Vector2f> getTextureVertices() {\r\n        return textureVertices;\r\n    }\r\n\r\n    public ArrayList<Vector3f> getNormals() {\r\n        return normals;\r\n    }\r\n\r\n    public ArrayList<Polygon> getPolygons() {\r\n        return polygons;\r\n    }\r\n    public ArrayList<Group> getGroups() {\r\n        return groups;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/model/Model.java b/src/main/java/com/cgvsu/model/Model.java
+--- a/src/main/java/com/cgvsu/model/Model.java	(revision 0dcfe2196a4877183de50914c0379b72587b43db)
++++ b/src/main/java/com/cgvsu/model/Model.java	(date 1736443417976)
+@@ -35,7 +35,6 @@
+         return polygons.get(0);
+     }
+ 
+-
+     public int getVerticesSize() {
+         return vertices.size();
+     }
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+--- /dev/null	(date 1736442543071)
++++ b/.idea/misc.xml	(date 1736442543071)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ExternalStorageConfigurationManager" enabled="true" />
++  <component name="MavenProjectsManager">
++    <option name="originalFiles">
++      <list>
++        <option value="$PROJECT_DIR$/pom.xml" />
++      </list>
++    </option>
++  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="22" project-jdk-type="JavaSDK" />
++</project>
+\ No newline at end of file
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+new file mode 100644
+--- /dev/null	(date 1736442543074)
++++ b/.idea/encodings.xml	(date 1736442543074)
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding">
++    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/uiDesigner.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/uiDesigner.xml b/.idea/uiDesigner.xml
+new file mode 100644
+--- /dev/null	(date 1736442543074)
++++ b/.idea/uiDesigner.xml	(date 1736442543074)
+@@ -0,0 +1,124 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Palette2">
++    <group name="Swing">
++      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
++      </item>
++      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.svg" removable="false" auto-create-binding="false" can-attach-label="true">
++        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
++        <initial-values>
++          <property name="text" value="Button" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="RadioButton" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="CheckBox" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="Label" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
++          <preferred-size width="-1" height="20" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
++      </item>
++    </group>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/jarRepositories.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/jarRepositories.xml b/.idea/jarRepositories.xml
+new file mode 100644
+--- /dev/null	(date 1736442543076)
++++ b/.idea/jarRepositories.xml	(date 1736442543076)
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Central Repository" />
++      <option name="url" value="https://repo.maven.apache.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+new file mode 100644
+--- /dev/null	(date 1736442543069)
++++ b/.idea/compiler.xml	(date 1736442543069)
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <annotationProcessing>
++      <profile name="Maven default annotation processors profile" enabled="true">
++        <sourceOutputDir name="target/generated-sources/annotations" />
++        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
++        <outputRelativeToContentRoot value="true" />
++        <module name="cgvsu" />
++      </profile>
++    </annotationProcessing>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1736442652300)
++++ b/.idea/vcs.xml	(date 1736442652300)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file

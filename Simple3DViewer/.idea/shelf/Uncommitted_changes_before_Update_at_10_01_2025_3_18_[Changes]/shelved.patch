@@ -1,0 +1,950 @@
+Index: src/main/java/com/cgvsu/TL/Texture.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu.TL;\r\n\r\nimport javafx.scene.image.Image;\r\nimport javafx.scene.image.PixelReader;\r\n\r\nimport java.io.FileInputStream;\r\nimport java.io.IOException;\r\n\r\npublic class Texture {\r\n    private Image textureImage;\r\n    private PixelReader pixelReader;\r\n\r\n    public Texture(String filePath) throws IOException {\r\n        loadTexture(filePath);\r\n    }\r\n\r\n    private void loadTexture(String filePath) throws IOException {\r\n        textureImage = new Image(new FileInputStream(filePath));\r\n        if (textureImage.isError()) {\r\n            throw new IOException(\"Не удалось загрузить текстуру из файла: \" + filePath);\r\n        }\r\n        pixelReader = textureImage.getPixelReader();\r\n    }\r\n\r\n    public int getColor(float u, float v) {\r\n        u = Math.max(0, Math.min(u, 1));\r\n        v = Math.max(0, Math.min(v, 1));\r\n\r\n        int x = Math.min((int) (u * textureImage.getWidth()), (int) textureImage.getWidth() - 1);\r\n        int y = Math.min((int) (v * textureImage.getHeight()), (int) textureImage.getHeight() - 1);\r\n\r\n        return pixelReader.getArgb(x, y);\r\n    }\r\n\r\n    public int getWidth() {\r\n        return (int) textureImage.getWidth();\r\n    }\r\n\r\n    public int getHeight() {\r\n        return (int) textureImage.getHeight();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/TL/Texture.java b/src/main/java/com/cgvsu/TL/Texture.java
+--- a/src/main/java/com/cgvsu/TL/Texture.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/TL/Texture.java	(date 1736467008987)
+@@ -1,42 +1,35 @@
+ package com.cgvsu.TL;
+ 
+-import javafx.scene.image.Image;
+-import javafx.scene.image.PixelReader;
++import com.cgvsu.math.Vector2f;
++import com.cgvsu.model.Model;
+ 
+-import java.io.FileInputStream;
+-import java.io.IOException;
++import java.awt.*;
++
+ 
+ public class Texture {
+-    private Image textureImage;
+-    private PixelReader pixelReader;
+ 
+-    public Texture(String filePath) throws IOException {
+-        loadTexture(filePath);
+-    }
++    private final Image image;
+ 
+-    private void loadTexture(String filePath) throws IOException {
+-        textureImage = new Image(new FileInputStream(filePath));
+-        if (textureImage.isError()) {
+-            throw new IOException("Не удалось загрузить текстуру из файла: " + filePath);
+-        }
+-        pixelReader = textureImage.getPixelReader();
++    public static double[] getGradientCoordinatesTexture(double[] barizentric, Vector2f[] texture) {
++        return new double[] {(barizentric[0] * texture[0].getX()) +  (barizentric[1] * texture[1].getX()) +  (barizentric[2] * texture[2].getX()),
++                (barizentric[0] * texture[0].getY()) + (barizentric[1] * texture[1].getY()) + (barizentric[2] * texture[2].getY())};
+     }
+-
+-    public int getColor(float u, float v) {
+-        u = Math.max(0, Math.min(u, 1));
+-        v = Math.max(0, Math.min(v, 1));
+-
+-        int x = Math.min((int) (u * textureImage.getWidth()), (int) textureImage.getWidth() - 1);
+-        int y = Math.min((int) (v * textureImage.getHeight()), (int) textureImage.getHeight() - 1);
+ 
+-        return pixelReader.getArgb(x, y);
++    public static void texture(double[] barizentric, Vector2f[] textures, Model mesh, int[] rgb){
++        double[] texture = getGradientCoordinatesTexture(barizentric, textures);
++        int u = (int) Math.round(texture[0] * (mesh.imageToText.wight - 1));
++        int v = (int) Math.round(texture[1] * (mesh.imageToText.height - 1));
++        if (u < mesh.imageToText.wight && v < mesh.imageToText.height) {
++            rgb[0] = ImageToText.pixelData[u][v][0];
++            rgb[1] = ImageToText.pixelData[u][v][1];
++            rgb[2] = ImageToText.pixelData[u][v][2];
++        }
+     }
+-
+-    public int getWidth() {
+-        return (int) textureImage.getWidth();
++    public Texture(Image image) {
++        this.image = image;
+     }
+ 
+-    public int getHeight() {
+-        return (int) textureImage.getHeight();
++    public javafx.scene.image.Image getImage() {
++        return null;
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/cgvsu/model/Polygon.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu.model;\r\n\r\nimport com.cgvsu.objreader.exceptions.FaceWordException;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class Polygon {\r\n\r\n    private ArrayList<Integer> vertexIndices;\r\n    private ArrayList<Integer> textureVertexIndices;\r\n    private ArrayList<Integer> normalIndices;\r\n    private int lineIndex;\r\n\r\n    // Конструктор по умолчанию\r\n    public Polygon() {\r\n        vertexIndices = new ArrayList<>();\r\n        textureVertexIndices = new ArrayList<>();\r\n        normalIndices = new ArrayList<>();\r\n    }\r\n\r\n    // Конструктор с параметрами\r\n    public Polygon(ArrayList<Integer> vertexIndices, ArrayList<Integer> textureVertexIndices, ArrayList<Integer> normalIndices) {\r\n        setVertexIndices(vertexIndices);\r\n        setTextureVertexIndices(textureVertexIndices);\r\n        setNormalIndices(normalIndices); // Используем метод установки для нормалей\r\n    }\r\n\r\n    public void setVertexIndices(ArrayList<Integer> vertexIndices) {\r\n        if (vertexIndices.size() < 3) {\r\n            throw new IllegalArgumentException(\"Полигон должен иметь хотя бы 3 вершины.\");\r\n        }\r\n        this.vertexIndices = vertexIndices;\r\n    }\r\n\r\n    public void setTextureVertexIndices(ArrayList<Integer> textureVertexIndices) {\r\n        this.textureVertexIndices = textureVertexIndices;\r\n    }\r\n\r\n    public void setNormalIndices(ArrayList<Integer> normalIndices) { // Новый метод установки нормалей\r\n        this.normalIndices = normalIndices;\r\n    }\r\n\r\n    public ArrayList<Integer> getVertexIndices() {\r\n        return vertexIndices;\r\n    }\r\n\r\n    public ArrayList<Integer> getTextureVertexIndices() {\r\n        return textureVertexIndices;\r\n    }\r\n\r\n    public ArrayList<Integer> getNormalIndices() {\r\n        return normalIndices;\r\n    }\r\n\r\n    public boolean hasTexture() {\r\n        return !textureVertexIndices.isEmpty();\r\n    }\r\n\r\n    public void setLineIndex(int lineIndex) {\r\n        this.lineIndex = lineIndex;\r\n    }\r\n\r\n    public void checkIndices(int verticesSize, int textureVerticesSize, int normalsSize) {\r\n        validateIndices(vertexIndices, verticesSize, \"vertex\");\r\n        validateIndices(textureVertexIndices, textureVerticesSize, \"texture vertex\");\r\n        validateIndices(normalIndices, normalsSize, \"normal\");\r\n    }\r\n\r\n    private void validateIndices(ArrayList<Integer> indices, int size, String type) { // Вынесена общая проверка\r\n        for (int i = 0; i < indices.size(); i++) {\r\n            int index = indices.get(i);\r\n            if (index >= size || index < 0) {\r\n                throw new FaceWordException(type, lineIndex, i + 1);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"Polygon{\" +\r\n                \"vertexIndices=\" + vertexIndices +\r\n                \", textureVertexIndices=\" + textureVertexIndices +\r\n                \", normalIndices=\" + normalIndices +\r\n                '}';\r\n    }\r\n\r\n    // Методы для добавления индексов\r\n    public void addVertexIndex(int vertexIndex) {\r\n        validateNonNegativeIndex(vertexIndex, \"vertex\");\r\n        vertexIndices.add(vertexIndex);\r\n    }\r\n\r\n    public void addTextureVertexIndex(int textureVertexIndex) {\r\n        validateNonNegativeIndex(textureVertexIndex, \"texture\");\r\n        textureVertexIndices.add(textureVertexIndex);\r\n    }\r\n\r\n    public void addNormalIndex(int normalIndex) {\r\n        validateNonNegativeIndex(normalIndex, \"normal\");\r\n        normalIndices.add(normalIndex);\r\n    }\r\n\r\n    private void validateNonNegativeIndex(int index, String type) { // Общая проверка на отрицательные индексы\r\n        if (index < 0) {\r\n            throw new IllegalArgumentException(\"Индекс \" + type + \" не может быть отрицательным.\");\r\n        }\r\n    }\r\n}\r\n\r\n//Заменены assert на выброс IllegalArgumentException.\r\n//Добавлены сообщения, которые помогут понять, почему было выброшено исключение.
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/model/Polygon.java b/src/main/java/com/cgvsu/model/Polygon.java
+--- a/src/main/java/com/cgvsu/model/Polygon.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/model/Polygon.java	(date 1736461051209)
+@@ -105,6 +105,24 @@
+             throw new IllegalArgumentException("Индекс " + type + " не может быть отрицательным.");
+         }
+     }
++
++    @Override
++    public Polygon clone() {
++        try {
++            Polygon clonedPolygon = (Polygon) super.clone();
++
++            // Глубокое копирование списков
++            clonedPolygon.vertexIndices = new ArrayList<>(this.vertexIndices);
++            clonedPolygon.textureVertexIndices = new ArrayList<>(this.textureVertexIndices);
++            clonedPolygon.normalIndices = new ArrayList<>(this.normalIndices);
++
++            return clonedPolygon;
++        } catch (CloneNotSupportedException e) {
++            throw new AssertionError(); // Этот код никогда не должен выполняться
++        }
++    }
++
++
+ }
+ 
+ //Заменены assert на выброс IllegalArgumentException.
+Index: src/main/java/com/cgvsu/GuiController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu;\r\n\r\nimport com.cgvsu.VertexDelete.Eraser;\r\nimport com.cgvsu.VertexDelete.EraserV2;\r\nimport com.cgvsu.obj_writer.ObjWriter;\r\nimport com.cgvsu.reader.Reader;\r\nimport com.cgvsu.render_engine.RenderEngine;\r\nimport javafx.beans.value.ChangeListener;\r\nimport javafx.beans.value.ObservableValue;\r\nimport javafx.collections.ObservableList;\r\nimport javafx.fxml.FXML;\r\nimport javafx.animation.Animation;\r\nimport javafx.animation.KeyFrame;\r\nimport javafx.animation.Timeline;\r\nimport javafx.event.ActionEvent;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.control.*;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.layout.AnchorPane;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.stage.Stage;\r\nimport javafx.stage.FileChooser;\r\nimport javafx.util.Duration;\r\nimport java.nio.file.Files;\r\nimport java.nio.file.Path;\r\nimport java.io.IOException;\r\nimport java.io.File;\r\nimport java.util.*;\r\nimport java.util.function.Function;\r\n\r\nimport com.cgvsu.math.*;\r\n\r\nimport com.cgvsu.model.Model;\r\nimport com.cgvsu.objreader.ObjReader;\r\nimport com.cgvsu.render_engine.Camera;\r\n\r\n\r\npublic class GuiController {\r\n\r\n    final private float TRANSLATION = 0.5F;\r\n\r\n    @FXML\r\n    AnchorPane mainPane;\r\n    @FXML\r\n    AnchorPane centerPane;\r\n\r\n    @FXML\r\n    private Canvas canvas;\r\n\r\n    @FXML\r\n    private CheckBox grid;\r\n\r\n    @FXML\r\n    private ListView<String> modelList;\r\n\r\n    //private SceneManager sceneManager = new SceneManager();\r\n    private Model selectedModel;\r\n    private int selectedModelIndex;\r\n    private List<Float> modelCenters = new ArrayList<>();\r\n    private float x = 0;\r\n    private float spacing = 5.0f;\r\n\r\n    private List<Model> models = new ArrayList<>();\r\n\r\n    private Camera camera = new Camera(\r\n            new Vector3f(0, 00, 100),\r\n            new Vector3f(0, 0, 0),\r\n            1.0F, 1, 0.01F, 100);\r\n\r\n    private Timeline timeline;\r\n\r\n\r\n    private double lastMouseX; // Последняя X-координата мыши\r\n    private double lastMouseY; // Последняя Y-координата мыши\r\n    private static final float MOUSE_SENSITIVITY = 0.1f;\r\n    private List<String> modelNames = new ArrayList<>();\r\n    @FXML\r\n    private TextField textScale;\r\n    @FXML\r\n    private TextField textRotate;\r\n    @FXML\r\n    private TextField textTranslate;\r\n    @FXML\r\n    private CheckBox boxSaveScale;\r\n    @FXML\r\n    private CheckBox boxSaveRotate;\r\n    @FXML\r\n    private CheckBox boxSaveTranslate;\r\n    @FXML\r\n    private Button buttonDeleteModel;\r\n    @FXML\r\n    private TextField textVertexDel; // Поле для ввода индексов\r\n    @FXML\r\n    private void initialize() {\r\n        //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));\r\n        //centerPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));\r\n        canvas.widthProperty().bind(centerPane.widthProperty());\r\n        canvas.heightProperty().bind(centerPane.heightProperty());\r\n\r\n        // Обработка нажатия мыши\r\n        canvas.setOnMousePressed(event -> {\r\n            lastMouseX = event.getSceneX();\r\n            lastMouseY = event.getSceneY();\r\n        });\r\n\r\n        // Обработка перемещения мыши\r\n        canvas.setOnMouseDragged(event -> {\r\n            double currentMouseX = event.getSceneX();\r\n            double currentMouseY = event.getSceneY();\r\n\r\n            // Вычисляем разницу\r\n            double deltaX = currentMouseX - lastMouseX;\r\n            double deltaY = currentMouseY - lastMouseY;\r\n\r\n            // Двигаем камеру в зависимости от направления\r\n            camera.movePosition(new Vector3f(\r\n                    (float) -deltaX * MOUSE_SENSITIVITY,\r\n                    (float) deltaY * MOUSE_SENSITIVITY,\r\n                    0\r\n            ));\r\n\r\n            // Запоминаем текущие координаты мыши\r\n            lastMouseX = currentMouseX;\r\n            lastMouseY = currentMouseY;\r\n        });\r\n        canvas.setOnScroll(event -> {\r\n            double deltaY = event.getDeltaY(); // Получаем направление прокрутки (вверх или вниз)\r\n\r\n            // Двигаем камеру вперед или назад в зависимости от направления\r\n            camera.movePosition(new Vector3f(0, 0, (float) -deltaY * MOUSE_SENSITIVITY));\r\n        });\r\n\r\n        timeline = new Timeline();\r\n        timeline.setCycleCount(Animation.INDEFINITE);\r\n\r\n        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {\r\n            double width = canvas.getWidth();\r\n            double height = canvas.getHeight();\r\n\r\n            GraphicsContext gc = canvas.getGraphicsContext2D();\r\n            gc.clearRect(0,0,width,height);\r\n            if(grid.isSelected()){\r\n\r\n                drawGrid(gc,width,height);\r\n            }\r\n            gc.setStroke(Color.BLACK);\r\n            //canvas.getGraphicsContext2D().clearRect(0, 0, width, height);\r\n            camera.setAspectRatio((float) (width / height));\r\n\r\n            if (models != null) {\r\n                for (Model mesh: models) {\r\n                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, models, (int) width, (int) height);\r\n                }\r\n            }\r\n        });\r\n\r\n        timeline.getKeyFrames().add(frame);\r\n        timeline.play();\r\n\r\n        textScale.setText(\"1, 1, 1\");\r\n        textRotate.setText(\"0x, 0y, 0z\");\r\n        textTranslate.setText(\"0 0 0\");\r\n\r\n\r\n        MultipleSelectionModel<String> modelsSelectionModel = modelList.getSelectionModel();\r\n        //слушатель для отслеживания изменений\r\n        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){\r\n            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){\r\n                String item = modelsSelectionModel.getSelectedItem();\r\n                if(!Objects.isNull(item)) {\r\n                    selectedModelIndex = modelNames.indexOf(item);\r\n                    selectedModel = models.get(selectedModelIndex);\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    @FXML\r\n    private void onOpenModelMenuItemClick() {\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"Model (*.obj)\", \"*.obj\"));\r\n        fileChooser.setTitle(\"Load Model\");\r\n\r\n        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());\r\n        if (file == null) {\r\n\r\n            return;\r\n        }\r\n        Path fileName = Path.of(file.getAbsolutePath());\r\n        try {\r\n            String fileContent = Files.readString(fileName);\r\n            Model newModel = ObjReader.read(fileContent);\r\n            if (newModel == null) {\r\n                ExceptionDialog.showError(ExceptionDialog.Operation.READING, \"Ошибка чтения модели\");\r\n            }\r\n            models.add(newModel);\r\n            selectedModel = newModel;\r\n            modelList.getItems().add(file.getName());\r\n            // todo: обработка ошибок\r\n        } catch (IOException exception) {\r\n            ExceptionDialog.showError(ExceptionDialog.Operation.READING,\"Ошибка при потытке открыть файл\"+ exception.getMessage());\r\n        }catch (Exception exception) {\r\n            ExceptionDialog.showError(ExceptionDialog.Operation.READING,\"неизвестная ошибка чтения файла\"+ exception.getMessage());\r\n        }\r\n    }\r\n\r\n    @FXML\r\n    private void onSaveModelClick() {\r\n        FileChooser fileChooser = new FileChooser();\r\n        fileChooser.setTitle(\"Save Model\");\r\n        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(\"OBJ files (*.obj)\", \"*.obj\"));\r\n\r\n        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());\r\n        if (file != null) {\r\n            try{\r\n                ObjWriter writer = new ObjWriter();\r\n                writer.write(selectedModel, file.getAbsolutePath());\r\n            }catch (Exception exception) {\r\n            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING,\"Ошибка при сохранении файла\"+ exception.getMessage());\r\n            }\r\n        }\r\n    }\r\n\r\n     //простая сетка нужна другая\r\n    private void drawGrid(GraphicsContext gc, double w,double h){\r\n        gc.setStroke(Color.GREEN);\r\n        gc.setLineWidth(0.5);\r\n        double cellSize =50.0;\r\n        for(double x=0;x<w;x+=cellSize){\r\n            gc.strokeLine(x,0,x,h);\r\n        }\r\n        for(double y=0;y<w;y+=cellSize){\r\n            gc.strokeLine(0,y,w,y);\r\n        }\r\n    }\r\n\r\n\r\n    @FXML\r\n    public void handleCameraForward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraBackward(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, 0, TRANSLATION));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraLeft(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraRight(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraUp(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, TRANSLATION, 0));\r\n    }\r\n\r\n    @FXML\r\n    public void handleCameraDown(ActionEvent actionEvent) {\r\n        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));\r\n    }\r\n    @FXML\r\n    public void toggleGrid(ActionEvent actionEvent) {\r\n    }\r\n    @FXML\r\n    private void scale(ActionEvent event) {\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        String s = textScale.getText();\r\n        String[] coefficient = Reader.readNumbersInLine(s, \"1\", 3);\r\n        selectedModel.getTransformation().setScale(AffineTransforms.scale(Float.parseFloat(coefficient[0]),\r\n                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));\r\n        if (boxSaveScale.isSelected()) {\r\n            selectedModel.saveScale();\r\n        }\r\n\r\n    }\r\n    @FXML\r\n    private void translate(ActionEvent event) {\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        String s = textTranslate.getText();\r\n        String[] coefficient = Reader.readNumbersInLine(s, \"0\", 3);\r\n        selectedModel.getTransformation().setTranslation(AffineTransforms.translate(Float.parseFloat(coefficient[0]),\r\n                Float.parseFloat(coefficient[1]), Float.parseFloat(coefficient[2])));\r\n        if (boxSaveTranslate.isSelected()) {\r\n            selectedModel.saveTranslation();\r\n        }\r\n    }\r\n    @FXML\r\n    private void rotate(ActionEvent event) {\r\n        if(Objects.isNull(selectedModel)){\r\n            return;\r\n        }\r\n        String s = textRotate.getText();\r\n        String[] coefficient = Reader.readNumbersInLineWithXYZ(s, \"0\");\r\n        Function<Double, Double> fromDegreeToRad = (a) -> (a*Math.PI)/180;\r\n        double rotX = fromDegreeToRad.apply(Double.parseDouble(coefficient[0]));\r\n        double rotY = fromDegreeToRad.apply(Double.parseDouble(coefficient[1]));\r\n        double rotZ = fromDegreeToRad.apply(Double.parseDouble(coefficient[2]));\r\n        selectedModel.getTransformation().setRotation(\r\n                AffineTransforms.rotateX(Math.cos(rotX), Math.sin(rotX)).getMultiplicationWith(\r\n                        AffineTransforms.rotateY(Math.cos(rotY), Math.sin(rotY)).getMultiplicationWith(\r\n                                AffineTransforms.rotateZ(Math.cos(rotZ), Math.sin(rotZ))\r\n                        )));\r\n        if (boxSaveRotate.isSelected()) {\r\n            selectedModel.saveRotation();\r\n        }\r\n    }\r\n    @FXML\r\n    private void deleteModel(){\r\n        if (Objects.isNull(selectedModel)) {\r\n            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, \"выберите модель для удаления\");\r\n            return;\r\n        }\r\n        models.remove(selectedModelIndex);\r\n        modelNames.remove(selectedModelIndex);\r\n\r\n        if (models.isEmpty()) {\r\n            selectedModel = null;\r\n            selectedModelIndex = -1;\r\n        } else {\r\n            selectedModel = models.get(0);\r\n            selectedModelIndex = 0;\r\n        }\r\n        //selectedModelIndex = 0;\r\n        //modelList.getItems().remove(selectedModelIndex);\r\n    }\r\n    @FXML\r\n    private void deleteVertices() {\r\n        try {\r\n            if(selectedModel == null){\r\n                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, \"Модель не выбрана\");\r\n                return;\r\n            }\r\n            // Считываем индексы вершин из текстового поля\r\n            String input = textVertexDel.getText();\r\n            if(input.isBlank()){\r\n                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, \"Индексы не введены\");\r\n                return;\r\n            }\r\n            // Преобразуем строку в список индексов\r\n            List<Integer> indicesToDelete = Arrays.stream(input.split(\",\"))\r\n                    .map(String::trim)\r\n                    .map(Integer::parseInt)\r\n                    .toList();\r\n\r\n            Model uptadeModel = new Model();\r\n\r\n            // Удаляем вершины с использованием Eraser\r\n            uptadeModel = EraserV2.vertexDelete(\r\n                    selectedModel,                   // Исходная модель\r\n                    indicesToDelete,         // Индексы для удаления\r\n                    true,                    // Изменяем текущую модель (не создаем новую)\r\n                    false,                  // Не удаляем висячие нормали\r\n                    false,                   // Не удаляем висячие текстуры\r\n                    true                   // Удаляем полигоны с менее чем 3 вершинами\r\n            );\r\n            if (uptadeModel == null){\r\n                ExceptionDialog.showError(ExceptionDialog.Operation.READING, \"Ошибка при удалении вершин\");\r\n                return;\r\n            }\r\n           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );\r\n            Model newModel = ObjReader.read(uptadeModel.toString());\r\n            // Очистка текстового поля после успешного выполнения\r\n            textVertexDel.clear();\r\n        } catch (Exception e) {\r\n            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, \"неизвестная ошибка\");\r\n        }\r\n    }\r\n\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/GuiController.java b/src/main/java/com/cgvsu/GuiController.java
+--- a/src/main/java/com/cgvsu/GuiController.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/GuiController.java	(date 1736468297573)
+@@ -13,6 +13,7 @@
+ import javafx.animation.KeyFrame;
+ import javafx.animation.Timeline;
+ import javafx.event.ActionEvent;
++import javafx.scene.Scene;
+ import javafx.scene.canvas.Canvas;
+ import javafx.scene.canvas.GraphicsContext;
+ import javafx.scene.control.*;
+@@ -22,6 +23,8 @@
+ import javafx.stage.Stage;
+ import javafx.stage.FileChooser;
+ import javafx.util.Duration;
++
++import java.net.MalformedURLException;
+ import java.nio.file.Files;
+ import java.nio.file.Path;
+ import java.io.IOException;
+@@ -217,12 +220,12 @@
+                 ObjWriter writer = new ObjWriter();
+                 writer.write(selectedModel, file.getAbsolutePath());
+             }catch (Exception exception) {
+-            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING,"Ошибка при сохранении файла"+ exception.getMessage());
++                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING,"Ошибка при сохранении файла"+ exception.getMessage());
+             }
+         }
+     }
+ 
+-     //простая сетка нужна другая
++    //простая сетка нужна другая
+     private void drawGrid(GraphicsContext gc, double w,double h){
+         gc.setStroke(Color.GREEN);
+         gc.setLineWidth(0.5);
+@@ -368,7 +371,7 @@
+                 ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка при удалении вершин");
+                 return;
+             }
+-           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
++            // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
+             Model newModel = ObjReader.read(uptadeModel.toString());
+             // Очистка текстового поля после успешного выполнения
+             textVertexDel.clear();
+@@ -377,6 +380,27 @@
+         }
+     }
+ 
++    @FXML
++    private void switchThemeToDark() {
++        Scene scene = mainPane.getScene(); // Получаем текущую сцену
++        if (scene == null) {
++            return;
++        }
++        scene.getStylesheets().clear(); // Очищаем текущие стили
++        scene.getStylesheets().add(getClass().getResource("/styles/darker-theme.css").toExternalForm()); // Подключаем тёмную тему
++    }
+ 
+-}
++    @FXML
++    private void switchThemeToLight() {
++        Scene scene = mainPane.getScene(); // Получаем текущую сцену
++        if (scene == null) {
++            return;
++        }
++        scene.getStylesheets().clear(); // Очищаем текущие стили
++        scene.getStylesheets().add(getClass().getResource("/styles/lighter-theme.css").toExternalForm()); // Подключаем светлую тему
++    }
+ 
++
++}
++
++
+Index: src/main/java/com/cgvsu/render_engine/RenderEngine.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu.render_engine;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\nimport com.cgvsu.math.*;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport com.cgvsu.model.Model;\r\nimport javafx.scene.paint.Color;\r\n\r\nimport javax.vecmath.Point2f;\r\n\r\nimport static com.cgvsu.render_engine.GraphicConveyor.*;\r\n\r\n\r\npublic class RenderEngine {\r\n\r\n    public static void render(\r\n            final GraphicsContext graphicsContext,\r\n            final Camera camera,\r\n            final List<Model> models,\r\n            final int width,\r\n            final int height) {\r\n\r\n\r\n        for (Model mesh : models) {\r\n            if (mesh.viewMesh) renderModel(graphicsContext, camera, mesh, width, height);\r\n        }\r\n    }\r\n    private static class PointVertexModel {\r\n\r\n        public PointVertexModel(Point2f point, int vertexIndex, Model model) {\r\n            this.point = new Point2f((float) Math.floor(point.x), (float) Math.floor(point.y));\r\n            this.vertexIndex = vertexIndex;\r\n            this.model = model;\r\n        }\r\n\r\n        public PointVertexModel(int vertexIndex) {\r\n            this.point = new Point2f(0, 0);\r\n            this.vertexIndex = vertexIndex;\r\n            this.model = new Model();\r\n        }\r\n\r\n        public Point2f point;\r\n        public int vertexIndex;\r\n\r\n        public Model model;\r\n    }\r\n    private static class SelectedPolygon {\r\n        public Model model;\r\n        public int selPoly = -2;\r\n\r\n        public SelectedPolygon(int poly, Model model) {\r\n            this.selPoly = poly;\r\n            this.model = model;\r\n        }\r\n\r\n        public SelectedPolygon() {\r\n            this.selPoly = -2;\r\n            this.model = new Model();\r\n        }\r\n    }\r\n    private static PointVertexModel selectedPVM = new PointVertexModel(-2);\r\n    private static SelectedPolygon selectedPoly = new SelectedPolygon();\r\n\r\n\r\n    public static void renderModel(\r\n            final GraphicsContext graphicsContext,\r\n            final Camera camera,\r\n            final Model model,\r\n            final int width,\r\n            final int height) {\r\n\r\n        Matrix4f modelMatrix =  model.getModelMatrix();\r\n        Matrix4f viewMatrix = camera.getViewMatrix();\r\n        Matrix4f projectionMatrix = camera.getProjectionMatrix();\r\n\r\n        Matrix4f modelViewProjectionMatrix = Matrix4f.createIdentityMatrix();\r\n        modelViewProjectionMatrix.multiply(projectionMatrix);\r\n        modelViewProjectionMatrix.multiply(viewMatrix);\r\n        modelViewProjectionMatrix.multiply(modelMatrix);\r\n\r\n        final int nPolygons = model.polygons.size();\r\n\r\n        for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {\r\n            final int nVerticesInPolygon = model.polygons.get(polygonInd).getVertexIndices().size();\r\n\r\n            ArrayList<Vector2f> resultPoints = new ArrayList<>();\r\n            for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {\r\n                Vector3f vertex = model.vertices.get(model.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));\r\n                Vector2f resultPoint = vertexToPoint(Vector3f.multiply(vertex, modelViewProjectionMatrix), width, height);\r\n                resultPoints.add(resultPoint);\r\n            }\r\n\r\n            graphicsContext.setStroke((model.selected) ? Color.BLACK : Color.GRAY);\r\n\r\n            for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {\r\n                if (model.selected) {\r\n                    graphicsContext.setStroke(\r\n                            (selectedPVM.vertexIndex > -2\r\n                                    && (model.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd) == selectedPVM.vertexIndex\r\n                                    || model.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd - 1) == selectedPVM.vertexIndex))\r\n                                    ? Color.RED\r\n                                    : graphicsContext.getStroke()\r\n                    );\r\n                    if (selectedPoly.selPoly > -2) {\r\n                        graphicsContext.setStroke(\r\n                                (polygonInd == selectedPoly.selPoly)\r\n                                        ? Color.BLUE\r\n                                        : graphicsContext.getStroke()\r\n                        );\r\n                        graphicsContext.setLineWidth((polygonInd == selectedPoly.selPoly)\r\n                                ? 2\r\n                                : 1);\r\n                    }\r\n                }\r\n                graphicsContext.strokeLine(\r\n                        resultPoints.get(vertexInPolygonInd - 1).getX(),\r\n                        resultPoints.get(vertexInPolygonInd - 1).getY(),\r\n                        resultPoints.get(vertexInPolygonInd).getX(),\r\n                        resultPoints.get(vertexInPolygonInd).getY());\r\n            }\r\n\r\n            if (nVerticesInPolygon > 0) {\r\n                graphicsContext.strokeLine(\r\n                        resultPoints.get(nVerticesInPolygon - 1).getX(),\r\n                        resultPoints.get(nVerticesInPolygon - 1).getY(),\r\n                        resultPoints.get(0).getX(),\r\n                        resultPoints.get(0).getY());\r\n            }\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/render_engine/RenderEngine.java b/src/main/java/com/cgvsu/render_engine/RenderEngine.java
+--- a/src/main/java/com/cgvsu/render_engine/RenderEngine.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/render_engine/RenderEngine.java	(date 1736466655954)
+@@ -3,12 +3,15 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import com.cgvsu.TL.Texture;
+ import com.cgvsu.math.*;
+ import javafx.scene.canvas.GraphicsContext;
+ import com.cgvsu.model.Model;
++import javafx.scene.image.Image;
+ import javafx.scene.paint.Color;
+ 
+ import javax.vecmath.Point2f;
++import com.cgvsu.TL.ImageToText;
+ 
+ import static com.cgvsu.render_engine.GraphicConveyor.*;
+ 
+@@ -27,6 +30,7 @@
+             if (mesh.viewMesh) renderModel(graphicsContext, camera, mesh, width, height);
+         }
+     }
++
+     private static class PointVertexModel {
+ 
+         public PointVertexModel(Point2f point, int vertexIndex, Model model) {
+@@ -46,6 +50,7 @@
+ 
+         public Model model;
+     }
++
+     private static class SelectedPolygon {
+         public Model model;
+         public int selPoly = -2;
+@@ -60,6 +65,7 @@
+             this.model = new Model();
+         }
+     }
++
+     private static PointVertexModel selectedPVM = new PointVertexModel(-2);
+     private static SelectedPolygon selectedPoly = new SelectedPolygon();
+ 
+@@ -71,7 +77,7 @@
+             final int width,
+             final int height) {
+ 
+-        Matrix4f modelMatrix =  model.getModelMatrix();
++        Matrix4f modelMatrix = model.getModelMatrix();
+         Matrix4f viewMatrix = camera.getViewMatrix();
+         Matrix4f projectionMatrix = camera.getProjectionMatrix();
+ 
+@@ -131,4 +137,62 @@
+         }
+     }
+ 
++    public static void renderTexture(
++            final GraphicsContext graphicsContext,
++            final Camera camera,
++            final Model model,
++            final int width,
++            final int height) {
++
++        // Получаем матрицы для обработки трансформаций
++        Matrix4f modelMatrix = model.getModelMatrix();
++        Matrix4f viewMatrix = camera.getViewMatrix();
++        Matrix4f projectionMatrix = camera.getProjectionMatrix();
++
++        // Создание модели видеопрезентации
++        Matrix4f modelViewProjectionMatrix = Matrix4f.createIdentityMatrix();
++        modelViewProjectionMatrix.multiply(projectionMatrix);
++        modelViewProjectionMatrix.multiply(viewMatrix);
++        modelViewProjectionMatrix.multiply(modelMatrix);
++
++        final int nPolygons = model.polygons.size();
++
++        for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
++            final int nVerticesInPolygon = model.polygons.get(polygonInd).getVertexIndices().size();
++            ArrayList<Vector2f> resultPoints = new ArrayList<>();
++
++            // Сохраняем UV-координаты
++            Vector2f[] uvCoords = new Vector2f[nVerticesInPolygon];
++
++            for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
++                int vertexIndex = model.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd);
++                Vector3f vertex = model.vertices.get(vertexIndex);
++                Vector2f uv = model.textureVertices.get(vertexIndex);
++
++                // Преобразуем 3D-координату в 2D
++                Vector2f resultPoint = vertexToPoint(Vector3f.multiply(vertex, modelViewProjectionMatrix), width, height);
++                resultPoints.add(resultPoint);
++                uvCoords[vertexInPolygonInd] = uv; // Сохраняем UV-координаты
++            }
++
++            // Отрисовка текстуры
++            if (model.texture != null) {
++                Texture texture = (Texture) model.texture;  // Приводим тип к текстуре
++                Image image = texture.getImage();           // Получаем изображение из текстуры
++                for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
++                    Vector2f uv = uvCoords[vertexInPolygonInd];
++
++                    // Преобразуем UV-координаты в пиксели
++                    double textureX = uv.getX() * image.getWidth();
++                    double textureY = uv.getY() * image.getHeight();
++
++                    // Рисуем текстуру по соответствующим координатам
++                    int[] rgb = new int[3];
++                    ImageToText.applyTexture(uv, model, rgb);
++                    graphicsContext.setFill(Color.rgb(rgb[0], rgb[1], rgb[2]));
++                    graphicsContext.fillRect((int) textureX, (int) textureY, 1, 1); // Размер рисуемой области
++                }
++            }
++            }
++    }
+ }
+\ No newline at end of file
+Index: src/main/java/com/cgvsu/render_engine/Camera.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu.render_engine;\r\nimport com.cgvsu.math.*;\r\npublic class Camera {\r\n\r\n    public Camera(\r\n            final Vector3f position,\r\n            final Vector3f target,\r\n            final float fov,\r\n            final float aspectRatio,\r\n            final float nearPlane,\r\n            final float farPlane) {\r\n        this.position = position;\r\n        this.target = target;\r\n        this.fov = fov;\r\n        this.aspectRatio = aspectRatio;\r\n        this.nearPlane = nearPlane;\r\n        this.farPlane = farPlane;\r\n    }\r\n\r\n    public void setPosition(final Vector3f position) {\r\n        this.position = position;\r\n    }\r\n\r\n    public void setTarget(final Vector3f target) {\r\n        this.target = target;\r\n    }\r\n\r\n    public void setAspectRatio(final float aspectRatio) {\r\n        this.aspectRatio = aspectRatio;\r\n    }\r\n\r\n    public Vector3f getPosition() {\r\n        return position;\r\n    }\r\n\r\n    public Vector3f getTarget() {\r\n        return target;\r\n    }\r\n\r\n    public void movePosition(final Vector3f translation) {\r\n        this.position.add(translation);\r\n    }\r\n\r\n    public void moveTarget(final Vector3f translation) {\r\n        this.target.add(target);\r\n    }\r\n\r\n    Matrix4f getViewMatrix() {\r\n        return GraphicConveyor.lookAt(position, target);\r\n    }\r\n\r\n    Matrix4f getProjectionMatrix() {\r\n        return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);\r\n    }\r\n\r\n    private Vector3f position;\r\n    private Vector3f target;\r\n    private float fov;\r\n    private float aspectRatio;\r\n    private float nearPlane;\r\n    private float farPlane;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/render_engine/Camera.java b/src/main/java/com/cgvsu/render_engine/Camera.java
+--- a/src/main/java/com/cgvsu/render_engine/Camera.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/render_engine/Camera.java	(date 1736468088429)
+@@ -59,4 +59,5 @@
+     private float aspectRatio;
+     private float nearPlane;
+     private float farPlane;
++
+ }
+\ No newline at end of file
+Index: src/main/java/com/cgvsu/model/Model.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu.model;\r\nimport com.cgvsu.math.AffineTransforms;\r\nimport com.cgvsu.math.Matrix4f;\r\nimport com.cgvsu.math.Vector3f;\r\nimport com.cgvsu.math.Vector2f;\r\nimport java.util.*;\r\n\r\npublic class Model {\r\n\r\n    public ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();\r\n    public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();\r\n    public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();\r\n    public ArrayList<Polygon> polygons = new ArrayList<Polygon>();\r\n    private ArrayList<Group> groups = new ArrayList<>();\r\n\r\n    public boolean viewMesh = true;\r\n    public boolean selected = false;\r\n    public float xSize = 0;\r\n    private Transformation transformation = Transformation.getDefaultTransformation();\r\n    public Model(){\r\n\r\n    }\r\n\r\n    public Model(ArrayList<Vector3f> vertices, ArrayList<Vector2f> textureVertices, ArrayList<Vector3f> normals,\r\n                 ArrayList<Polygon> polygons, ArrayList<Group> groups, Transformation transformation) {\r\n        this.vertices = vertices;\r\n        this.textureVertices = textureVertices;\r\n        this.normals = normals;\r\n        this.polygons = polygons;\r\n        this.groups = groups;\r\n        this.transformation = transformation;\r\n    }\r\n\r\n\r\n\r\n    public void addVertex(Vector3f vertex) {\r\n        vertices.add(vertex);\r\n    }\r\n\r\n    public void addTextureVertex(Vector2f textureVertex) {\r\n        textureVertices.add(textureVertex);\r\n    }\r\n\r\n    public void addNormal(Vector3f normal) {\r\n        normals.add(normal);\r\n    }\r\n\r\n    public void addPolygon(Polygon polygon) {\r\n        polygons.add(polygon);\r\n    }\r\n\r\n    public void addGroup(Group group) {\r\n        groups.add(group);\r\n    }\r\n\r\n    public Polygon getFirstPolygon() {\r\n        return polygons.get(0);\r\n    }\r\n\r\n\r\n    public int getVerticesSize() {\r\n        return vertices.size();\r\n    }\r\n\r\n    public int getTextureVerticesSize() {\r\n        return textureVertices.size();\r\n    }\r\n\r\n    public int getNormalsSize() {\r\n        return normals.size();\r\n    }\r\n\r\n    public int getPolygonsSize() {\r\n        return polygons.size();\r\n    }\r\n\r\n    public ArrayList<Vector3f> getVertices() {\r\n        return vertices;\r\n    }\r\n\r\n    public ArrayList<Vector2f> getTextureVertices() {\r\n        return textureVertices;\r\n    }\r\n\r\n    public ArrayList<Vector3f> getNormals() {\r\n        return normals;\r\n    }\r\n\r\n    public ArrayList<Polygon> getPolygons() {\r\n        return polygons;\r\n    }\r\n    public ArrayList<Group> getGroups() {\r\n        return groups;\r\n    }\r\n    public Transformation getTransformation() {\r\n        return transformation;\r\n    }\r\n    public Matrix4f getModelMatrix() {\r\n        return transformation.getTransformation();\r\n    }\r\n\r\n    public Model getModelWithTransformations(){\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getTransformation());\r\n            transformVertices.add(vertex);\r\n        }\r\n        return new Model(transformVertices,textureVertices, normals,\r\n                polygons, groups, Transformation.getDefaultTransformation());\r\n    }\r\n    public void saveScale(){\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getScale());\r\n            transformVertices.add(vertex);\r\n        }\r\n        vertices = transformVertices;\r\n        transformation = transformation.getWithDefaultScale();\r\n    }\r\n    public void saveTranslation(){\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getTranslation());\r\n            transformVertices.add(vertex);\r\n        }\r\n        vertices = transformVertices;\r\n        transformation = transformation.getWithDefaultTranslation();\r\n    }\r\n    public void saveRotation(){\r\n        Transformation oldTransformation = transformation;\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getRotation());\r\n            transformVertices.add(vertex);\r\n        }\r\n        vertices = transformVertices;\r\n        transformation = transformation.getWithDefaultRotation();\r\n    }\r\n    public Model getModelWithTranslation(){\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getTranslation());\r\n            transformVertices.add(vertex);\r\n        }\r\n        return new Model(transformVertices,textureVertices, normals,\r\n                polygons, groups, transformation.getWithDefaultTranslation());\r\n    }\r\n    public Model getModelWithRotation(){\r\n        Transformation oldTransformation = transformation;\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getRotation());\r\n            transformVertices.add(vertex);\r\n        }\r\n        return new Model(transformVertices,textureVertices, normals,\r\n                polygons, groups, transformation.getWithDefaultRotation());\r\n    }\r\n    public Model getModelWithScale(){\r\n        ArrayList<Vector3f> transformVertices = new ArrayList<>();\r\n        for (int i = 0; i < vertices.size(); i++) {\r\n            Vector3f vertex = vertices.get(i);\r\n            vertex.multiply(transformation.getScale());\r\n            transformVertices.add(vertex);\r\n        }\r\n        return new Model(transformVertices,textureVertices, normals,\r\n                polygons, groups, transformation.getWithDefaultScale());\r\n    }\r\n    public void setDefaultTransformation(){\r\n        transformation = Transformation.getDefaultTransformation();\r\n    }\r\n\r\n    // Метод клонирования вершин\r\n    public ArrayList<Vector3f> cloneVertices() {\r\n        ArrayList<Vector3f> clonedVertices = new ArrayList<>();\r\n        for (Vector3f vertex : this.vertices) {\r\n            clonedVertices.add(vertex.clone());\r\n        }\r\n        return clonedVertices;\r\n    }\r\n\r\n    // Метод клонирования текстурных вершин\r\n    public ArrayList<Vector2f> cloneTextureVertices() {\r\n        ArrayList<Vector2f> clonedTextureVertices = new ArrayList<>();\r\n        for (Vector2f textureVertex : this.textureVertices) {\r\n            clonedTextureVertices.add(textureVertex.clone());\r\n        }\r\n        return clonedTextureVertices;\r\n    }\r\n\r\n    // Метод клонирования нормалей\r\n    public ArrayList<Vector3f> cloneNormals() {\r\n        ArrayList<Vector3f> clonedNormals = new ArrayList<>();\r\n        for (Vector3f normal : this.normals) {\r\n            clonedNormals.add(normal.clone());\r\n        }\r\n        return clonedNormals;\r\n    }\r\n\r\n    // Метод клонирования полигонов\r\n    public ArrayList<Polygon> clonePolygons() {\r\n        ArrayList<Polygon> clonedPolygons = new ArrayList<>();\r\n        for (Polygon polygon : this.polygons) {\r\n            clonedPolygons.add(polygon.clone());\r\n        }\r\n        return clonedPolygons;\r\n    }\r\n\r\n    // Метод clone\r\n    @Override\r\n    public Model clone() {\r\n        Model clonedModel = new Model();\r\n        clonedModel.vertices = this.cloneVertices();\r\n        clonedModel.textureVertices = this.cloneTextureVertices();\r\n        clonedModel.normals = this.cloneNormals();\r\n        clonedModel.polygons = this.clonePolygons();\r\n        return clonedModel;\r\n    }\r\n    public void exportToOBJ() {\r\n        // Устанавливаем локаль для использования точки как разделителя дробной части\r\n        Locale.setDefault(Locale.US);\r\n\r\n        // Вывод вершин\r\n        for (Vector3f vertex : vertices) {\r\n            System.out.printf(\"v %.6f %.6f %.6f%n\", vertex.getX(), vertex.getY(), vertex.getZ());\r\n        }\r\n\r\n        // Вывод нормалей\r\n        for (Vector3f normal : normals) {\r\n            System.out.printf(\"vn %.6f %.6f %.6f%n\", normal.getX(), normal.getY(), normal.getZ());\r\n        }\r\n\r\n        // Вывод текстурных координат\r\n        for (Vector2f textureVertex : textureVertices) {\r\n            System.out.printf(\"vt %.6f %.6f%n\", textureVertex.getX(), textureVertex.getY());\r\n        }\r\n\r\n        // Вывод полигонов\r\n        for (Polygon polygon : polygons) {\r\n            System.out.print(\"f\");\r\n            for (int i = 0; i < polygon.getVertexIndices().size(); i++) {\r\n                int vertexIndex = polygon.getVertexIndices().get(i) + 1; // Индексация в OBJ начинается с 1\r\n                String facePart = String.valueOf(vertexIndex);\r\n\r\n                if (!polygon.getTextureVertexIndices().isEmpty()) {\r\n                    int textureIndex = polygon.getTextureVertexIndices().get(i) + 1;\r\n                    facePart += \"/\" + textureIndex;\r\n                }\r\n\r\n                if (!polygon.getNormalIndices().isEmpty()) {\r\n                    int normalIndex = polygon.getNormalIndices().get(i) + 1;\r\n                    facePart += (facePart.contains(\"/\") ? \"\" : \"/\") + \"/\" + normalIndex;\r\n                }\r\n\r\n                System.out.print(\" \" + facePart);\r\n            }\r\n            System.out.println();\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/model/Model.java b/src/main/java/com/cgvsu/model/Model.java
+--- a/src/main/java/com/cgvsu/model/Model.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/model/Model.java	(date 1736463113308)
+@@ -1,9 +1,11 @@
+ package com.cgvsu.model;
++import com.cgvsu.TL.Texture;
+ import com.cgvsu.math.AffineTransforms;
+ import com.cgvsu.math.Matrix4f;
+ import com.cgvsu.math.Vector3f;
+ import com.cgvsu.math.Vector2f;
+ import java.util.*;
++import com.cgvsu.TL.ImageToText;
+ 
+ public class Model {
+ 
+@@ -12,10 +14,12 @@
+     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
+     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+     private ArrayList<Group> groups = new ArrayList<>();
++    public Texture texture; // Поле для хранения текстуры
+ 
+     public boolean viewMesh = true;
+     public boolean selected = false;
+     public float xSize = 0;
++    public ImageToText imageToText = null;
+     private Transformation transformation = Transformation.getDefaultTransformation();
+     public Model(){
+ 
+@@ -29,6 +33,7 @@
+         this.polygons = polygons;
+         this.groups = groups;
+         this.transformation = transformation;
++        this.texture = texture; // Инициализация текстуры
+     }
+ 
+ 
+Index: src/main/java/com/cgvsu/render_engine/PolygonRasterizer.java
+===================================================================
+diff --git a/src/main/java/com/cgvsu/render_engine/PolygonRasterizer.java b/src/main/java/com/cgvsu/render_engine/PolygonRasterizer.java
+deleted file mode 100644
+--- a/src/main/java/com/cgvsu/render_engine/PolygonRasterizer.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ /dev/null	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
+@@ -1,183 +0,0 @@
+-package com.cgvsu.render_engine;
+-
+-import com.cgvsu.math.Vector2f;
+-import com.cgvsu.math.Vector3f;
+-import java.awt.Color;
+-import java.awt.image.BufferedImage;
+-
+-public class PolygonRasterizer {
+-    private BufferedImage frameBuffer; // Буфер для хранения пикселей (изображение)
+-    protected float[][] zBuffer; // Z-буфер для хранения глубины пикселей
+-    private int width, height; // Ширина и высота изображения
+-
+-    public PolygonRasterizer(int width, int height) {
+-        this.width = width;
+-        this.height = height;
+-        this.frameBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+-        this.zBuffer = new float[width][height];
+-        clearBuffers(); // Очистка буферов при создании
+-    }
+-
+-    // Метод для очистки буферов
+-    private void clearBuffers() {
+-        for (int x = 0; x < width; x++) {
+-            for (int y = 0; y < height; y++) {
+-                frameBuffer.setRGB(x, y, new Color(0, 0, 0, 0).getRGB()); // Установка полностью прозрачного цвета
+-                zBuffer[x][y] = Float.NEGATIVE_INFINITY; // Инициализация Z-буфера
+-            }
+-        }
+-    }
+-
+-    // Перегруженный метод для растеризации треугольника без текстуры
+-    public void rasterizeTriangle(Vector3f v1, Vector3f v2, Vector3f v3, Color color) {
+-        // Сортировка вершин по Y для упрощения растеризации
+-        if (v1.getY() > v2.getY()) {
+-            Vector3f temp = v1;
+-            v1 = v2;
+-            v2 = temp;
+-        }
+-        if (v2.getY() > v3.getY()) {
+-            Vector3f temp = v2;
+-            v2 = v3;
+-            v3 = temp;
+-        }
+-        if (v1.getY() > v2.getY()) {
+-            Vector3f temp = v1;
+-            v1 = v2;
+-            v2 = temp;
+-        }
+-
+-        // Расчет высот треугольника
+-        float totalHeight = v3.getY() - v1.getY();
+-
+-        for (float y = v1.getY(); y <= v3.getY(); y++) {
+-            boolean secondHalf = y > v2.getY() || v2.getY() == v1.getY();
+-            int segmentHeight = secondHalf ? (int) (v3.getY() - v2.getY()) : (int) (v2.getY() - v1.getY());
+-            float alpha = (y - v1.getY()) / totalHeight;
+-            float beta = (y - (secondHalf ? v2.getY() : v1.getY())) / segmentHeight;
+-
+-            Vector3f A = Vector3f.add(v1, Vector3f.multiply(Vector3f.subtract(v2, v1), alpha)); // Левый край
+-            Vector3f B = secondHalf
+-                    ? Vector3f.add(v2, Vector3f.multiply(Vector3f.subtract(v3, v2), beta))
+-                    : Vector3f.add(v1, Vector3f.multiply(Vector3f.subtract(v3, v1), alpha));
+-
+-            if (A.getX() > B.getX()) {
+-                Vector3f temp = A;
+-                A = B;
+-                B = temp;
+-            }
+-            for (int x = (int) A.getX(); x <= (int) B.getX(); x++) {
+-                float z = interpolateZ(A, B, x); // Интерполяция Z-координаты
+-
+-                if (x >= 0 && x < width && (int) y >= 0 && (int) y < height && z > zBuffer[x][(int) y]) {
+-                    frameBuffer.setRGB(x, (int) y, color.getRGB()); // Установка цвета пикселя
+-
+-                    zBuffer[x][(int) y] = z; // Обновление Z-буфера
+-                }
+-            }
+-        }
+-    }
+-
+-    // Метод для растеризации треугольника с учетом текстуры
+-    public void rasterizeTriangle(Vector3f v1, Vector3f v2, Vector3f v3,
+-                                  Color color, Vector2f uv1, Vector2f uv2, Vector2f uv3, BufferedImage texture) {
+-        // Сортировка вершин по Y для упрощения растеризации
+-        if (v1.getY() > v2.getY()) {
+-            Vector3f temp = v1;
+-            v1 = v2;
+-            v2 = temp;
+-        }
+-        if (v2.getY() > v3.getY()) {
+-            Vector3f temp = v2;
+-            v2 = v3;
+-            v3 = temp;
+-        }
+-        if (v1.getY() > v2.getY()) {
+-            Vector3f temp = v1;
+-            v1 = v2;
+-            v2 = temp;
+-        }
+-
+-        // Расчет высот треугольника
+-        float totalHeight = v3.getY() - v1.getY();
+-
+-        for (float y = v1.getY(); y <= v3.getY(); y++) {
+-            boolean secondHalf = y > v2.getY() || v2.getY() == v1.getY();
+-            int segmentHeight = secondHalf ? (int) (v3.getY() - v2.getY()) : (int) (v2.getY() - v1.getY());
+-            float alpha = (y - v1.getY()) / totalHeight;
+-            float beta = (y - (secondHalf ? v2.getY() : v1.getY())) / segmentHeight;
+-
+-            Vector3f A = Vector3f.add(v1, Vector3f.multiply(Vector3f.subtract(v2, v1), alpha)); // Левый край
+-            Vector3f B = secondHalf
+-                    ? Vector3f.add(v2, Vector3f.multiply(Vector3f.subtract(v3, v2), beta))
+-                    : Vector3f.add(v1, Vector3f.multiply(Vector3f.subtract(v3, v1), alpha));
+-
+-            if (A.getX() > B.getX()) {
+-                Vector3f temp = A;
+-                A = B;
+-                B = temp;
+-            }
+-
+-            for (int x = (int) A.getX(); x <= (int) B.getX(); x++) {
+-                float z = interpolateZ(A, B, x); // Интерполяция Z-координаты
+-
+-                if (x >= 0 && x < width && (int) y >= 0 && (int) y < height && z > zBuffer[x][(int) y]) {
+-                    // Интерполяция текстурных координат с передачей secondHalf
+-                    float[] uv = interpolateTextureCoord(uv1, uv2, uv3, A, B, x, (int) y, secondHalf);
+-                    float u = uv[0]; // Извлечение u
+-                    float v = uv[1]; // Извлечение v
+-
+-                    // Ограничение UV-координат в пределах текстуры
+-                    int textureX = Math.min(Math.max((int) (u * texture.getWidth()), 0), texture.getWidth() - 1);
+-                    int textureY = Math.min(Math.max((int) (v * texture.getHeight()), 0), texture.getHeight() - 1);
+-
+-                    Color texColor = new Color(texture.getRGB(textureX, textureY)); // Получение цвета из текстуры
+-
+-                    frameBuffer.setRGB(x, (int) y, texColor.getRGB()); // Установка цвета пикселя
+-                    zBuffer[x][(int) y] = z; // Обновление Z-буфера
+-                }
+-            }
+-        }
+-    }
+-
+-    // Метод для интерполяции Z-координаты между двумя вершинами
+-    private float interpolateZ(Vector3f A, Vector3f B, int x) {
+-        float t = (x - A.getX()) / (B.getX() - A.getX());
+-        return A.getZ() + t * (B.getZ() - A.getZ()); // Линейная интерполяция Z
+-    }
+-
+-    // Метод для интерполяции текстурных координат
+-    private float[] interpolateTextureCoord(Vector2f uv1, Vector2f uv2, Vector2f uv3, Vector3f A, Vector3f B, int x, int y, boolean secondHalf) {
+-        float areaABC = triangleArea(uv1, uv2, uv3);
+-
+-        Vector2f uvA = uv1;
+-        Vector2f uvB = secondHalf ? uv2 : uv1;
+-
+-        // Вычисление весов для интерполяции
+-        float areaPBC = triangleArea(new Vector2f(x, y), uvB, (secondHalf ? uv3 : uv2));
+-        float areaPCA = triangleArea(new Vector2f(x, y), uvA, (secondHalf ? uv3 : uv1));
+-
+-        float u = (areaPBC * uv1.getX() + areaPCA * uv3.getX() + areaABC * uv2.getX()) / areaABC;
+-        float v = (areaPBC * uv1.getY() + areaPCA * uv3.getY() + areaABC * uv2.getY()) / areaABC;
+-
+-        return new float[]{u, v}; // Возврат адреса UV-координат
+-    }
+-
+-    // Метод для вычисления площади треугольника с использованием координат вершин
+-    private float triangleArea(Vector2f p1, Vector2f p2, Vector2f p3) {
+-        return Math.abs((p1.getX() * (p2.getY() - p3.getY()) +
+-                p2.getX() * (p3.getY() - p1.getY()) +
+-                p3.getX() * (p1.getY() - p2.getY())) / 2.0f);
+-    }
+-
+-    // Метод для получения текущего изображения (буфера)
+-    public BufferedImage getFrameBuffer() {
+-        return frameBuffer; // Возвращает текущее содержимое фреймбуфера
+-    }
+-}
+-
+-
+-
+-
+-
+-
+Index: src/main/java/com/cgvsu/TL/Light.java
+===================================================================
+diff --git a/src/main/java/com/cgvsu/TL/Light.java b/src/main/java/com/cgvsu/TL/Light.java
+deleted file mode 100644
+--- a/src/main/java/com/cgvsu/TL/Light.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ /dev/null	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
+@@ -1,59 +0,0 @@
+-package com.cgvsu.TL;
+-
+-import com.cgvsu.math.Vector3f;
+-import javafx.scene.paint.Color;
+-
+-public class Light {
+-    private Vector3f position; // Положение источника света
+-    private Color color;       // Цвет света
+-    private double intensity;  // Интенсивность света
+-
+-    public Light(Vector3f position, Color color, double intensity) {
+-        this.position = position;
+-        this.color = color;
+-        this.intensity = intensity;
+-    }
+-
+-    // Геттеры и сеттеры
+-    public Vector3f getPosition() {
+-        return position;
+-    }
+-
+-    public Color getColor() {
+-        return color;
+-    }
+-
+-    public double getIntensity() {
+-        return intensity;
+-    }
+-
+-    final static double k = 0.5;
+-
+-    public static void calculateLight(int[] rgb, double[] light, Vector3f normal){
+-        double l = -(light[0] * normal.getX() + light[1] * normal.getY() + light[2] * normal.getZ());
+-        if(l < 0){
+-            l = 0;
+-        }
+-        rgb[0] = Math.min(255, (int) (rgb[0] * (1 - k) + rgb[0] * k * l));
+-        rgb[1] = Math.min(255, (int) (rgb[1] * (1 - k) + rgb[1] * k * l));
+-        rgb[2] = Math.min(255, (int) (rgb[2] * (1 - k) + rgb[2] * k * l));
+-    }
+-
+-    public static int[] getGradientCoordinatesRGB(final double[] baristicCoords, final Color[] color) {
+-        int r = Math.min(255, (int) Math.abs(color[0].getRed() * 255 * baristicCoords[0] + color[1].getRed()
+-                * 255 * baristicCoords[1] + color[2].getRed() * 255 * baristicCoords[2]));
+-        int g = Math.min(255, (int) Math.abs(color[0].getGreen() * 255 * baristicCoords[0] + color[1].getGreen()
+-                * 255 * baristicCoords[1] + color[2].getGreen() * 255 * baristicCoords[2]));
+-        int b = Math.min(255, (int) Math.abs(color[0].getBlue() * 255 * baristicCoords[0] + color[1].getBlue()
+-                * 255 * baristicCoords[1] + color[2].getBlue() * 255 * baristicCoords[2]));
+-
+-        return new int[]{r, g, b};
+-    }
+-
+-    public static Vector3f smoothingNormal(final double[] baristicCoords, final Vector3f[] normals) {
+-        return new Vector3f((float) (baristicCoords[0] * normals[0].getX() + baristicCoords[1] * normals[1].getX() + baristicCoords[2] * normals[2].getX()),
+-                (float) (baristicCoords[0] * normals[0].getY() + baristicCoords[1] * normals[1].getY() + baristicCoords[2] * normals[2].getY()),
+-                (float) (baristicCoords[0] * normals[0].getZ() + baristicCoords[1] * normals[1].getZ() + baristicCoords[2] * normals[2].getZ()));
+-    }
+-
+-}
+Index: src/main/java/com/cgvsu/ExceptionDialog.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<form xmlns=\"http://www.intellij.com/uidesigner/form/\" version=\"1\" bind-to-class=\"com.cgvsu.ExceptionDialog\">\r\n  <grid id=\"cbd77\" binding=\"contentPane\" layout-manager=\"GridLayoutManager\" row-count=\"2\" column-count=\"1\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n    <margin top=\"10\" left=\"10\" bottom=\"10\" right=\"10\"/>\r\n    <constraints>\r\n      <xy x=\"48\" y=\"54\" width=\"1033\" height=\"297\"/>\r\n    </constraints>\r\n    <properties/>\r\n    <border type=\"none\"/>\r\n    <children>\r\n      <grid id=\"94766\" layout-manager=\"GridLayoutManager\" row-count=\"1\" column-count=\"1\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n        <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n        <constraints>\r\n          <grid row=\"1\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"1\" hsize-policy=\"3\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties/>\r\n        <border type=\"none\"/>\r\n        <children>\r\n          <grid id=\"9538f\" layout-manager=\"GridLayoutManager\" row-count=\"1\" column-count=\"1\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n            <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n            <constraints>\r\n              <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"3\" hsize-policy=\"3\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties/>\r\n            <border type=\"none\"/>\r\n            <children>\r\n              <component id=\"e7465\" class=\"javax.swing.JButton\" binding=\"buttonOK\">\r\n                <constraints>\r\n                  <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n                </constraints>\r\n                <properties>\r\n                  <text value=\"OK\"/>\r\n                </properties>\r\n              </component>\r\n            </children>\r\n          </grid>\r\n        </children>\r\n      </grid>\r\n      <grid id=\"e3588\" layout-manager=\"GridLayoutManager\" row-count=\"1\" column-count=\"1\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n        <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n        <constraints>\r\n          <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"3\" hsize-policy=\"3\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties/>\r\n        <border type=\"none\"/>\r\n        <children>\r\n          <component id=\"114f7\" class=\"javax.swing.JLabel\" binding=\"textMessage\">\r\n            <constraints>\r\n              <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"0\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties>\r\n              <font name=\"Segoe UI\" size=\"14\"/>\r\n              <text value=\"&lt;html&gt;Ошибка импорта модели. &#10;Убедитесь, что файл имеет &#10;расширение .obj или выберите другую модель&lt;/html&gt;\"/>\r\n            </properties>\r\n          </component>\r\n        </children>\r\n      </grid>\r\n    </children>\r\n  </grid>\r\n</form>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/ExceptionDialog.form b/src/main/java/com/cgvsu/ExceptionDialog.form
+--- a/src/main/java/com/cgvsu/ExceptionDialog.form	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/ExceptionDialog.form	(date 1736464989971)
+@@ -1,60 +1,12 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.cgvsu.ExceptionDialog">
+-  <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++  <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+     <margin top="10" left="10" bottom="10" right="10"/>
+     <constraints>
+       <xy x="48" y="54" width="1033" height="297"/>
+     </constraints>
+     <properties/>
+     <border type="none"/>
+-    <children>
+-      <grid id="94766" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+-        <margin top="0" left="0" bottom="0" right="0"/>
+-        <constraints>
+-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+-        </constraints>
+-        <properties/>
+-        <border type="none"/>
+-        <children>
+-          <grid id="9538f" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+-            <margin top="0" left="0" bottom="0" right="0"/>
+-            <constraints>
+-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+-            </constraints>
+-            <properties/>
+-            <border type="none"/>
+-            <children>
+-              <component id="e7465" class="javax.swing.JButton" binding="buttonOK">
+-                <constraints>
+-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+-                </constraints>
+-                <properties>
+-                  <text value="OK"/>
+-                </properties>
+-              </component>
+-            </children>
+-          </grid>
+-        </children>
+-      </grid>
+-      <grid id="e3588" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+-        <margin top="0" left="0" bottom="0" right="0"/>
+-        <constraints>
+-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+-        </constraints>
+-        <properties/>
+-        <border type="none"/>
+-        <children>
+-          <component id="114f7" class="javax.swing.JLabel" binding="textMessage">
+-            <constraints>
+-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+-            </constraints>
+-            <properties>
+-              <font name="Segoe UI" size="14"/>
+-              <text value="&lt;html&gt;Ошибка импорта модели. &#10;Убедитесь, что файл имеет &#10;расширение .obj или выберите другую модель&lt;/html&gt;"/>
+-            </properties>
+-          </component>
+-        </children>
+-      </grid>
+-    </children>
++    <children/>
+   </grid>
+ </form>
+Index: src/main/java/com/cgvsu/ExceptionDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cgvsu;\r\n\r\nimport javafx.scene.control.Alert;\r\nimport javafx.scene.control.Alert.AlertType;\r\n\r\npublic class ExceptionDialog {\r\n    public static void showError(Operation operation, String message) {\r\n        Alert alert = new Alert(AlertType.ERROR);\r\n        alert.setTitle(\"Ошибка\");\r\n        alert.setHeaderText(operation == Operation.READING ? \"Ошибка чтения\" : \"Ошибка записи\");\r\n        alert.setContentText(message);\r\n        alert.showAndWait();\r\n    }\r\n\r\n    public enum Operation {\r\n        READING,\r\n        WRITING\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/ExceptionDialog.java b/src/main/java/com/cgvsu/ExceptionDialog.java
+--- a/src/main/java/com/cgvsu/ExceptionDialog.java	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/src/main/java/com/cgvsu/ExceptionDialog.java	(date 1736464989983)
+@@ -3,7 +3,11 @@
+ import javafx.scene.control.Alert;
+ import javafx.scene.control.Alert.AlertType;
+ 
++import javax.swing.*;
++
+ public class ExceptionDialog {
++    private JPanel contentPane;
++
+     public static void showError(Operation operation, String message) {
+         Alert alert = new Alert(AlertType.ERROR);
+         alert.setTitle("Ошибка");
+Index: .idea/libraries/openjfx_javafx_graphics.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"openjfx.javafx.graphics\" type=\"repository\">\r\n    <properties maven-id=\"org.openjfx:javafx-graphics:18\" />\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/18/javafx-graphics-18.jar!/\" />\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/18/javafx-graphics-18-win-x86-monocle.jar!/\" />\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/18/javafx-base-18.jar!/\" />\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/18/javafx-base-18-win-x86-monocle.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC />\r\n    <SOURCES />\r\n  </library>\r\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/openjfx_javafx_graphics.xml b/.idea/libraries/openjfx_javafx_graphics.xml
+--- a/.idea/libraries/openjfx_javafx_graphics.xml	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/.idea/libraries/openjfx_javafx_graphics.xml	(date 1736460943438)
+@@ -3,9 +3,9 @@
+     <properties maven-id="org.openjfx:javafx-graphics:18" />
+     <CLASSES>
+       <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/18/javafx-graphics-18.jar!/" />
+-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/18/javafx-graphics-18-win-x86-monocle.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/18/javafx-graphics-18-win.jar!/" />
+       <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/18/javafx-base-18.jar!/" />
+-      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/18/javafx-base-18-win-x86-monocle.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/18/javafx-base-18-win.jar!/" />
+     </CLASSES>
+     <JAVADOC />
+     <SOURCES />
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/../.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/../.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$/..\" value=\"main\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;ver-a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/villsxxx/Task_4.git&quot;,\r\n    &quot;accountId&quot;: &quot;0185781d-679d-4445-9a9b-6deb367d84d9&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2rM825wAyoIzaHBQDPbWg9kSMv7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;Application.Main.executor&quot;: &quot;Run&quot;,\r\n    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,\r\n    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,\r\n    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,\r\n    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;vertexDel&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.45632184&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\IdeaProjects\\Task_4-main\\Task_4-main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\\src\\main\\java\\com\\cgvsu\" />\r\n      <recent name=\"C:\\Users\\Stacia\\CG1project\\new_main\\Task_4\\Simple3DViewer\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.reader\" />\r\n      <recent name=\"com.cgvsu.render_engine\" />\r\n      <recent name=\"com.cgvsu.objreader\" />\r\n      <recent name=\"com.cgvsu\" />\r\n      <recent name=\"com.cgvsu.triangulation\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.cgvsu.model\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Main\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.Main\" />\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"AffineTransformsTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.math.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.math\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.math.AffineTransformsTest\" />\r\n      <option name=\"TEST_OBJECT\" value=\"class\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ1\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ1\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ3\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ3\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ReaderTest.testLineWithXYZ4\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"cgvsu\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.cgvsu.reader.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"com.cgvsu.reader\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.cgvsu.reader.ReaderTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testLineWithXYZ4\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ1\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ4\" />\r\n        <item itemvalue=\"JUnit.ReaderTest.testLineWithXYZ3\" />\r\n        <item itemvalue=\"JUnit.AffineTransformsTest\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"821bf296-21dc-4441-9e03-f685d385c53b\" name=\"Changes\" comment=\"\" />\r\n      <created>1736357387439</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1736357387439</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>80</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"isCosAndSin\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/reader/ReaderTest.java</url>\r\n          <line>22</line>\r\n          <properties class=\"com.cgvsu.reader.ReaderTest\" method=\"testLineWithXYZ2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"10\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>24</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateY\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"14\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/Matrix.java</url>\r\n          <line>114</line>\r\n          <properties class=\"com.cgvsu.math.Matrix\" method=\"multiplication\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"22\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/com/cgvsu/math/AffineTransforms.java</url>\r\n          <line>38</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransforms\" method=\"rotateZ\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"23\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\r\n          <url>file://$PROJECT_DIR$/test/com/cgvsu/math/AffineTransformsTest.java</url>\r\n          <line>36</line>\r\n          <properties class=\"com.cgvsu.math.AffineTransformsTest\" method=\"rotateXTest2\">\r\n            <option name=\"EMULATED\" value=\"true\" />\r\n            <option name=\"WATCH_EXIT\" value=\"false\" />\r\n          </properties>\r\n          <option name=\"timeStamp\" value=\"24\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 19cfe369201b277a083a43ed63f215a72c307d68)
++++ b/.idea/workspace.xml	(date 1736468297745)
+@@ -5,21 +5,39 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Network.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/ExceptionDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/ExceptionDialog.form" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/ExceptionDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/ExceptionDialog.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Light.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Texture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Texture.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Polygon.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/cgvsu/fxml/gui.fxml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController$1.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/PolygonRasterizer.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog$Operation.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/ExceptionDialog.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/fxml/gui.fxml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/TL/Light.class" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/TL/Texture.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/TL/Texture.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector3f.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector4f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector4f.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Polygon.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/Camera.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/Camera.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/GraphicConveyor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/GraphicConveyor.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/PolygonRasterizer.class" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine$PointVertexModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine$PointVertexModel.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine$SelectedPolygon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine$SelectedPolygon.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator$1.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/triangulation/Triangulator.class" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -57,29 +75,31 @@
+   &quot;associatedIndex&quot;: 2
+ }</component>
+   <component name="ProjectId" id="2rM825wAyoIzaHBQDPbWg9kSMv7" />
++  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;vertexDel&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu&quot;,
+-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+-    &quot;project.structure.side.proportion&quot;: &quot;0.45632184&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "Application.Main.executor": "Run",
++    "Application.Simple3DViewer.executor": "Run",
++    "Downloaded.Files.Path.Enabled": "false",
++    "Repository.Attach.Annotations": "false",
++    "Repository.Attach.JavaDocs": "false",
++    "Repository.Attach.Sources": "false",
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "git-widget-placeholder": "main",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu",
++    "project.structure.last.edited": "Project",
++    "project.structure.proportion": "0.15",
++    "project.structure.side.proportion": "0.45632184"
+   }
+-}</component>
++}]]></component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="D:\IdeaProjects\Task_4-main\Task_4-main\Task_4\Simple3DViewer\src\main\java\com\cgvsu" />
+@@ -97,7 +117,7 @@
+       <recent name="com.cgvsu.model" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Application.Main">
++  <component name="RunManager" selected="Application.Simple3DViewer">
+     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="com.cgvsu.Main" />
+       <module name="cgvsu" />
+@@ -111,17 +131,15 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="AffineTransformsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="Simple3DViewer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="com.cgvsu.Simple3DViewer" />
+       <module name="cgvsu" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="com.cgvsu.math.*" />
++          <option name="PATTERN" value="com.cgvsu.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+-      <option name="PACKAGE_NAME" value="com.cgvsu.math" />
+-      <option name="MAIN_CLASS_NAME" value="com.cgvsu.math.AffineTransformsTest" />
+-      <option name="TEST_OBJECT" value="class" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+@@ -176,11 +194,11 @@
+     </configuration>
+     <recent_temporary>
+       <list>
++        <item itemvalue="Application.Simple3DViewer" />
+         <item itemvalue="Application.Main" />
+         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ1" />
+         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ4" />
+         <item itemvalue="JUnit.ReaderTest.testLineWithXYZ3" />
+-        <item itemvalue="JUnit.AffineTransformsTest" />
+       </list>
+     </recent_temporary>
+   </component>
+Index: src/main/java/com/cgvsu/TL/Network.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/TL/Network.java b/src/main/java/com/cgvsu/TL/Network.java
+new file mode 100644
+--- /dev/null	(date 1736461875363)
++++ b/src/main/java/com/cgvsu/TL/Network.java	(date 1736461875363)
+@@ -0,0 +1,45 @@
++package com.cgvsu.TL;
++
++import javafx.scene.canvas.GraphicsContext;
++import javafx.scene.image.PixelWriter;
++import javafx.scene.paint.Color;
++
++import static com.cgvsu.render_engine.TriangleRasterization.barizentricCoordinates;
++import static com.cgvsu.render_engine.TriangleRasterization.interpolateCoordinatesZBuffer;
++
++public class Network {
++
++    public static void drawLine(int x0, int y0, int x1, int y1, final double[][] zBuff, double[] deepZ,
++                                int[] coordX, int[] coordY, GraphicsContext graphicsContext) {
++        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
++        int dx = Math.abs(x1 - x0);
++        int dy = Math.abs(y1 - y0);
++        int sx = (x0 < x1) ? 1 : -1;
++        int sy = (y0 < y1) ? 1 : -1;
++        int err = dx - dy;
++
++        while (true) {
++            double[] barizentric = barizentricCoordinates(x0, y0, coordX, coordY);
++            if (x0 >= 0 && y0 >= 0 && x0 < zBuff.length && y0 < zBuff[0].length) {
++                if (!Double.isNaN(barizentric[0]) && !Double.isNaN(barizentric[1]) && !Double.isNaN(barizentric[2])) {
++                    double zNew = interpolateCoordinatesZBuffer(barizentric, deepZ);
++                    if (Math.abs(zBuff[x0][y0] - zNew) <= 1e-7f) {
++                        pixelWriter.setColor(x0, y0, Color.BLACK); // Можно выбрать любой цвет
++                    }
++                }
++            }
++            if (x0 == x1 && y0 == y1) break;
++
++            int e2 = err * 2;
++            if (e2 > -dy) {
++                err -= dy;
++                x0 += sx;
++            }
++            if (e2 < dx) {
++                err += dx;
++                y0 += sy;
++            }
++        }
++    }
++}
++

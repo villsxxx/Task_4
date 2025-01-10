@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" afterDir="false" />
+    <list default="true" id="821bf296-21dc-4441-9e03-f685d385c53b" name="Changes" comment="что-то наделала надо утром будет посмотреть, хз">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Light.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Texture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/TL/Texture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/PolygonRasterizer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,12 +36,12 @@
     &quot;assignee&quot;: &quot;ver-a&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/villsxxx/Task_4.git&quot;,
-    &quot;accountId&quot;: &quot;0185781d-679d-4445-9a9b-6deb367d84d9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/villsxxx/Task_4.git",
+    "accountId": "945085e7-4540-4222-af0d-a10a40e63127"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -58,6 +54,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.Simple3DViewer.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
@@ -67,6 +64,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/IdeaProjects/Task_4-main/Task_4-main/Task_4/Simple3DViewer/src/main/java/com/cgvsu",
     "project.structure.last.edited": "Project",
@@ -185,6 +183,15 @@
       <option name="presentableId" value="Default" />
       <updated>1736357387439</updated>
     </task>
+    <task id="LOCAL-00001" summary="что-то наделала надо утром будет посмотреть, хз">
+      <option name="closed" value="true" />
+      <created>1736469466786</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1736469466786</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -197,6 +204,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="что-то наделала надо утром будет посмотреть, хз" />
+    <option name="LAST_COMMIT_MESSAGE" value="что-то наделала надо утром будет посмотреть, хз" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
