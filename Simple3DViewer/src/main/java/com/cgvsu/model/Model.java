@@ -1,4 +1,5 @@
 package com.cgvsu.model;
+import com.cgvsu.TL.ImageToText;
 import com.cgvsu.math.AffineTransforms;
 import com.cgvsu.math.Matrix4f;
 import com.cgvsu.math.Vector3f;
@@ -11,6 +12,7 @@ public class Model {
     public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    public ImageToText imageToText;
     private ArrayList<Group> groups = new ArrayList<>();
 
     public boolean viewMesh = true;

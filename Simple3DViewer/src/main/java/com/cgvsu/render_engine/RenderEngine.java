@@ -3,12 +3,15 @@ package com.cgvsu.render_engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cgvsu.TL.Texture;
 import com.cgvsu.math.*;
 import javafx.scene.canvas.GraphicsContext;
 import com.cgvsu.model.Model;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import javax.vecmath.Point2f;
+import com.cgvsu.TL.ImageToText;
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
@@ -27,6 +30,7 @@ public class RenderEngine {
             if (mesh.viewMesh) renderModel(graphicsContext, camera, mesh, width, height);
         }
     }
+
     private static class PointVertexModel {
 
         public PointVertexModel(Point2f point, int vertexIndex, Model model) {
@@ -46,6 +50,7 @@ public class RenderEngine {
 
         public Model model;
     }
+
     private static class SelectedPolygon {
         public Model model;
         public int selPoly = -2;
@@ -60,6 +65,7 @@ public class RenderEngine {
             this.model = new Model();
         }
     }
+
     private static PointVertexModel selectedPVM = new PointVertexModel(-2);
     private static SelectedPolygon selectedPoly = new SelectedPolygon();
 
@@ -71,7 +77,7 @@ public class RenderEngine {
             final int width,
             final int height) {
 
-        Matrix4f modelMatrix =  model.getModelMatrix();
+        Matrix4f modelMatrix = model.getModelMatrix();
         Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
@@ -131,4 +137,62 @@ public class RenderEngine {
         }
     }
 
+    public static void renderTexture(
+            final GraphicsContext graphicsContext,
+            final Camera camera,
+            final Model model,
+            final int width,
+            final int height) {
+
+        // Получаем матрицы для обработки трансформаций
+        Matrix4f modelMatrix = model.getModelMatrix();
+        Matrix4f viewMatrix = camera.getViewMatrix();
+        Matrix4f projectionMatrix = camera.getProjectionMatrix();
+
+        // Создание модели видеопрезентации
+        Matrix4f modelViewProjectionMatrix = Matrix4f.createIdentityMatrix();
+        modelViewProjectionMatrix.multiply(projectionMatrix);
+        modelViewProjectionMatrix.multiply(viewMatrix);
+        modelViewProjectionMatrix.multiply(modelMatrix);
+
+        final int nPolygons = model.polygons.size();
+
+        for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
+            final int nVerticesInPolygon = model.polygons.get(polygonInd).getVertexIndices().size();
+            ArrayList<Vector2f> resultPoints = new ArrayList<>();
+
+            // Сохраняем UV-координаты
+            Vector2f[] uvCoords = new Vector2f[nVerticesInPolygon];
+
+            for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
+                int vertexIndex = model.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd);
+                Vector3f vertex = model.vertices.get(vertexIndex);
+                Vector2f uv = model.textureVertices.get(vertexIndex);
+
+                // Преобразуем 3D-координату в 2D
+                Vector2f resultPoint = vertexToPoint(Vector3f.multiply(vertex, modelViewProjectionMatrix), width, height);
+                resultPoints.add(resultPoint);
+                uvCoords[vertexInPolygonInd] = uv; // Сохраняем UV-координаты
+            }
+
+            // Отрисовка текстуры
+            if (model.textureVertices != null) {
+                Texture texture = new Texture();
+                Image image = texture.getImage();
+                for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
+                    Vector2f uv = uvCoords[vertexInPolygonInd];
+
+                    // Преобразуем UV-координаты в пиксели
+                    double textureX = uv.getX() * image.getWidth();
+                    double textureY = uv.getY() * image.getHeight();
+
+                    // Рисуем текстуру по соответствующим координатам
+                    int[] rgb = new int[3];
+                    ImageToText.applyTexture(uv, model, rgb);
+                    graphicsContext.setFill(Color.rgb(rgb[0], rgb[1], rgb[2]));
+                    graphicsContext.fillRect((int) textureX, (int) textureY, 1, 1); // Размер рисуемой области
+                }
+            }
+        }
+    }
 }

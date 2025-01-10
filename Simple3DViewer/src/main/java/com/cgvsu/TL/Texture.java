@@ -1,42 +1,29 @@
 package com.cgvsu.TL;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import com.cgvsu.math.Vector2f;
+import com.cgvsu.model.Model;
+import javafx.scene.image.Image;
 
 public class Texture {
-    private Image textureImage;
-    private PixelReader pixelReader;
 
-    public Texture(String filePath) throws IOException {
-        loadTexture(filePath);
+    public static double[] getGradientCoordinatesTexture(double[] barizentric, Vector2f[] texture) {
+        return new double[] {(barizentric[0] * texture[0].getX()) +  (barizentric[1] * texture[1].getX()) +  (barizentric[2] * texture[2].getX()),
+                (barizentric[0] * texture[0].getY()) + (barizentric[1] * texture[1].getY()) + (barizentric[2] * texture[2].getY())};
     }
 
-    private void loadTexture(String filePath) throws IOException {
-        textureImage = new Image(new FileInputStream(filePath));
-        if (textureImage.isError()) {
-            throw new IOException("Не удалось загрузить текстуру из файла: " + filePath);
+    public static void texture(double[] barizentric, Vector2f[] textures, Model mesh, int[] rgb){
+        double[] texture = getGradientCoordinatesTexture(barizentric, textures);
+        int u = (int) Math.round(texture[0] * (mesh.imageToText.wight - 1));
+        int v = (int) Math.round(texture[1] * (mesh.imageToText.height - 1));
+        if (u < mesh.imageToText.wight && v < mesh.imageToText.height) {
+            rgb[0] = mesh.imageToText.pixelData[u][v][0];
+            rgb[1] = mesh.imageToText.pixelData[u][v][1];
+            rgb[2] = mesh.imageToText.pixelData[u][v][2];
         }
-        pixelReader = textureImage.getPixelReader();
     }
 
-    public int getColor(float u, float v) {
-        u = Math.max(0, Math.min(u, 1));
-        v = Math.max(0, Math.min(v, 1));
-
-        int x = Math.min((int) (u * textureImage.getWidth()), (int) textureImage.getWidth() - 1);
-        int y = Math.min((int) (v * textureImage.getHeight()), (int) textureImage.getHeight() - 1);
-
-        return pixelReader.getArgb(x, y);
-    }
-
-    public int getWidth() {
-        return (int) textureImage.getWidth();
-    }
-
-    public int getHeight() {
-        return (int) textureImage.getHeight();
+    public Image getImage() {
+        return getImage();
     }
 }

@@ -13,6 +13,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -22,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -50,6 +53,10 @@ public class GuiController {
 
     @FXML
     private CheckBox grid;
+
+    @FXML
+    private CheckBox textyre;
+
 
     @FXML
     private ListView<String> modelList;
@@ -91,6 +98,7 @@ public class GuiController {
     private Button buttonDeleteModel;
     @FXML
     private TextField textVertexDel; // Поле для ввода индексов
+
     @FXML
     private void initialize() {
         //centerPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
@@ -139,17 +147,17 @@ public class GuiController {
             double height = canvas.getHeight();
 
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.clearRect(0,0,width,height);
-            if(grid.isSelected()){
+            gc.clearRect(0, 0, width, height);
+            if (grid.isSelected()) {
 
-                drawGrid(gc,width,height);
+                drawGrid(gc, width, height);
             }
             gc.setStroke(Color.BLACK);
             //canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
             if (models != null) {
-                for (Model mesh: models) {
+                for (Model mesh : models) {
                     RenderEngine.render(canvas.getGraphicsContext2D(), camera, models, (int) width, (int) height);
                 }
             }
@@ -165,10 +173,10 @@ public class GuiController {
 
         MultipleSelectionModel<String> modelsSelectionModel = modelList.getSelectionModel();
         //слушатель для отслеживания изменений
-        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){
-            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
+        modelsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue) {
                 String item = modelsSelectionModel.getSelectedItem();
-                if(!Objects.isNull(item)) {
+                if (!Objects.isNull(item)) {
                     selectedModelIndex = modelNames.indexOf(item);
                     selectedModel = models.get(selectedModelIndex);
                 }
@@ -199,9 +207,9 @@ public class GuiController {
             modelList.getItems().add(file.getName());
             // todo: обработка ошибок
         } catch (IOException exception) {
-            ExceptionDialog.showError(ExceptionDialog.Operation.READING,"Ошибка при потытке открыть файл"+ exception.getMessage());
-        }catch (Exception exception) {
-            ExceptionDialog.showError(ExceptionDialog.Operation.READING,"неизвестная ошибка чтения файла"+ exception.getMessage());
+            ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка при потытке открыть файл" + exception.getMessage());
+        } catch (Exception exception) {
+            ExceptionDialog.showError(ExceptionDialog.Operation.READING, "неизвестная ошибка чтения файла" + exception.getMessage());
         }
     }
 
@@ -213,25 +221,25 @@ public class GuiController {
 
         File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
         if (file != null) {
-            try{
+            try {
                 ObjWriter writer = new ObjWriter();
                 writer.write(selectedModel, file.getAbsolutePath());
-            }catch (Exception exception) {
-            ExceptionDialog.showError(ExceptionDialog.Operation.WRITING,"Ошибка при сохранении файла"+ exception.getMessage());
+            } catch (Exception exception) {
+                ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Ошибка при сохранении файла" + exception.getMessage());
             }
         }
     }
 
-     //простая сетка нужна другая
-    private void drawGrid(GraphicsContext gc, double w,double h){
+    //простая сетка нужна другая
+    private void drawGrid(GraphicsContext gc, double w, double h) {
         gc.setStroke(Color.GREEN);
         gc.setLineWidth(0.5);
-        double cellSize =50.0;
-        for(double x=0;x<w;x+=cellSize){
-            gc.strokeLine(x,0,x,h);
+        double cellSize = 50.0;
+        for (double x = 0; x < w; x += cellSize) {
+            gc.strokeLine(x, 0, x, h);
         }
-        for(double y=0;y<w;y+=cellSize){
-            gc.strokeLine(0,y,w,y);
+        for (double y = 0; y < w; y += cellSize) {
+            gc.strokeLine(0, y, w, y);
         }
     }
 
@@ -265,12 +273,14 @@ public class GuiController {
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
+
     @FXML
     public void toggleGrid(ActionEvent actionEvent) {
     }
+
     @FXML
     private void scale(ActionEvent event) {
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         String s = textScale.getText();
@@ -282,9 +292,10 @@ public class GuiController {
         }
 
     }
+
     @FXML
     private void translate(ActionEvent event) {
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         String s = textTranslate.getText();
@@ -295,14 +306,15 @@ public class GuiController {
             selectedModel.saveTranslation();
         }
     }
+
     @FXML
     private void rotate(ActionEvent event) {
-        if(Objects.isNull(selectedModel)){
+        if (Objects.isNull(selectedModel)) {
             return;
         }
         String s = textRotate.getText();
         String[] coefficient = Reader.readNumbersInLineWithXYZ(s, "0");
-        Function<Double, Double> fromDegreeToRad = (a) -> (a*Math.PI)/180;
+        Function<Double, Double> fromDegreeToRad = (a) -> (a * Math.PI) / 180;
         double rotX = fromDegreeToRad.apply(Double.parseDouble(coefficient[0]));
         double rotY = fromDegreeToRad.apply(Double.parseDouble(coefficient[1]));
         double rotZ = fromDegreeToRad.apply(Double.parseDouble(coefficient[2]));
@@ -315,8 +327,9 @@ public class GuiController {
             selectedModel.saveRotation();
         }
     }
+
     @FXML
-    private void deleteModel(){
+    private void deleteModel() {
         if (Objects.isNull(selectedModel)) {
             ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "выберите модель для удаления");
             return;
@@ -334,16 +347,17 @@ public class GuiController {
         //selectedModelIndex = 0;
         //modelList.getItems().remove(selectedModelIndex);
     }
+
     @FXML
     private void deleteVertices() {
         try {
-            if(selectedModel == null){
+            if (selectedModel == null) {
                 ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Модель не выбрана");
                 return;
             }
             // Считываем индексы вершин из текстового поля
             String input = textVertexDel.getText();
-            if(input.isBlank()){
+            if (input.isBlank()) {
                 ExceptionDialog.showError(ExceptionDialog.Operation.WRITING, "Индексы не введены");
                 return;
             }
@@ -364,11 +378,11 @@ public class GuiController {
                     false,                   // Не удаляем висячие текстуры
                     true                   // Удаляем полигоны с менее чем 3 вершинами
             );
-            if (uptadeModel == null){
+            if (uptadeModel == null) {
                 ExceptionDialog.showError(ExceptionDialog.Operation.READING, "Ошибка при удалении вершин");
                 return;
             }
-           // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
+            // RenderEngine.render(canvas.getGraphicsContext2D(), camera,  );
             Model newModel = ObjReader.read(uptadeModel.toString());
             // Очистка текстового поля после успешного выполнения
             textVertexDel.clear();
@@ -377,6 +391,47 @@ public class GuiController {
         }
     }
 
+    @FXML
+    private void switchThemeToDark() {
+        Scene scene = mainPane.getScene(); // Получаем текущую сцену
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear(); // Очищаем текущие стили
+        scene.getStylesheets().add(getClass().getResource("/styles/darker-theme.css").toExternalForm()); // Подключаем тёмную тему
+    }
 
+    @FXML
+    private void switchThemeToLight() {
+        Scene scene = mainPane.getScene(); // Получаем текущую сцену
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear(); // Очищаем текущие стили
+        scene.getStylesheets().add(getClass().getResource("/styles/lighter-theme.css").toExternalForm()); // Подключаем светлую тему
+    }
+
+    // метод для загрузки текстуры
+    @FXML
+    private void onLoadTextureMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        fileChooser.setTitle("Load Texture");
+        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        if (file != null && mesh != null) {
+            try {
+                String texturePath = file.getAbsolutePath();
+                mesh.setTexture(texturePath);
+                System.out.println("Texture loaded successfully!");
+            } catch (Exception e) {
+
+                System.err.println("Failed to load texture: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No model loaded or texture file not selected.");
+        }
+    }
 }
+
+
 
